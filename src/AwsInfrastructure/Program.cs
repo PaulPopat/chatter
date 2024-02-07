@@ -1,16 +1,16 @@
 ﻿using Amazon.CDK;
 
-namespace Effuse
+namespace Effuse.AWS.CDK;
+
+sealed class Program
 {
-  sealed class Program
+  public static void Main(string[] args)
   {
-    public static void Main(string[] args)
+    var app = new App();
+    new Stacks.EffuseCore(app, "core-stack", new StackProps
     {
-      var app = new App();
-      new EffuseCoreStack(app, "core-stack", new StackProps
-      {
-      });
-      app.Synth();
-    }
+    });
+    app.Synth();
   }
 }
+
