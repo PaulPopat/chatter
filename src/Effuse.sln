@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwsInfrastructure", "AwsInfrastructure\AwsInfrastructure.csproj", "{924CF5AB-46E7-437A-A3D2-F83DEF140E5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.AWS.Infrastructure", "Effuse.AWS.Infrastructure\Effuse.AWS.Infrastructure.csproj", "{924CF5AB-46E7-437A-A3D2-F83DEF140E5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwsIntegration", "AwsIntegration\AwsIntegration.csproj", "{6859BC17-F91E-4C42-9070-A783FB7FB198}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.AWS.Integration", "Effuse.AWS.Integration\Effuse.AWS.Integration.csproj", "{6859BC17-F91E-4C42-9070-A783FB7FB198}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Handlers", "Effuse.Handlers\Effuse.Handlers.csproj", "{497BE617-FDEB-4089-9796-EF4B791C9519}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.AWS.Handlers", "Effuse.AWS.Handlers\Effuse.AWS.Handlers.csproj", "{5320A6BF-B92A-46A3-A43C-5B72627EC36D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{924CF5AB-46E7-437A-A3D2-F83DEF140E5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -44,5 +45,32 @@ Global
 		{6859BC17-F91E-4C42-9070-A783FB7FB198}.Release|x64.Build.0 = Release|Any CPU
 		{6859BC17-F91E-4C42-9070-A783FB7FB198}.Release|x86.ActiveCfg = Release|Any CPU
 		{6859BC17-F91E-4C42-9070-A783FB7FB198}.Release|x86.Build.0 = Release|Any CPU
+		{497BE617-FDEB-4089-9796-EF4B791C9519}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{497BE617-FDEB-4089-9796-EF4B791C9519}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{497BE617-FDEB-4089-9796-EF4B791C9519}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{497BE617-FDEB-4089-9796-EF4B791C9519}.Debug|x64.Build.0 = Debug|Any CPU
+		{497BE617-FDEB-4089-9796-EF4B791C9519}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{497BE617-FDEB-4089-9796-EF4B791C9519}.Debug|x86.Build.0 = Debug|Any CPU
+		{497BE617-FDEB-4089-9796-EF4B791C9519}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{497BE617-FDEB-4089-9796-EF4B791C9519}.Release|Any CPU.Build.0 = Release|Any CPU
+		{497BE617-FDEB-4089-9796-EF4B791C9519}.Release|x64.ActiveCfg = Release|Any CPU
+		{497BE617-FDEB-4089-9796-EF4B791C9519}.Release|x64.Build.0 = Release|Any CPU
+		{497BE617-FDEB-4089-9796-EF4B791C9519}.Release|x86.ActiveCfg = Release|Any CPU
+		{497BE617-FDEB-4089-9796-EF4B791C9519}.Release|x86.Build.0 = Release|Any CPU
+		{5320A6BF-B92A-46A3-A43C-5B72627EC36D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5320A6BF-B92A-46A3-A43C-5B72627EC36D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5320A6BF-B92A-46A3-A43C-5B72627EC36D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5320A6BF-B92A-46A3-A43C-5B72627EC36D}.Debug|x64.Build.0 = Debug|Any CPU
+		{5320A6BF-B92A-46A3-A43C-5B72627EC36D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5320A6BF-B92A-46A3-A43C-5B72627EC36D}.Debug|x86.Build.0 = Debug|Any CPU
+		{5320A6BF-B92A-46A3-A43C-5B72627EC36D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5320A6BF-B92A-46A3-A43C-5B72627EC36D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5320A6BF-B92A-46A3-A43C-5B72627EC36D}.Release|x64.ActiveCfg = Release|Any CPU
+		{5320A6BF-B92A-46A3-A43C-5B72627EC36D}.Release|x64.Build.0 = Release|Any CPU
+		{5320A6BF-B92A-46A3-A43C-5B72627EC36D}.Release|x86.ActiveCfg = Release|Any CPU
+		{5320A6BF-B92A-46A3-A43C-5B72627EC36D}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

@@ -1,8 +1,8 @@
 using Amazon.CDK;
 using Constructs;
-using Effuse.AWS.CDK.Utilities;
+using Effuse.AWS.Infrastructure.Utilities;
 
-namespace Effuse.AWS.CDK.Stacks;
+namespace Effuse.AWS.Infrastructure.Stacks;
 
 public class EffuseCore : Stack
 {

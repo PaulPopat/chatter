@@ -6,7 +6,7 @@
     <!-- Roll forward to future major versions of the netcoreapp as needed -->
     <RollForward>Major</RollForward>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <!-- CDK Construct Library dependencies -->
     <PackageReference Include="Amazon.CDK.Lib" Version="2.126.0" />
