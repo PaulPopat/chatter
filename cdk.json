@@ -1,5 +1,5 @@
 {
-  "app": "dotnet run --project src/Chatter/Chatter.csproj",
+  "app": "dotnet run --project src/AwsInfrastructure/AwsInfrastructure.csproj",
   "watch": {
     "include": [
       "**"
