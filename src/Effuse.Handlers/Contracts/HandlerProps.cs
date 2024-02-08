@@ -1,6 +1,6 @@
 namespace Effuse.Handlers.Contracts;
 
-public class HandlerProps<TBody>
+public class HandlerProps<TBody> where TBody : class
 {
   public HandlerProps
     (
@@ -10,7 +10,7 @@ public class HandlerProps<TBody>
       IDictionary<string, string> pathParameters,
       IDictionary<string, string> queryParameter,
       IDictionary<string, string> headers,
-      TBody body
+      TBody? body = null
     )
   {
     this.Path = path;
@@ -34,5 +34,5 @@ public class HandlerProps<TBody>
 
   public string ConnectionId { get; }
 
-  public TBody Body { get; }
+  public TBody? Body { get; }
 }

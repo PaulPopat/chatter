@@ -59,6 +59,8 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
+resources/
+.env
 
 # StyleCop
 StyleCopReport.xml

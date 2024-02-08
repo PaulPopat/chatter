@@ -12,7 +12,7 @@ public static class Bootstrap
     {
       var container = new UnityContainer();
 
-      container.RegisterType<TestHandler>();
+      container.RegisterType<HeartBeat>();
       return container;
     }
   }

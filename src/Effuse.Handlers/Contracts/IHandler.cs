@@ -1,5 +1,5 @@
 namespace Effuse.Handlers.Contracts;
 
-public interface IHandler<TInput, TResponse> {
-  Task<HandlerResponse<TResponse>> Handle(HandlerProps<TInput> props);
+public interface IHandler<TBody, TResponse> where TBody : class {
+  Task<HandlerResponse<TResponse>> Handle(HandlerProps<TBody> props);
 }

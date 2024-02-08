@@ -4,7 +4,7 @@ using Effuse.Handlers.Models;
 namespace Effuse.Handlers.Controllers;
 
 
-public class TestHandler : IHandler<object, TestHandlerResponse>
+public class HeartBeat : IHandler<object, TestHandlerResponse>
 {
   public async Task<HandlerResponse<TestHandlerResponse>> Handle(HandlerProps<object> props)
   {

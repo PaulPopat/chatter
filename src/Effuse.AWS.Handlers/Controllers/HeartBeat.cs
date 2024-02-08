@@ -10,10 +10,10 @@ using Base = Effuse.Handlers.Controllers;
 
 namespace Effuse.AWS.Handlers.Controllers;
 
-public class TestHandler
+public class HeartBeat
 {
   public async Task<APIGatewayProxyResponse> Handler(APIGatewayProxyRequest request)
   {
-    return await AWSHandlerMapper.Process<object, TestHandlerResponse, Base.TestHandler>(request);
+    return await AWSHandlerMapper.Process<object, TestHandlerResponse, Base.HeartBeat>(request);
   }
 }

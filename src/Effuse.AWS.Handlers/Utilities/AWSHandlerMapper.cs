@@ -12,7 +12,9 @@ public static class AWSHandlerMapper
   public static async Task<APIGatewayProxyResponse> Process<TBody, TResponse, THandler>
     (
       APIGatewayProxyRequest request
-    ) where THandler : IHandler<TBody, TResponse>
+    )
+      where TBody : class
+      where THandler : IHandler<TBody, TResponse>
   {
     try
     {
@@ -26,7 +28,7 @@ public static class AWSHandlerMapper
           request.PathParameters,
           request.QueryStringParameters,
           request.Headers,
-          JsonSerializer.Deserialize<TBody>(JsonDocument.Parse(request.Body))
+          request.Body != null || request.Body == string.Empty ? JsonSerializer.Deserialize<TBody>(JsonDocument.Parse(request.Body)) : null
         );
 
       var response = await handler.Handle(input);
