@@ -1,0 +1,23 @@
+version: '3'
+
+tasks:
+  project:build:
+    cmds:
+      - dotnet build
+    dir: "{{.TASKFILE_DIR}}/src"
+
+  aws:package:
+    cmds:
+      - dotnet lambda package
+    dir: "{{.TASKFILE_DIR}}/src/Effuse.AWS.Handlers"
+
+  aws:dependencies:
+    cmds:
+      - dotnet tool install -g Amazon.Lambda.Tools
+
+  aws:deploy:
+    cmds:
+      - task: project:build
+      - task: aws:package
+      - cdk bootstrap
+      - cdk deploy --require-approval never

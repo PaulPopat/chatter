@@ -89,7 +89,7 @@ internal class Lambda : Function
     {
       Runtime = Runtime.DOTNET_6,
       Code = Code.FromAsset(Path.Combine(Directory.GetCurrentDirectory(), $"src/{Config.HandlersProject}/bin/Release/net6.0/{Config.HandlersProject}.zip")),
-      Handler = $"{Config.HandlersProject}::Effuse.AWS.Handlers.{props.Handler}::Handler"
+      Handler = $"{Config.HandlersProject}::Effuse.AWS.Handlers.Controllers.{props.Handler}::Handler"
     })
   {
   }

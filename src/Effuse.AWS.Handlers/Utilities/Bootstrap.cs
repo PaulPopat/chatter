@@ -1,21 +1,24 @@
+using System;
 using Effuse.Handlers.Controllers;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Unity;
 
 namespace Effuse.AWS.Handlers.Utilities;
 
-public static class Bootstrap {
-  public static T CreateApp<T>()
+public static class Bootstrap
+{
+  private static UnityContainer container
   {
-    // no buenop by sosso
-    // poupou loves you
+    get
+    {
+      var container = new UnityContainer();
 
-    var builder = Host.CreateApplicationBuilder();
-
-    builder.Services.AddSingleton<TestHandler>();
-
-    var host = builder.Build();
-
-    return host.Services.GetService<T>();
+      container.RegisterType<TestHandler>();
+      return container;
+    }
   }
+
+  public readonly static Lazy<UnityContainer> Container = new Lazy<UnityContainer>(() =>
+  {
+    return container;
+  });
 }
