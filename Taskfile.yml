@@ -3,23 +3,25 @@ version: '3'
 dotenv: ['.env']
 
 tasks:
-  project:build:
+  solution:build:
     cmds:
       - dotnet build
     dir: "{{.TASKFILE_DIR}}/src"
 
-  aws:package:
+  sso:aws:package:
     cmds:
       - dotnet lambda package
-    dir: "{{.TASKFILE_DIR}}/src/Effuse.AWS.Handlers"
+    dir: "{{.TASKFILE_DIR}}/src/Effuse.SSO.AWS.Handlers"
 
   aws:dependencies:
     cmds:
       - dotnet tool install -g Amazon.Lambda.Tools
 
-  aws:deploy:
+  sso:aws:deploy:
     cmds:
       - task: project:build
-      - task: aws:package
-      - cdk bootstrap
-      - cdk deploy --require-approval never
+      - task: sso:aws:package
+      - cdk --app "{{.CDK_APP}}" bootstrap
+      - cdk --app "{{.CDK_APP}}" deploy --require-approval never
+    vars:
+      CDK_APP: dotnet run --project src/Effuse.SSO.AWS.Infrastructure/Effuse.SSO.AWS.Infrastructure.csproj

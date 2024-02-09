@@ -3,19 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.AWS.Infrastructure", "Effuse.AWS.Infrastructure\Effuse.AWS.Infrastructure.csproj", "{924CF5AB-46E7-437A-A3D2-F83DEF140E5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.AWS.Infrastructure", "Effuse.SSO.AWS.Infrastructure\Effuse.SSO.AWS.Infrastructure.csproj", "{924CF5AB-46E7-437A-A3D2-F83DEF140E5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.AWS.Integration", "Effuse.AWS.Integration\Effuse.AWS.Integration.csproj", "{6859BC17-F91E-4C42-9070-A783FB7FB198}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.AWS.Integration", "Effuse.Core.AWS.Integration\Effuse.Core.AWS.Integration.csproj", "{6859BC17-F91E-4C42-9070-A783FB7FB198}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Handlers", "Effuse.Handlers\Effuse.Handlers.csproj", "{497BE617-FDEB-4089-9796-EF4B791C9519}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.Handlers", "Effuse.SSO.Handlers\Effuse.SSO.Handlers.csproj", "{497BE617-FDEB-4089-9796-EF4B791C9519}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.AWS.Handlers", "Effuse.AWS.Handlers\Effuse.AWS.Handlers.csproj", "{5320A6BF-B92A-46A3-A43C-5B72627EC36D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.AWS.Handlers", "Effuse.SSO.AWS.Handlers\Effuse.SSO.AWS.Handlers.csproj", "{5320A6BF-B92A-46A3-A43C-5B72627EC36D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Integration", "Effuse.Integration\Effuse.Integration.csproj", "{CDF28F49-D78F-4244-9F2E-D0020F6C4259}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.Integration", "Effuse.SSO.Integration\Effuse.SSO.Integration.csproj", "{CDF28F49-D78F-4244-9F2E-D0020F6C4259}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Services", "Effuse.Services\Effuse.Services.csproj", "{9945C4B9-E769-49D1-8148-0BBD05194DD0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.Services", "Effuse.SSO.Services\Effuse.SSO.Services.csproj", "{9945C4B9-E769-49D1-8148-0BBD05194DD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Domain", "Effuse.Domain\Effuse.Domain.csproj", "{DF652C90-64C9-49F1-8E32-052758AE51C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.Domain", "Effuse.SSO.Domain\Effuse.SSO.Domain.csproj", "{DF652C90-64C9-49F1-8E32-052758AE51C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.Integration", "Effuse.Core.Integration\Effuse.Core.Integration.csproj", "{DF1615B5-9B55-4BDE-9996-098D632B3F41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.Handlers", "Effuse.Core.Handlers\Effuse.Core.Handlers.csproj", "{A35061CA-19D7-46A9-BCF7-B13D43918487}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +115,30 @@ Global
 		{DF652C90-64C9-49F1-8E32-052758AE51C8}.Release|x64.Build.0 = Release|Any CPU
 		{DF652C90-64C9-49F1-8E32-052758AE51C8}.Release|x86.ActiveCfg = Release|Any CPU
 		{DF652C90-64C9-49F1-8E32-052758AE51C8}.Release|x86.Build.0 = Release|Any CPU
+		{DF1615B5-9B55-4BDE-9996-098D632B3F41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF1615B5-9B55-4BDE-9996-098D632B3F41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF1615B5-9B55-4BDE-9996-098D632B3F41}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DF1615B5-9B55-4BDE-9996-098D632B3F41}.Debug|x64.Build.0 = Debug|Any CPU
+		{DF1615B5-9B55-4BDE-9996-098D632B3F41}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DF1615B5-9B55-4BDE-9996-098D632B3F41}.Debug|x86.Build.0 = Debug|Any CPU
+		{DF1615B5-9B55-4BDE-9996-098D632B3F41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF1615B5-9B55-4BDE-9996-098D632B3F41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF1615B5-9B55-4BDE-9996-098D632B3F41}.Release|x64.ActiveCfg = Release|Any CPU
+		{DF1615B5-9B55-4BDE-9996-098D632B3F41}.Release|x64.Build.0 = Release|Any CPU
+		{DF1615B5-9B55-4BDE-9996-098D632B3F41}.Release|x86.ActiveCfg = Release|Any CPU
+		{DF1615B5-9B55-4BDE-9996-098D632B3F41}.Release|x86.Build.0 = Release|Any CPU
+		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Debug|x64.Build.0 = Debug|Any CPU
+		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Debug|x86.Build.0 = Debug|Any CPU
+		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Release|x64.ActiveCfg = Release|Any CPU
+		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Release|x64.Build.0 = Release|Any CPU
+		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Release|x86.ActiveCfg = Release|Any CPU
+		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

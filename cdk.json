@@ -1,5 +1,4 @@
 {
-  "app": "dotnet run --project src/Effuse.AWS.Infrastructure/Effuse.AWS.Infrastructure.csproj",
   "watch": {
     "include": [
       "**"

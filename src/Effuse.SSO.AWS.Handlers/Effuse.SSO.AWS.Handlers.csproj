@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <AWSProjectType>Lambda</AWSProjectType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.301.8" />
+    <PackageReference Include="AWSSDK.Lambda" Version="3.7.303.42" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.305.22" />
+
+    <PackageReference Include="Amazon.Lambda" Version="0.12.0" />
+    <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.7.0" />
+    <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
+    <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.0" />
+    <PackageReference Include="Unity" Version="5.11.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Effuse.Core.Handlers/Effuse.Core.Handlers.csproj" />
+    <ProjectReference Include="../Effuse.SSO.Handlers/Effuse.SSO.Handlers.csproj" />
+    <ProjectReference Include="../Effuse.Core.AWS.Integration/Effuse.Core.AWS.Integration.csproj" />
+    <ProjectReference Include="../Effuse.SSO.Integration/Effuse.SSO.Integration.csproj" />
+    <ProjectReference Include="../Effuse.SSO.Services/Effuse.SSO.Services.csproj" />
+  </ItemGroup>
+</Project>
