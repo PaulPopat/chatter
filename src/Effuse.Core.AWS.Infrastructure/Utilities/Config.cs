@@ -1,4 +1,4 @@
-namespace Effuse.AWS.Infrastructure.Utilities;
+namespace Effuse.Core.AWS.Infrastructure.Utilities;
 
 public static class Config
 {

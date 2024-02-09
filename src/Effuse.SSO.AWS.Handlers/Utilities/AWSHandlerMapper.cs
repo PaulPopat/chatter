@@ -2,8 +2,11 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Lambda.Core;
 using Effuse.Core.Handlers.Contracts;
 using Unity;
+
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
 namespace Effuse.SSO.AWS.Handlers.Utilities;
 

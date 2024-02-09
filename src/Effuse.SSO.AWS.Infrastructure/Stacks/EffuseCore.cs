@@ -1,7 +1,7 @@
 using Amazon.CDK;
 using Amazon.CDK.AWS.Apigatewayv2;
 using Constructs;
-using Effuse.AWS.Infrastructure.Utilities;
+using Effuse.Core.AWS.Infrastructure.Utilities;
 
 namespace Effuse.AWS.Infrastructure.Stacks;
 
@@ -9,6 +9,12 @@ public class EffuseCore : Stack
 {
   internal EffuseCore(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
   {
+    new Lambda(this, "inviter", new LambdaProps
+    {
+      Handler = "Invite",
+      Area = "SSO"
+    });
+
     new WebApi(this, "core-services", new WebApiProps
     {
       Description = "The core services API",
@@ -16,7 +22,8 @@ public class EffuseCore : Stack
         new Route() {
           Method = HttpMethod.GET,
           Path = "/api/v1/heartbeat",
-          Handler = "HeartBeat"
+          Handler = "HeartBeat",
+          Area = "SSO"
         }
       }
     });

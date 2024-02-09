@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.Integration", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.Handlers", "Effuse.Core.Handlers\Effuse.Core.Handlers.csproj", "{A35061CA-19D7-46A9-BCF7-B13D43918487}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.AWS.Infrastructure", "Effuse.Core.AWS.Infrastructure\Effuse.Core.AWS.Infrastructure.csproj", "{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +141,18 @@ Global
 		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Release|x64.Build.0 = Release|Any CPU
 		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Release|x86.ActiveCfg = Release|Any CPU
 		{A35061CA-19D7-46A9-BCF7-B13D43918487}.Release|x86.Build.0 = Release|Any CPU
+		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Debug|x64.Build.0 = Debug|Any CPU
+		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Debug|x86.Build.0 = Debug|Any CPU
+		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Release|x64.ActiveCfg = Release|Any CPU
+		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Release|x64.Build.0 = Release|Any CPU
+		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

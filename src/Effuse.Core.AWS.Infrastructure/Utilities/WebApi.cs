@@ -1,15 +1,17 @@
-using System.Collections.Generic;
 using Amazon.CDK.AWS.Apigatewayv2;
 using Constructs;
 using Amazon.CDK.AwsApigatewayv2Integrations;
+using HttpMethod = Amazon.CDK.AWS.Apigatewayv2.HttpMethod;
 
-namespace Effuse.AWS.Infrastructure.Utilities;
+namespace Effuse.Core.AWS.Infrastructure.Utilities;
 
 public class Route
 {
   public HttpMethod Method { get; set; }
 
   public string Path { get; set; }
+
+  public string Area { get; set; }
 
   public string Handler { get; set; }
 }
@@ -42,7 +44,8 @@ public class WebApi : HttpApi
           route.Path,
           new Lambda(this, route.Path + "_handler", new LambdaProps
           {
-            Handler = route.Handler
+            Handler = route.Handler,
+            Area = route.Area
           }))
       });
     }

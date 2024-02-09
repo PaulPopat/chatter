@@ -1,11 +1,9 @@
-using System;
 using System.Diagnostics;
-using System.IO;
 using Amazon.CDK;
 using Amazon.CDK.AWS.Lambda;
 using Constructs;
 
-namespace Effuse.AWS.Infrastructure.Utilities;
+namespace Effuse.Core.AWS.Infrastructure.Utilities;
 
 class LocalBuilder : ILocalBundling
 {
@@ -75,12 +73,14 @@ class LambdaBuilderOptions : BundlingOptions
   }
 }
 
-internal class LambdaProps
+public class LambdaProps
 {
+  public string Area { get; set; }
+
   public string Handler { get; set; }
 }
 
-internal class Lambda : Function
+public class Lambda : Function
 {
   public Lambda(Construct scope, string id, LambdaProps props) : base(
     scope,
@@ -89,7 +89,7 @@ internal class Lambda : Function
     {
       Runtime = Runtime.DOTNET_6,
       Code = Code.FromAsset(Path.Combine(Directory.GetCurrentDirectory(), $"src/{Config.HandlersProject}/bin/Release/net6.0/{Config.HandlersProject}.zip")),
-      Handler = $"{Config.HandlersProject}::Effuse.AWS.Handlers.Controllers.{props.Handler}::Handler"
+      Handler = $"{Config.HandlersProject}::Effuse{props.Area}.AWS.Handlers.Controllers.{props.Handler}::Handler"
     })
   {
   }
