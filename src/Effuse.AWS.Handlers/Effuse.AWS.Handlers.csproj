@@ -22,5 +22,6 @@
     <ProjectReference Include="../Effuse.Handlers/Effuse.Handlers.csproj" />
     <ProjectReference Include="../Effuse.AWS.Integration/Effuse.AWS.Integration.csproj" />
     <ProjectReference Include="../Effuse.Integration/Effuse.Integration.csproj" />
+    <ProjectReference Include="../Effuse.Services/Effuse.Services.csproj" />
   </ItemGroup>
 </Project>

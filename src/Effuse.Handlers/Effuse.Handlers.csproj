@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../Effuse.Domain/Effuse.Domain.csproj" />
+    <ProjectReference Include="../Effuse.Services/Effuse.Services.csproj" />
+  </ItemGroup>
 </Project>
