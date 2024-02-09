@@ -7,7 +7,7 @@ namespace Effuse.Core.AWS.Infrastructure.Utilities;
 
 class LocalBuilder : ILocalBundling
 {
-  private bool run_command(string command, string working_directory)
+  private bool RunCommand(string command, string working_directory)
   {
 
     var start_info = new ProcessStartInfo()
@@ -23,6 +23,7 @@ class LocalBuilder : ILocalBundling
 
     using (var proc = Process.Start(start_info))
     {
+      if (proc == null) throw new Exception("Failed to start process");
       Console.WriteLine("Attempting to run " + command);
       Console.WriteLine(proc.StandardOutput.ReadToEnd());
       Console.WriteLine(proc.StandardError.ReadToEnd());
@@ -39,11 +40,11 @@ class LocalBuilder : ILocalBundling
     try
     {
       return
-        this.run_command(
+        this.RunCommand(
           "dotnet build",
           Path.Combine(Directory.GetCurrentDirectory(), "src")
         ) &&
-        this.run_command(
+        this.RunCommand(
           $"dotnet lambda package --output-package {outputDir}/function.zip",
           Path.Combine(Directory.GetCurrentDirectory(), $"src/{Config.HandlersProject}")
         );
@@ -75,9 +76,9 @@ class LambdaBuilderOptions : BundlingOptions
 
 public class LambdaProps
 {
-  public string Area { get; set; }
+  public string Area { get; set; } = "";
 
-  public string Handler { get; set; }
+  public string Handler { get; set; } = "";
 }
 
 public class Lambda : Function
