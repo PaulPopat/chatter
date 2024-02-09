@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.301.8" />
     <PackageReference Include="AWSSDK.Lambda" Version="3.7.303.42" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.305.22" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../Effuse.Integration/Effuse.Integration.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,5 +1,4 @@
 using System;
-using Effuse.Handlers.Controllers;
 using Unity;
 
 namespace Effuse.AWS.Handlers.Utilities;
@@ -12,7 +11,10 @@ public static class Bootstrap
     {
       var container = new UnityContainer();
 
-      container.RegisterType<HeartBeat>();
+      container.RegisterFactory<Amazon.DynamoDBv2.IAmazonDynamoDB>((con) => new Amazon.DynamoDBv2.AmazonDynamoDBClient());
+
+      container.RegisterType<Effuse.Handlers.Controllers.HeartBeat>();
+      container.RegisterType<Effuse.Integration.Contracts.IDatabase, Integration.DynamoDBDatabase>();
       return container;
     }
   }

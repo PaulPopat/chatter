@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.301.8" />
+    <PackageReference Include="AWSSDK.Lambda" Version="3.7.303.42" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.305.22" />
+
     <PackageReference Include="Amazon.Lambda" Version="0.12.0" />
     <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.7.0" />
     <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
@@ -16,5 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Effuse.Handlers/Effuse.Handlers.csproj" />
+    <ProjectReference Include="../Effuse.AWS.Integration/Effuse.AWS.Integration.csproj" />
+    <ProjectReference Include="../Effuse.Integration/Effuse.Integration.csproj" />
   </ItemGroup>
 </Project>
