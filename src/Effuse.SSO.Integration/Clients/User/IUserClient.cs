@@ -13,4 +13,8 @@ public interface IUserClient
   Task UpdateUser(AppDomain.User user);
 
   Task DeleteUser(AppDomain.User user);
+
+  Task<MemoryStream> GetProfilePicture(AppDomain.User user);
+
+  Task UploadProfilePicture(AppDomain.User user, MemoryStream imageData, string mime);
 }

@@ -21,10 +21,11 @@ public class Login : IHandler<object, LoginResponse>
 
     var response = await this.authService.Login(email, password);
 
-    return new(201, new LoginResponse()
+    return new(200, new LoginResponse()
     {
       AdminToken = response.UserToken,
-      ServerToken = response.ServerToken
+      ServerToken = response.ServerToken,
+      UserId = response.UserId.ToString()
     });
   }
 }

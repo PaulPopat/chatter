@@ -1,6 +1,6 @@
 using Effuse.SSO.Domain;
 using Effuse.Core.Integration.Contracts;
-using Effuse.SSO.Integration.Utilities;
+using Effuse.Core.Utilities;
 using AppDomain = Effuse.SSO.Domain;
 
 namespace Effuse.SSO.Integration.Clients.User;
@@ -14,38 +14,59 @@ public class DbUserClient : IUserClient
     public string JoinedAt { get; set; } = "";
   }
 
-  private class UserDto
+  private struct UserDto
   {
-    public string UserId { get; set; } = "";
+    public string UserId { get; set; }
 
-    public string Email { get; set; } = "";
+    public string UserName { get; set; }
 
-    public string EncryptedPassword { get; set; } = "";
+    public string Email { get; set; }
 
-    public string RegisteredAt { get; set; } = "";
+    public string EncryptedPassword { get; set; }
 
-    public string LastSignIn { get; set; } = "";
+    public string RegisteredAt { get; set; }
 
-    public List<UserServerDto>? Servers { get; set; }
+    public string LastSignIn { get; set; }
+
+    public List<UserServerDto> Servers { get; set; }
+
+    public string Biography { get; set; }
   }
 
   private readonly IDatabase database;
+  private readonly IStatic statics;
 
   private static string TableName => Environment.GetEnvironmentVariable("USER_TABLE_NAME") ?? throw new Exception("Could not find user table name");
 
   private static string EmailIndexName => Environment.GetEnvironmentVariable("USER_TABLE_EMAIL_INDEX") ?? throw new Exception("Could not find user table name");
 
-
-  public DbUserClient(IDatabase database)
+  public DbUserClient(IDatabase database, IStatic statics)
   {
     this.database = database;
+    this.statics = statics;
   }
 
-  public Task CreateUser(AppDomain.User user)
+  private AppDomain.User FromDto(UserDto result)
   {
-    return this.database.AddItem(TableName, new UserDto
+    return new AppDomain.User(
+      userId: Guid.Parse(result.UserId),
+      email: result.Email,
+      userName: result.UserName,
+      encryptedPassword: result.EncryptedPassword,
+      registeredAt: DateTime.Parse(result.RegisteredAt),
+      lastSignIn: DateTime.Parse(result.LastSignIn),
+      servers: result.Servers?.Select(s => new UserServer(s.Url, DateTime.Parse(s.JoinedAt))) ?? Array.Empty<UserServer>(),
+      biography: result.Biography
+    );
+  }
+
+  private UserDto ToDto(AppDomain.User user)
+  {
+    return new UserDto
     {
       UserId = user.UserId.ToString(),
+      UserName = user.UserName,
+      Biography = user.Biography,
       Email = user.Email,
       EncryptedPassword = user.EncryptedPassword,
       RegisteredAt = user.RegisteredAt.ToISOString(),
@@ -55,7 +76,17 @@ public class DbUserClient : IUserClient
         Url = s.Url,
         JoinedAt = s.JoinedAt.ToISOString()
       }).ToList()
-    });
+    };
+  }
+
+  private string PictureName(AppDomain.User user)
+  {
+    return $"profile-pictures/{user.UserId.ToString()}";
+  }
+
+  public Task CreateUser(AppDomain.User user)
+  {
+    return this.database.AddItem(TableName, this.ToDto(user));
   }
 
   public Task DeleteUser(AppDomain.User user)
@@ -77,14 +108,7 @@ public class DbUserClient : IUserClient
       KeyValue = userId.ToString()
     });
 
-    return new AppDomain.User(
-      Guid.Parse(result.UserId),
-      result.Email,
-      result.EncryptedPassword,
-      DateTime.Parse(result.RegisteredAt),
-      DateTime.Parse(result.LastSignIn),
-      result.Servers?.Select(s => new AppDomain.UserServer(s.Url, DateTime.Parse(s.JoinedAt))) ?? Array.Empty<UserServer>()
-    );
+    return this.FromDto(result);
   }
 
   public async Task<AppDomain.User> GetUserByEmail(string email)
@@ -101,31 +125,28 @@ public class DbUserClient : IUserClient
     if (resultList.Count != 1) throw new Exception("Could not find user via email");
 
     var result = resultList[0];
-
-    return new AppDomain.User(
-      Guid.Parse(result.UserId),
-      result.Email,
-      result.EncryptedPassword,
-      DateTime.Parse(result.RegisteredAt),
-      DateTime.Parse(result.LastSignIn),
-      result.Servers?.Select(s => new AppDomain.UserServer(s.Url, DateTime.Parse(s.JoinedAt))) ?? Array.Empty<UserServer>()
-    );
+    return this.FromDto(result);
   }
 
   public Task UpdateUser(AppDomain.User user)
   {
-    return this.database.UpdateItem(TableName, new UserDto
+    return this.database.UpdateItem(TableName, this.ToDto(user));
+  }
+
+  public async Task<MemoryStream> GetProfilePicture(AppDomain.User user)
+  {
+    var file = await this.statics.Download(this.PictureName(user));
+
+    return file.Data;
+  }
+
+  public Task UploadProfilePicture(AppDomain.User user, MemoryStream imageData, string mime)
+  {
+    return this.statics.Upload(new StaticFile
     {
-      UserId = user.UserId.ToString(),
-      Email = user.Email,
-      EncryptedPassword = user.EncryptedPassword,
-      RegisteredAt = user.RegisteredAt.ToISOString(),
-      LastSignIn = user.LastSignIn.ToISOString(),
-      Servers = user.Servers.Select(s => new UserServerDto
-      {
-        Url = s.Url,
-        JoinedAt = s.JoinedAt.ToISOString()
-      }).ToList()
+      Name = this.PictureName(user),
+      Data = imageData,
+      Mime = mime
     });
   }
 }

@@ -7,7 +7,7 @@ public class HandlerResponse<TBody>
   public HandlerResponse
     (
       int statusCode,
-      TBody? body,
+      [Optional] TBody? body,
       [Optional] IDictionary<string, string>? headers 
     )
   {

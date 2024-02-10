@@ -3,7 +3,7 @@
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Effuse.Core.Integration.Contracts;
-using Effuse.SSO.Integration.Utilities;
+using Effuse.Core.Utilities;
 using JWT.Algorithms;
 using JWT.Builder;
 

@@ -8,18 +8,26 @@ tasks:
       - dotnet build
     dir: "{{.TASKFILE_DIR}}/src"
 
+  core:aws:dependencies:
+    cmds:
+      - dotnet tool install -g Amazon.Lambda.Tools
+
+  sso:generate-key:
+    cmds:
+      - openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:4096
+    dir: "{{.TASKFILE_DIR}}/resources"
+
   sso:aws:package:
+    dotenv: ['.sso.env']
     cmds:
       - dotnet lambda package
     dir: "{{.TASKFILE_DIR}}/src/Effuse.SSO.AWS.Handlers"
 
-  aws:dependencies:
-    cmds:
-      - dotnet tool install -g Amazon.Lambda.Tools
-
   sso:aws:deploy:
+    dotenv: ['.sso.env']
     cmds:
       - task: project:build
+      - task: sso:generate-key
       - task: sso:aws:package
       - cdk --app "{{.CDK_APP}}" bootstrap
       - cdk --app "{{.CDK_APP}}" deploy --require-approval never

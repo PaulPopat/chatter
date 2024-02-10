@@ -42,11 +42,11 @@ class LocalBuilder : ILocalBundling
       return
         this.RunCommand(
           "dotnet build",
-          Path.Combine(Directory.GetCurrentDirectory(), "src")
+          Config.ProjectPath("src")
         ) &&
         this.RunCommand(
           $"dotnet lambda package --output-package {outputDir}/function.zip",
-          Path.Combine(Directory.GetCurrentDirectory(), $"src/{Config.HandlersProject}")
+          Config.ProjectPath($"src/{Config.HandlersProject}")
         );
     }
     catch
@@ -68,17 +68,19 @@ class LambdaBuilderOptions : BundlingOptions
         "-c",
         " dotnet tool install -g Amazon.Lambda.Tools && dotnet build && dotnet lambda package --output-package /asset-output/function.zip"
       };
-    this.WorkingDirectory = Path.Combine(Directory.GetCurrentDirectory(), $"src/{Config.HandlersProject}");
+    this.WorkingDirectory = Config.ProjectPath($"src/{Config.HandlersProject}");
 
     this.Local = new LocalBuilder();
   }
 }
 
-public class LambdaProps
+public struct LambdaProps
 {
-  public string Area { get; set; } = "";
+  public string Area { get; set; }
 
-  public string Handler { get; set; } = "";
+  public string Handler { get; set; }
+
+  public IDictionary<string, string> Environment { get; set; }
 }
 
 public class Lambda : Function
@@ -89,8 +91,9 @@ public class Lambda : Function
     new FunctionProps
     {
       Runtime = Runtime.DOTNET_6,
-      Code = Code.FromAsset(Path.Combine(Directory.GetCurrentDirectory(), $"src/{Config.HandlersProject}/bin/Release/net6.0/{Config.HandlersProject}.zip")),
-      Handler = $"{Config.HandlersProject}::Effuse{props.Area}.AWS.Handlers.Controllers.{props.Handler}::Handler"
+      Code = Code.FromAsset(Config.ProjectPath($"src/{Config.HandlersProject}/bin/Release/net6.0/{Config.HandlersProject}.zip")),
+      Handler = $"{Config.HandlersProject}::Effuse{props.Area}.AWS.Handlers.Controllers.{props.Handler}::Handler",
+      Environment = props.Environment
     })
   {
   }

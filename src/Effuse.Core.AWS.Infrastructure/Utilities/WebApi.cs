@@ -5,7 +5,7 @@ using HttpMethod = Amazon.CDK.AWS.Apigatewayv2.HttpMethod;
 
 namespace Effuse.Core.AWS.Infrastructure.Utilities;
 
-public class Route
+public struct Route
 {
   public HttpMethod Method { get; set; }
 
@@ -16,11 +16,13 @@ public class Route
   public string Handler { get; set; }
 }
 
-public class WebApiProps
+public struct WebApiProps
 {
   public string Description { get; set; }
 
   public IEnumerable<Route> Routes { get; set; }
+
+  public IDictionary<string, string> Environment { get; set; }
 }
 
 public class WebApi : HttpApi
@@ -45,7 +47,8 @@ public class WebApi : HttpApi
           new Lambda(this, route.Path + "_handler", new LambdaProps
           {
             Handler = route.Handler,
-            Area = route.Area
+            Area = route.Area,
+            Environment = props.Environment
           }))
       });
     }

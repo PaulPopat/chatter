@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="../Effuse.SSO.Domain/Effuse.SSO.Domain.csproj" />
     <ProjectReference Include="../Effuse.Core.Integration/Effuse.Core.Integration.csproj" />
+    <ProjectReference Include="../Effuse.Core.Utilities/Effuse.Core.Utilities.csproj" />
   </ItemGroup>
 
 

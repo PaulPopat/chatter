@@ -39,7 +39,7 @@ public static class AWSHandlerMapper
       return new APIGatewayProxyResponse
       {
         StatusCode = response.StatusCode,
-        Body = JsonSerializer.Serialize(response.Body),
+        Body = response.Body != null ? JsonSerializer.Serialize(response.Body) : string.Empty,
         Headers = response.Headers
       };
     }

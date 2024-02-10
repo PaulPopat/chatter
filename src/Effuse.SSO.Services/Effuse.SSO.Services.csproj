@@ -10,4 +10,8 @@
     <ProjectReference Include="../Effuse.SSO.Domain/Effuse.SSO.Domain.csproj" />
     <ProjectReference Include="../Effuse.SSO.Integration/Effuse.SSO.Integration.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
+  </ItemGroup>
 </Project>

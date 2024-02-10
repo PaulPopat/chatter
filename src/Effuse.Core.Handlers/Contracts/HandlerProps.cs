@@ -1,6 +1,6 @@
 namespace Effuse.Core.Handlers.Contracts;
 
-public class HandlerProps<TBody> where TBody : class
+public class HandlerProps<TBody>
 {
   public HandlerProps
     (
@@ -10,7 +10,7 @@ public class HandlerProps<TBody> where TBody : class
       IDictionary<string, string> pathParameters,
       IDictionary<string, string> queryParameter,
       IDictionary<string, string> headers,
-      TBody? body = null
+      TBody? body = default
     )
   {
     this.Path = path;
@@ -35,4 +35,16 @@ public class HandlerProps<TBody> where TBody : class
   public string ConnectionId { get; }
 
   public TBody? Body { get; }
+
+  public string? AuthToken
+  {
+    get {
+      if (!this.Headers.ContainsKey("Authorization")) return null;
+      var authHeader = this.Headers["Authorization"];
+      if (!authHeader.StartsWith("Bearer ")) return null;
+      var token = authHeader.Replace("Bearer ", string.Empty);
+      if (token == string.Empty) return null;
+      return token;
+    }
+  }
 }

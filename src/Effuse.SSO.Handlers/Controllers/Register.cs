@@ -18,9 +18,10 @@ public class Register : IHandler<RegisterForm, RegisterResponse>
   public async Task<HandlerResponse<RegisterResponse>> Handle(HandlerProps<RegisterForm> props)
   {
     if (props.Body == null)
-      return new(400, null);
+      return new(400);
 
     var response = await this.authService.Register(
+      props.Body.UserName,
       props.Body.Email,
       props.Body.Password,
       props.Body.InviteToken);
@@ -28,7 +29,8 @@ public class Register : IHandler<RegisterForm, RegisterResponse>
     return new(201, new RegisterResponse()
     {
       AdminToken = response.UserToken,
-      ServerToken = response.ServerToken
+      ServerToken = response.ServerToken,
+      UserId = response.UserId.ToString()
     });
   }
 }

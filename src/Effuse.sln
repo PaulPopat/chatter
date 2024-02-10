@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.Handlers", "Eff
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.AWS.Infrastructure", "Effuse.Core.AWS.Infrastructure\Effuse.Core.AWS.Infrastructure.csproj", "{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.Utilities", "Effuse.Core.Utilities\Effuse.Core.Utilities.csproj", "{0203CE64-C026-4554-AFEC-8BB5B18DD95D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,18 @@ Global
 		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Release|x64.Build.0 = Release|Any CPU
 		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Release|x86.ActiveCfg = Release|Any CPU
 		{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}.Release|x86.Build.0 = Release|Any CPU
+		{0203CE64-C026-4554-AFEC-8BB5B18DD95D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0203CE64-C026-4554-AFEC-8BB5B18DD95D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0203CE64-C026-4554-AFEC-8BB5B18DD95D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0203CE64-C026-4554-AFEC-8BB5B18DD95D}.Debug|x64.Build.0 = Debug|Any CPU
+		{0203CE64-C026-4554-AFEC-8BB5B18DD95D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0203CE64-C026-4554-AFEC-8BB5B18DD95D}.Debug|x86.Build.0 = Debug|Any CPU
+		{0203CE64-C026-4554-AFEC-8BB5B18DD95D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0203CE64-C026-4554-AFEC-8BB5B18DD95D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0203CE64-C026-4554-AFEC-8BB5B18DD95D}.Release|x64.ActiveCfg = Release|Any CPU
+		{0203CE64-C026-4554-AFEC-8BB5B18DD95D}.Release|x64.Build.0 = Release|Any CPU
+		{0203CE64-C026-4554-AFEC-8BB5B18DD95D}.Release|x86.ActiveCfg = Release|Any CPU
+		{0203CE64-C026-4554-AFEC-8BB5B18DD95D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

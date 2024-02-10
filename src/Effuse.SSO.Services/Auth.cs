@@ -8,15 +8,18 @@ namespace Effuse.SSO.Services;
 
 public class UserGrant
 {
-  public UserGrant(string userToken, string serverToken)
+  public UserGrant(string userToken, string serverToken, Guid userId)
   {
-    UserToken = userToken;
-    ServerToken = serverToken;
+    this.UserToken = userToken;
+    this.ServerToken = serverToken;
+    this.UserId = userId;
   }
 
   public string UserToken { get; }
 
   public string ServerToken { get; }
+
+  public Guid UserId { get; }
 }
 
 public enum UserAccess
@@ -98,10 +101,11 @@ public class AuthService
           UserId = user.UserId.ToString(),
           Access = UserAccess.Identify
         }),
-        DateTime.Now.AddHours(1)));
+        DateTime.Now.AddHours(1)),
+        user.UserId);
   }
 
-  public async Task<UserGrant> Register(string email, string password, string invite)
+  public async Task<UserGrant> Register(string username, string email, string password, string invite)
   {
     var invitedEmail = await this.jwtClient.DecodeJwt(invite);
 
@@ -110,11 +114,13 @@ public class AuthService
 
     var user = new User(
       new Guid(),
+      username,
       email,
       this.EncryptPassowrd(password),
       DateTime.Now,
       DateTime.Now,
-      new List<UserServer>());
+      new List<UserServer>(),
+      string.Empty);
 
     await this.userClient.CreateUser(user);
 
@@ -128,17 +134,19 @@ public class AuthService
     if (!this.VerifyPassword(password, user.EncryptedPassword))
       throw new Exception("Access denied");
 
+    await this.userClient.UpdateUser(user.LoggedIn());
+
     return await this.CreateGrant(user);
   }
 
-  public async Task<string> Verify(string token, UserAccess access)
+  public async Task<Guid> Verify(string token, UserAccess access)
   {
     var json = await this.jwtClient.DecodeJwt(token);
     var grant = JsonSerializer.Deserialize<UserToken>(json);
 
     if (grant?.Access != access) throw new Exception("Invalid token");
 
-    return grant.UserId;
+    return Guid.Parse(grant.UserId);
   }
 
   public async Task<string> CreateInvite(string email)

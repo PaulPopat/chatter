@@ -1,8 +1,8 @@
 using System.Globalization;
 
-namespace Effuse.SSO.Integration.Utilities;
+namespace Effuse.Core.Utilities;
 
-internal static class DateTimeUtilities
+public static class DateTimeUtilities
 {
   public static string ToISOString(this DateTime date)
   {
