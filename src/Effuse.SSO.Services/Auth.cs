@@ -25,16 +25,19 @@ public class UserGrant
 public enum UserAccess
 {
   Admin = 0,
-  Readonly = 1,
-  Identify = 2,
+  Identify = 1,
 }
 
 public class AuthService
 {
-
-  private class UserToken
+  private struct InvitePayload
   {
-    public string UserId { get; set; } = "";
+    public string Email { get; set; }
+  }
+
+  private struct UserTokenPayload
+  {
+    public string UserId { get; set; }
 
     public UserAccess Access { get; set; }
   }
@@ -89,27 +92,27 @@ public class AuthService
   {
     return new UserGrant(
       await this.jwtClient.CreateJwt(
-        JsonSerializer.Serialize(new UserToken
+        new UserTokenPayload
         {
           UserId = user.UserId.ToString(),
           Access = UserAccess.Admin
-        }),
-        DateTime.Now.AddHours(12)),
+        },
+        TimeSpan.FromHours(12)),
       await this.jwtClient.CreateJwt(
-        JsonSerializer.Serialize(new UserToken
+        new UserTokenPayload
         {
           UserId = user.UserId.ToString(),
           Access = UserAccess.Identify
-        }),
-        DateTime.Now.AddHours(1)),
+        },
+        TimeSpan.FromHours(1)),
         user.UserId);
   }
 
   public async Task<UserGrant> Register(string username, string email, string password, string invite)
   {
-    var invitedEmail = await this.jwtClient.DecodeJwt(invite);
+    var invitation = await this.jwtClient.DecodeJwt<InvitePayload>(invite);
 
-    if (invitedEmail != email)
+    if (invitation.Email != email)
       throw new Exception("User not invited");
 
     var user = new User(
@@ -141,16 +144,15 @@ public class AuthService
 
   public async Task<Guid> Verify(string token, UserAccess access)
   {
-    var json = await this.jwtClient.DecodeJwt(token);
-    var grant = JsonSerializer.Deserialize<UserToken>(json);
+    var grant = await this.jwtClient.DecodeJwt<UserTokenPayload>(token);
 
-    if (grant?.Access != access) throw new Exception("Invalid token");
+    if (grant.Access != access) throw new Exception("Invalid token");
 
     return Guid.Parse(grant.UserId);
   }
 
   public async Task<string> CreateInvite(string email)
   {
-    return await this.jwtClient.CreateJwt(email, DateTime.Now.AddDays(7));
+    return await this.jwtClient.CreateJwt(new InvitePayload { Email = email }, TimeSpan.FromDays(7));
   }
 }

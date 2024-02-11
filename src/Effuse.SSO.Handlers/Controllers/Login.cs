@@ -5,7 +5,7 @@ using Effuse.SSO.Services;
 namespace Effuse.SSO.Handlers.Controllers;
 
 
-public class Login : IHandler<object, LoginResponse>
+public class Login : IHandler
 {
   private readonly AuthService authService;
 
@@ -14,7 +14,7 @@ public class Login : IHandler<object, LoginResponse>
     this.authService = authService;
   }
 
-  public async Task<HandlerResponse<LoginResponse>> Handle(HandlerProps<object> props)
+  public async Task<HandlerResponse> Handle(HandlerProps props)
   {
     var email = props.QueryParameters["email"];
     var password = props.QueryParameters["password"];

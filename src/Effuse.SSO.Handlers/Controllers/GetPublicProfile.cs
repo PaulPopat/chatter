@@ -5,7 +5,7 @@ using Effuse.SSO.Services;
 namespace Effuse.SSO.Handlers.Controllers;
 
 
-public class GetPublicProfile : IHandler<object, PublicProfileResponse>
+public class GetPublicProfile : IHandler
 {
   private readonly ProfileService profileService;
 
@@ -14,7 +14,7 @@ public class GetPublicProfile : IHandler<object, PublicProfileResponse>
     this.profileService = profileService;
   }
 
-  public async Task<HandlerResponse<PublicProfileResponse>> Handle(HandlerProps<object> props)
+  public async Task<HandlerResponse> Handle(HandlerProps props)
   {
     var userId = Guid.Parse(props.PathParameters["userId"]);
     var user = await this.profileService.GetUser(userId);

@@ -4,11 +4,11 @@ using Effuse.SSO.Handlers.Models;
 namespace Effuse.SSO.Handlers.Controllers;
 
 
-public class HeartBeat : IHandler<object, TestHandlerResponse>
+public class HeartBeat : IHandler
 {
-  public Task<HandlerResponse<TestHandlerResponse>> Handle(HandlerProps<object> props)
+  public Task<HandlerResponse> Handle(HandlerProps props)
   {
-    return Task.Run(() => new HandlerResponse<TestHandlerResponse>(200, new TestHandlerResponse
+    return Task.Run(() => new HandlerResponse(200, new TestHandlerResponse
     {
       Text = "Hello world"
     }));

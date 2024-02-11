@@ -1,9 +1,5 @@
-
-
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using Effuse.Core.Integration.Contracts;
-using Effuse.Core.Utilities;
 using JWT.Algorithms;
 using JWT.Builder;
 
@@ -20,29 +16,44 @@ public class ParameterJwtClient : IJwtClient
     this.parameters = parameters;
 
     this.certificate = new(async () =>
-      new X509Certificate2(Encoding.ASCII.GetBytes(await this.parameters.GetParameter("JWT_SECRET"))));
+    {
+      var cert = await this.parameters.GetParameter("JWT_CERTIFICATE");
+      var key = await this.parameters.GetParameter("JWT_SECRET");
+      return X509Certificate2.CreateFromPem(cert, key);
+    });
   }
 
-  public async Task<string> CreateJwt(string value, DateTime expires)
+  private struct Payload<TData>
+  {
+    public long exp { get; set; }
+
+    public TData data { get; set; }
+  }
+
+  private static long SecondsSinceEpoch(TimeSpan duration)
+  {
+    var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    return Convert.ToInt64((DateTime.Now.ToUniversalTime() - epoch).TotalSeconds) + (long)duration.TotalSeconds;
+  }
+
+  public async Task<string> CreateJwt<TData>(TData payload, TimeSpan expires)
   {
     return JwtBuilder.Create()
       .WithAlgorithm(new RS4096Algorithm(await this.certificate.Value))
-      .AddClaim("exp", expires.ToISOString())
-      .AddClaim("data", value)
-      .Encode();
+      .Encode(new Payload<TData>
+      {
+        exp = SecondsSinceEpoch(expires),
+        data = payload
+      });
   }
 
-  public async Task<string> DecodeJwt(string jwt)
+  public async Task<TData> DecodeJwt<TData>(string jwt)
   {
-    var json = JwtBuilder.Create()
+    var result = JwtBuilder.Create()
       .WithAlgorithm(new RS4096Algorithm(await this.certificate.Value))
       .MustVerifySignature()
-      .Decode<IDictionary<string, object>>(jwt);
+      .Decode<Payload<TData>>(jwt);
 
-    var data = json["data"];
-    if (data is not string stringData || stringData == string.Empty)
-      throw new Exception("Could not find JWT data");
-
-    return stringData;
+    return result.data;
   }
 }

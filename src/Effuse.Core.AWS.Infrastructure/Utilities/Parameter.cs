@@ -17,7 +17,7 @@ public class Parameter : StringParameter
     id,
     new StringParameterProps
     {
-      ParameterName = $"{Config.AppPrefix}/{props.Name}",
+      ParameterName = $"/{Config.AppPrefix}/{props.Name}",
       StringValue = props.Value
     }
   )

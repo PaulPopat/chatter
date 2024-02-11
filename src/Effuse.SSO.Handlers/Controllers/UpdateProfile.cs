@@ -6,7 +6,7 @@ using Effuse.SSO.Services;
 namespace Effuse.SSO.Handlers.Controllers;
 
 
-public class UpdateProfile : IHandler<ProfileForm, ProfileResponse>
+public class UpdateProfile : IHandler
 {
   private readonly ProfileService profileService;
   private readonly AuthService authService;
@@ -17,19 +17,20 @@ public class UpdateProfile : IHandler<ProfileForm, ProfileResponse>
     this.authService = authService;
   }
 
-  public async Task<HandlerResponse<ProfileResponse>> Handle(HandlerProps<ProfileForm> props)
+  public async Task<HandlerResponse> Handle(HandlerProps props)
   {
     var token = props.AuthToken;
     if (token == null) return new(403);
     var userId = await this.authService.Verify(token, UserAccess.Admin);
-    var imageData = new MemoryStream(Convert.FromBase64String(props.Body.Picture.Base64Data));
+    var body = props.Body<ProfileForm>();
+    var imageData = new MemoryStream(Convert.FromBase64String(body.Picture.Base64Data));
 
     var user = await this.profileService.UpdateProfile(
       userId,
-      props.Body.UserName,
-      props.Body.Biography,
+      body.UserName,
+      body.Biography,
       imageData,
-      props.Body.Picture.MimeType);
+      body.Picture.MimeType);
 
     return new(200, new ProfileResponse()
     {

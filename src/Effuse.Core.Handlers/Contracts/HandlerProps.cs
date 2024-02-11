@@ -1,7 +1,11 @@
+using System.Text.Json;
+
 namespace Effuse.Core.Handlers.Contracts;
 
-public class HandlerProps<TBody>
+public class HandlerProps
 {
+  private readonly string body;
+
   public HandlerProps
     (
       string path,
@@ -10,7 +14,7 @@ public class HandlerProps<TBody>
       IDictionary<string, string> pathParameters,
       IDictionary<string, string> queryParameter,
       IDictionary<string, string> headers,
-      TBody? body = default
+      string body = ""
     )
   {
     this.Path = path;
@@ -19,7 +23,7 @@ public class HandlerProps<TBody>
     this.PathParameters = pathParameters;
     this.QueryParameters = queryParameter;
     this.Headers = headers;
-    this.Body = body;
+    this.body = body;
   }
 
   public string Path { get; }
@@ -34,7 +38,11 @@ public class HandlerProps<TBody>
 
   public string ConnectionId { get; }
 
-  public TBody? Body { get; }
+  public TBody? Body<TBody>() {
+    if (this.body == string.Empty) return default;
+
+    return JsonSerializer.Deserialize<TBody>(this.body);
+  }
 
   public string? AuthToken
   {

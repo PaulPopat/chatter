@@ -10,7 +10,7 @@ sealed class Program
   {
     Console.WriteLine("Starting app in " + Directory.GetCurrentDirectory());
     var app = new App();
-    new Stacks.EffuseCore(app, "core-stack", new StackProps
+    _ = new Stacks.EffuseSSO(app, "core-stack", new StackProps
     {
     });
     app.Synth();

@@ -5,7 +5,7 @@ using Effuse.SSO.Services;
 namespace Effuse.SSO.Handlers.Controllers;
 
 
-public class JoinServer : IHandler<JoinServerForm, JoinServerResponse>
+public class JoinServer : IHandler
 {
   private readonly ServersService serversService;
   private readonly AuthService authService;
@@ -16,13 +16,13 @@ public class JoinServer : IHandler<JoinServerForm, JoinServerResponse>
     this.authService = authService;
   }
 
-  public async Task<HandlerResponse<JoinServerResponse>> Handle(HandlerProps<JoinServerForm> props)
+  public async Task<HandlerResponse> Handle(HandlerProps props)
   {
     var token = props.AuthToken;
     if (token == null) return new(403);
     var userId = await this.authService.Verify(token, UserAccess.Admin);
 
-    await this.serversService.JoinServer(userId, props.Body.ServerUrl);
+    await this.serversService.JoinServer(userId, props.Body<JoinServerForm>().ServerUrl);
 
     return new(200, new JoinServerResponse()
     {

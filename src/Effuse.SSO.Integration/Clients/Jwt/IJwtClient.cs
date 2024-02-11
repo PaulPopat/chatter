@@ -2,7 +2,7 @@ namespace Effuse.SSO.Integration.Clients.Jwt;
 
 public interface IJwtClient
 {
-  Task<string> CreateJwt(string value, DateTime expires);
+  Task<string> CreateJwt<TData>(TData payload, TimeSpan expires);
 
-  Task<string> DecodeJwt(string jwt);
+  Task<TData> DecodeJwt<TData>(string jwt);
 }

@@ -1,12 +1,18 @@
+using Effuse.Core.Utilities;
+
 namespace Effuse.Core.AWS.Infrastructure.Utilities;
 
 public static class Config
 {
-  public static string HandlersProject => "Effuse.AWS.Handlers";
+  public static string HandlersProject(string area) {
+    return $"Effuse.{area}.AWS.Handlers";
+  }
 
-  public static string AWSRegion => "eu-west-2";
+  public static string AWSRegion => Env.GetEnv("AWS_REGION");
 
-  public static string AppPrefix => Environment.GetEnvironmentVariable("APP_PREFIX") ?? throw new Exception("App prefix is not defined");
+  public static string AWSAccount => Env.GetEnv("AWS_ACCOUNT");
+
+  public static string AppPrefix => Env.GetEnv("APP_PREFIX");
 
   public static string ProjectPath(string path)
   {

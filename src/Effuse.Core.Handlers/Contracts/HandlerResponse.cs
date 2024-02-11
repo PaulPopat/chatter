@@ -2,12 +2,12 @@ using System.Runtime.InteropServices;
 
 namespace Effuse.Core.Handlers.Contracts;
 
-public class HandlerResponse<TBody>
+public class HandlerResponse
 {
   public HandlerResponse
     (
       int statusCode,
-      [Optional] TBody? body,
+      [Optional] object? body,
       [Optional] IDictionary<string, string>? headers 
     )
   {
@@ -20,5 +20,5 @@ public class HandlerResponse<TBody>
 
   public IDictionary<string, string> Headers { get; }
 
-  public TBody? Body { get; }
+  public object? Body { get; }
 }

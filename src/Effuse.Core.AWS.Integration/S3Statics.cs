@@ -1,6 +1,7 @@
 using Effuse.Core.Integration.Contracts;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Effuse.Core.Utilities;
 
 namespace Effuse.Core.AWS.Integration;
 
@@ -13,7 +14,7 @@ public class S3Statics : IStatic
     this.s3 = s3;
   }
 
-  private static string BucketName => Environment.GetEnvironmentVariable("BUCKET_NAME") ?? throw new Exception("Bucket name is not specified");
+  private static string BucketName => Env.GetEnv("BUCKET_NAME");
 
   public async Task<StaticFile> Download(string name)
   {

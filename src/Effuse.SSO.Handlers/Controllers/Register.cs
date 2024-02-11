@@ -6,7 +6,7 @@ using Effuse.SSO.Services;
 namespace Effuse.SSO.Handlers.Controllers;
 
 
-public class Register : IHandler<RegisterForm, RegisterResponse>
+public class Register : IHandler
 {
   private readonly AuthService authService;
 
@@ -15,16 +15,17 @@ public class Register : IHandler<RegisterForm, RegisterResponse>
     this.authService = authService;
   }
 
-  public async Task<HandlerResponse<RegisterResponse>> Handle(HandlerProps<RegisterForm> props)
+  public async Task<HandlerResponse> Handle(HandlerProps props)
   {
-    if (props.Body == null)
+    var body = props.Body<RegisterForm>();
+    if (body == null)
       return new(400);
 
     var response = await this.authService.Register(
-      props.Body.UserName,
-      props.Body.Email,
-      props.Body.Password,
-      props.Body.InviteToken);
+      body.UserName,
+      body.Email,
+      body.Password,
+      body.InviteToken);
 
     return new(201, new RegisterResponse()
     {

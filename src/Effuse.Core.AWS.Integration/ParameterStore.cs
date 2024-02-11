@@ -1,6 +1,7 @@
 using Amazon.SimpleSystemsManagement;
 using Effuse.Core.Integration.Contracts;
 using Amazon.SimpleSystemsManagement.Model;
+using Effuse.Core.Utilities;
 
 namespace Effuse.Core.AWS.Integration;
 
@@ -13,13 +14,13 @@ public class ParameterStore : IParameters
     this.ssm = ssm;
   }
 
-  private static string AppPrefix => Environment.GetEnvironmentVariable("APP_PREFIX") ?? throw new Exception("An app prefix is required");
+  private static string AppPrefix => Env.GetEnv("APP_PREFIX");
 
   public async Task<string> GetParameter(string name)
   {
     var response = await this.ssm.GetParameterAsync(new GetParameterRequest
     {
-      Name = $"{AppPrefix}/{name}"
+      Name = $"/{AppPrefix}/{name}"
     });
 
     if (response.Parameter == null || response.Parameter.Value == string.Empty)

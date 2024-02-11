@@ -36,9 +36,9 @@ public class DbUserClient : IUserClient
   private readonly IDatabase database;
   private readonly IStatic statics;
 
-  private static string TableName => Environment.GetEnvironmentVariable("USER_TABLE_NAME") ?? throw new Exception("Could not find user table name");
+  private static string TableName => Env.GetEnv("USER_TABLE_NAME");
 
-  private static string EmailIndexName => Environment.GetEnvironmentVariable("USER_TABLE_EMAIL_INDEX") ?? throw new Exception("Could not find user table name");
+  private static string EmailIndexName => Env.GetEnv("USER_TABLE_EMAIL_INDEX");
 
   public DbUserClient(IDatabase database, IStatic statics)
   {

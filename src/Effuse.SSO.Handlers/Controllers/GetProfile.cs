@@ -6,7 +6,7 @@ using Effuse.SSO.Services;
 namespace Effuse.SSO.Handlers.Controllers;
 
 
-public class GetProfile : IHandler<object, ProfileResponse>
+public class GetProfile : IHandler
 {
   private readonly ProfileService profileService;
   private readonly AuthService authService;
@@ -17,7 +17,7 @@ public class GetProfile : IHandler<object, ProfileResponse>
     this.authService = authService;
   }
 
-  public async Task<HandlerResponse<ProfileResponse>> Handle(HandlerProps<object> props)
+  public async Task<HandlerResponse> Handle(HandlerProps props)
   {
     var token = props.AuthToken;
     if (token == null) return new(403);
