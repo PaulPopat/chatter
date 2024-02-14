@@ -3,8 +3,10 @@ using Constructs;
 using Amazon.CDK.AwsApigatewayv2Integrations;
 using HttpMethod = Amazon.CDK.AWS.Apigatewayv2.HttpMethod;
 using Amazon.CDK.AWS.IAM;
+using Amazon.CDK.AWS.Logs;
+using Effuse.Core.AWS.Infrastructure.Utilities;
 
-namespace Effuse.Core.AWS.Infrastructure.Utilities;
+namespace Effuse.Core.AWS.Infrastructure.Constructs;
 
 public struct Route
 {
@@ -13,6 +15,8 @@ public struct Route
   public string Path { get; set; }
 
   public string Handler { get; set; }
+
+  public IHttpRouteAuthorizer? Authorizer { get; set; }
 }
 
 public struct WebApiProps
@@ -23,7 +27,11 @@ public struct WebApiProps
 
   public IDictionary<string, string> Environment { get; set; }
 
+  public ILogGroup LogGroup { get; set; }
+
   public string Area { get; set; }
+
+  public PolicyStatement[]? Policies { get; set; }
 }
 
 public class WebApi : HttpApi
@@ -45,13 +53,16 @@ public class WebApi : HttpApi
         Handler = route.Handler,
         Area = props.Area,
         Environment = props.Environment,
+        LogGroup = props.LogGroup,
+        Policies = props.Policies
       });
 
       this.AddRoutes(new AddRoutesOptions
       {
         Path = route.Path,
         Methods = new HttpMethod[] { route.Method },
-        Integration = new HttpLambdaIntegration(route.Path, lambda)
+        Integration = new HttpLambdaIntegration(route.Path, lambda),
+        Authorizer = route.Authorizer
       });
 
       this.lambdas.Add(lambda);
@@ -61,10 +72,4 @@ public class WebApi : HttpApi
   public string DomainName => $"{this.ApiId}.execute-api.{Config.AWSRegion}.amazonaws.com";
 
   public override string Url => $"https://{this.DomainName}";
-
-  public void AddToPrincipalPolicy(PolicyStatementProps statement)
-  {
-    foreach (var lambda in this.lambdas)
-      lambda.Role?.AddToPrincipalPolicy(new PolicyStatement(statement));
-  }
 }

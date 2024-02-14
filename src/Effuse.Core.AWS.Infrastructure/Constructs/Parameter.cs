@@ -1,7 +1,8 @@
 using Amazon.CDK.AWS.SSM;
 using Constructs;
+using Effuse.Core.AWS.Infrastructure.Utilities;
 
-namespace Effuse.Core.AWS.Infrastructure.Utilities;
+namespace Effuse.Core.AWS.Infrastructure.Constructs;
 
 public struct ParameterProps
 {

@@ -7,6 +7,8 @@ using Effuse.Core.Handlers.Contracts;
 using System.Text.Json;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Serialization.SystemTextJson;
+using Effuse.Core.Utilities;
+using System.Collections.Generic;
 
 [assembly: LambdaSerializer(typeof(DefaultLambdaJsonSerializer))]
 
@@ -86,7 +88,7 @@ public class Operate
       {
         StatusCode = response.StatusCode,
         Body = response.Body != null ? JsonSerializer.Serialize(response.Body) : string.Empty,
-        Headers = response.Headers
+        Headers = response.Headers.WithKeyValue("Content-Type", "application/json")
       };
     }
     catch (Exception e)
@@ -96,53 +98,22 @@ public class Operate
       {
         StatusCode = 500,
         Body = JsonSerializer.Serialize(new { Message = "Internal Server Error" }),
+        Headers = new Dictionary<string, string>()
+        {
+          ["Content-Type"] = "application/json"
+        }
       };
     }
   }
 
-  public async Task<APIGatewayProxyResponse> GetProfile(APIGatewayProxyRequest request)
+  private static Type GetHandlerType()
   {
-    return await Process(request, typeof(GetProfile));
+    var asm = typeof(GetProfile).Assembly;
+    return asm.GetType($"Effuse.SSO.Handlers.Controllers.{Env.GetEnv("HANDLER_NAME")}") ?? throw new Exception("Could not find handler");
   }
 
-  public async Task<APIGatewayProxyResponse> GetPublicProfile(APIGatewayProxyRequest request)
+  public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request)
   {
-    return await Process(request, typeof(GetPublicProfile));
-  }
-
-  public async Task<APIGatewayProxyResponse> HeartBeat(APIGatewayProxyRequest request)
-  {
-    return await Process(request, typeof(HeartBeat));
-  }
-
-  public async Task<APIGatewayProxyResponse> JoinServer(APIGatewayProxyRequest request)
-  {
-    return await Process(request, typeof(JoinServer));
-  }
-
-  public async Task<APIGatewayProxyResponse> Login(APIGatewayProxyRequest request)
-  {
-    return await Process(request, typeof(Login));
-  }
-
-  public async Task<APIGatewayProxyResponse> Register(APIGatewayProxyRequest request)
-  {
-    return await Process(request, typeof(Register));
-  }
-
-  public async Task<APIGatewayProxyResponse> UpdateProfile(APIGatewayProxyRequest request)
-  {
-    return await Process(request, typeof(UpdateProfile));
-  }
-
-  public async Task<APIGatewayProxyResponse> Invite(InviteProps props)
-  {
-    var service = Container.Value.Resolve<Effuse.SSO.Services.AuthService>();
-
-    return new APIGatewayProxyResponse
-    {
-      StatusCode = 200,
-      Body = await service.CreateInvite(props.Email)
-    };
+    return await Process(request, GetHandlerType());
   }
 }

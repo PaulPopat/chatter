@@ -41,7 +41,7 @@ public class DynamoDBDatabase : IDatabase
     {
       TableName = command.TableName,
       IndexName = command.IndexName,
-      KeyConditionExpression = $"{command.KeyName} = :{command.KeyValue}",
+      KeyConditionExpression = $"{command.KeyName} = :{command.KeyName}",
       ExpressionAttributeValues = new Dictionary<string, AttributeValue>
       {
         [$":{command.KeyName}"] = new AttributeValue { S = command.KeyValue }

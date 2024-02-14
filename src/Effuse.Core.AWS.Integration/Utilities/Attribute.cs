@@ -61,18 +61,6 @@ public static class AttributeUtilities
     return (T)(UnmarshalBasic(typeof(T), input) ?? throw new Exception("Could not unmarshall object"));
   }
 
-  private static bool TryMake<TTarget>(object original, PropertyInfo property, out TTarget? result)
-  {
-    if (!typeof(TTarget).IsAssignableFrom(property.PropertyType))
-    {
-      result = default;
-      return false;
-    }
-
-    result = (TTarget)(property.GetValue(original) ?? throw new Exception("Could not find value"));
-    return true;
-  }
-
   private static AttributeValue MarshalValue(object? item)
   {
     if (item is MemoryStream stream)
@@ -148,7 +136,10 @@ public static class AttributeUtilities
     var type = input?.GetType() ?? throw new Exception("Cannot marshall a null value");
     var result = new Dictionary<string, AttributeValue>();
 
-    foreach (var property in type.GetProperties())
+    foreach (var property in type.GetProperties()
+      .Where(p => p.CanRead)
+      .Where(p => p.MemberType == MemberTypes.Property)
+      .Where(p => !p.GetIndexParameters().Any()))
     {
       result[property.Name] = MarshalValue(property.GetValue(input));
     }

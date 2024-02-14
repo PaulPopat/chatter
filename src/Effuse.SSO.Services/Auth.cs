@@ -116,14 +116,14 @@ public class AuthService
       throw new Exception("User not invited");
 
     var user = new User(
-      new Guid(),
-      username,
-      email,
-      this.EncryptPassowrd(password),
-      DateTime.Now,
-      DateTime.Now,
-      new List<UserServer>(),
-      string.Empty);
+      userId: Guid.NewGuid(),
+      userName: username,
+      email: email,
+      encryptedPassword: this.EncryptPassowrd(password),
+      registeredAt: DateTime.Now,
+      lastSignIn: DateTime.Now,
+      servers: new List<UserServer>(),
+      biography: string.Empty);
 
     await this.userClient.CreateUser(user);
 
