@@ -12,8 +12,6 @@ public struct Route
 
   public string Path { get; set; }
 
-  public string Area { get; set; }
-
   public string Handler { get; set; }
 }
 
@@ -24,6 +22,8 @@ public struct WebApiProps
   public IEnumerable<Route> Routes { get; set; }
 
   public IDictionary<string, string> Environment { get; set; }
+
+  public string Area { get; set; }
 }
 
 public class WebApi : HttpApi
@@ -43,7 +43,7 @@ public class WebApi : HttpApi
       var lambda = new Lambda(this, route.Method.ToString() + route.Path + "_handler", new LambdaProps
       {
         Handler = route.Handler,
-        Area = route.Area,
+        Area = props.Area,
         Environment = props.Environment,
       });
 

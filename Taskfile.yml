@@ -7,6 +7,18 @@ tasks:
     cmds:
       - dotnet build
     dir: "{{.TASKFILE_DIR}}/src"
+  
+  solution:test:
+    cmds:
+      - task: solution:build
+      - dotnet test Effuse.sln
+    dir: "{{.TASKFILE_DIR}}/src"
+
+  solution:clean:
+    cmds:
+      - rm -rf **/bin
+      - rm -rf **/obj
+      - rm -rf **/TestResults
 
   core:aws:dependencies:
     cmds:

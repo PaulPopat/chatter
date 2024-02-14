@@ -53,10 +53,11 @@ public class DynamoDBDatabase : IDatabase
 
   public Task AddItem<T>(string tableName, T item)
   {
+    var marshalled = item.Marshal();
     return this.dynamoDB.PutItemAsync(new PutItemRequest
     {
       TableName = tableName,
-      Item = item.Marshal()
+      Item = marshalled
     });
   }
 

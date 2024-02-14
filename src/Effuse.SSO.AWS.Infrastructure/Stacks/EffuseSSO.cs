@@ -61,48 +61,42 @@ public class EffuseSSO : Stack
     {
       Description = "The core services API",
       Environment = appEnv,
+      Area = "SSO",
       Routes = new Route[] {
         new() {
           Method = HttpMethod.GET,
           Path = "/api/v1/heartbeat",
-          Handler = "HeartBeat",
-          Area = "SSO"
+          Handler = "HeartBeat"
         },
         new() {
           Method = HttpMethod.POST,
           Path = "/api/v1/users",
-          Handler = "Register",
-          Area = "SSO"
+          Handler = "Register"
         },
         new() {
           Method = HttpMethod.GET,
           Path = "/api/v1/users/{userId}/profile",
-          Handler = "GetPublicProfile",
-          Area = "SSO"
+          Handler = "GetPublicProfile"
         },
         new() {
           Method = HttpMethod.GET,
           Path = "/api/v1/user/profile",
-          Handler = "GetProfile",
-          Area = "SSO"
+          Handler = "GetProfile"
         },
         new() {
           Method = HttpMethod.PUT,
           Path = "/api/v1/user/profile",
-          Handler = "UpdateProfile",
-          Area = "SSO"
+          Handler = "UpdateProfile"
         },
         new() {
           Method = HttpMethod.POST,
           Path = "/api/v1/user/servers",
-          Handler = "JoinServer",
-          Area = "SSO"
+          Handler = "JoinServer"
         },
         new() {
           Method = HttpMethod.GET,
           Path = "/api/v1/auth/token",
           Handler = "Login",
-          Area = "SSO"
         }
       }
     });
