@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Reflection;
 using Amazon.DynamoDBv2.Model;
+using Effuse.Core.Utilities;
 
 namespace Effuse.Core.AWS.Integration.Utilities;
 
@@ -15,42 +14,69 @@ public static class AttributeUtilities
 
   private static object? UnmarshalValue(Type target, AttributeValue value)
   {
-    if (value.B != null) return value.B;
-    if (value.IsBOOLSet) return value.BOOL;
-    if (value.BS != null) return value.BS;
-    if (value.S != null) return value.S;
-    if (value.SS != null) return value.SS;
-    if (value.M != null) return UnmarshalBasic(target, value.M);
-    if (value.L != null)
-    {
-      var arrayType = GetListType(target);
-      return value.L.Select(n => UnmarshalValue(arrayType, n));
-    }
-    if (value.N != null) return Convert.ChangeType(double.Parse(value.N), target);
-    if (value.NS != null)
+    if (value.NULL) return null;
+    if (target.IsAssignableFrom(typeof(MemoryStream))) return value.B;
+    if (target.IsAssignableFrom(typeof(bool))) return value.BOOL;
+    if (target.IsAssignableFrom(typeof(List<MemoryStream>))) return value.BS;
+    if (target.IsAssignableFrom(typeof(string))) return value.S;
+    if (target.IsAssignableFrom(typeof(List<string>))) return value.SS;
+    if (
+      target.IsAssignableFrom(typeof(byte)) ||
+      target.IsAssignableFrom(typeof(sbyte)) ||
+      target.IsAssignableFrom(typeof(ushort)) ||
+      target.IsAssignableFrom(typeof(uint)) ||
+      target.IsAssignableFrom(typeof(ulong)) ||
+      target.IsAssignableFrom(typeof(short)) ||
+      target.IsAssignableFrom(typeof(int)) ||
+      target.IsAssignableFrom(typeof(long)) ||
+      target.IsAssignableFrom(typeof(decimal)) ||
+      target.IsAssignableFrom(typeof(double)) ||
+      target.IsAssignableFrom(typeof(float)))
+      return Convert.ChangeType(double.Parse(value.N), target);
+    if (
+      target.IsAssignableFrom(typeof(List<byte>)) ||
+      target.IsAssignableFrom(typeof(List<sbyte>)) ||
+      target.IsAssignableFrom(typeof(List<ushort>)) ||
+      target.IsAssignableFrom(typeof(List<uint>)) ||
+      target.IsAssignableFrom(typeof(List<ulong>)) ||
+      target.IsAssignableFrom(typeof(List<short>)) ||
+      target.IsAssignableFrom(typeof(List<int>)) ||
+      target.IsAssignableFrom(typeof(List<long>)) ||
+      target.IsAssignableFrom(typeof(List<decimal>)) ||
+      target.IsAssignableFrom(typeof(List<double>)) ||
+      target.IsAssignableFrom(typeof(List<float>)))
     {
       var arrayType = GetListType(target);
       return value.NS.Select(n => Convert.ChangeType(double.Parse(n), arrayType));
     }
-    if (value.NULL) return null;
+    if (target.IsAssignableFrom(typeof(List<>)))
+    {
+      var arrayType = GetListType(target);
+      return value.L.Select(n => UnmarshalValue(arrayType, n));
+    }
 
-    throw new Exception("Could not find type");
+    return UnmarshalBasic(target, value.M);
   }
 
   private static object? UnmarshalBasic(Type type, IDictionary<string, AttributeValue> input)
   {
     var result = Activator.CreateInstance(type);
 
-    foreach (var property in type.GetProperties())
+    foreach (var property in type.GetBasicProperties())
     {
-      if (property == null) continue;
-      if (!input.TryGetValue(property.Name, out var value))
+      try
       {
-        throw new Exception($"Error unmarshalling, looking for {property.Name} but not found");
-      }
+        if (!input.TryGetValue(property.Name, out var value))
+        {
+          throw new Exception($"Error unmarshalling, looking for {property.Name} but not found");
+        }
 
-      var unmarshalled = UnmarshalValue(property.PropertyType, value);
-      property.SetValue(result, unmarshalled);
+        property.SetValue(result, UnmarshalValue(property.PropertyType, value));
+      }
+      catch
+      {
+        throw new Exception($"Error parsing property {property.Name}");
+      }
     }
 
     return result;
@@ -136,10 +162,7 @@ public static class AttributeUtilities
     var type = input?.GetType() ?? throw new Exception("Cannot marshall a null value");
     var result = new Dictionary<string, AttributeValue>();
 
-    foreach (var property in type.GetProperties()
-      .Where(p => p.CanRead)
-      .Where(p => p.MemberType == MemberTypes.Property)
-      .Where(p => !p.GetIndexParameters().Any()))
+    foreach (var property in type.GetBasicProperties())
     {
       result[property.Name] = MarshalValue(property.GetValue(input));
     }

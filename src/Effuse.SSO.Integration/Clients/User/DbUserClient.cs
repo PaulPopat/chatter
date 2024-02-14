@@ -7,11 +7,11 @@ namespace Effuse.SSO.Integration.Clients.User;
 
 public class DbUserClient : IUserClient
 {
-  private class UserServerDto
+  private struct UserServerDto
   {
-    public string Url { get; set; } = "";
+    public string Url { get; set; }
 
-    public string JoinedAt { get; set; } = "";
+    public string JoinedAt { get; set; }
   }
 
   private struct UserDto
