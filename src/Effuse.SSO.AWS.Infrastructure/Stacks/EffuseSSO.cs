@@ -74,7 +74,7 @@ public class EffuseSSO : Stack
       Policies = new PolicyStatement[]
       {
         new DynamoDBAdmin(usersTable),
-        new S3Reader(assetsBucket),
+        new S3Admin(assetsBucket),
         new ParameterReader(secret, certificate)
       },
       Routes = new Route[] {
@@ -112,6 +112,11 @@ public class EffuseSSO : Stack
           Method = HttpMethod.GET,
           Path = "/api/v1/auth/token",
           Handler = "Login",
+        },
+        new() {
+          Method = HttpMethod.GET,
+          Path = "/api/v1/auth/user",
+          Handler = "GetUserFromToken",
         },
         new() {
           Method = HttpMethod.GET,
