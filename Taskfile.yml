@@ -16,9 +16,8 @@ tasks:
 
   solution:clean:
     cmds:
-      - rm -rf **/bin
-      - rm -rf **/obj
-      - rm -rf **/TestResults
+      - find . -iname "bin" -print0 | xargs -0 rm -rf
+      - find . -iname "TestResults" -print0 | xargs -0 rm -rf
 
   core:aws:dependencies:
     cmds:
