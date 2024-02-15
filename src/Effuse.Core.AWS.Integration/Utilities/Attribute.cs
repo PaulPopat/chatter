@@ -1,3 +1,4 @@
+using System.Collections;
 using Amazon.DynamoDBv2.Model;
 using Effuse.Core.Utilities;
 
@@ -62,7 +63,7 @@ public static class AttributeUtilities
   {
     var result = Activator.CreateInstance(type);
 
-    foreach (var property in type.GetBasicProperties())
+    foreach (var property in type.GetBasicWriteProperties())
     {
       try
       {
@@ -143,9 +144,9 @@ public static class AttributeUtilities
     {
       return new AttributeValue() { NS = ((List<object>)item).Select(i => i.ToString()).ToList() };
     }
-    else if (item is List<object> l)
+    else if (item is IEnumerable l)
     {
-      return new AttributeValue() { L = l.Select(l => MarshalValue(l)).ToList() };
+      return new AttributeValue() { L = l.Cast<object>().Select(l => MarshalValue(l)).ToList() };
     }
     else if (item is object m)
     {

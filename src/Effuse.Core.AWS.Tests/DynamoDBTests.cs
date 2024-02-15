@@ -1,4 +1,3 @@
-using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Effuse.Core.AWS.Integration;
 using Effuse.Core.AWS.Tests.Stubs;
@@ -138,6 +137,65 @@ public class DynamoDBTests
     this.AssertMatches(item.Item, new Dictionary<string, AttributeValue>
     {
       ["Text"] = new AttributeValue { S = "Hello world" }
+    });
+  }
+
+  private struct TestListItem
+  {
+    public string Test { get; set; }
+
+    public int Other { get; set; }
+  }
+
+  private struct TestListModel
+  {
+    public string Text { get; set; }
+
+    public List<TestListItem> Other { get; set; }
+  }
+
+  [TestMethod]
+  public async Task SendsAListOfModels()
+  {
+    await this.sut.AddItem("TestTable", new TestListModel
+    {
+      Text = "Hello world",
+      Other = new List<TestListItem>()
+      {
+        new()
+        {
+          Test = "text",
+          Other = 123
+        }
+      }
+    });
+
+    Assert.AreEqual(this.database.PutItems.Count, 1);
+    var item = this.database.PutItems[0];
+    Assert.AreEqual(item.TableName, "TestTable");
+    this.AssertMatches(item.Item, new Dictionary<string, AttributeValue>
+    {
+      ["Text"] = new() { S = "Hello world" },
+      ["Other"] = new()
+      {
+        L = new()
+        {
+          new()
+          {
+            M = new()
+            {
+              ["Test"] = new()
+              {
+                S = "text"
+              },
+              ["Other"] = new()
+              {
+                N = "123"
+              }
+            }
+          }
+        }
+      }
     });
   }
 }
