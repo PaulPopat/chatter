@@ -77,7 +77,7 @@ public class Operate
           request.HttpMethod,
           request.RequestContext.ConnectionId,
           request.PathParameters,
-          request.QueryStringParameters,
+          request.QueryStringParameters.ToLowerCaseKeys(),
           request.Headers,
           request.Body
         );

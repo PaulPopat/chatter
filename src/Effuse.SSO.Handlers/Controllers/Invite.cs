@@ -16,7 +16,7 @@ public class Invite : IHandler
 
   public async Task<HandlerResponse> Handle(HandlerProps props)
   {
-    var email = props.QueryParameters["Email"];
+    var email = props.QueryParameters["email"];
 
     if (email == null) return new (400);
 

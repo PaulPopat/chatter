@@ -15,7 +15,7 @@ public class GetUserFromToken : IHandler
 
   public async Task<HandlerResponse> Handle(HandlerProps props)
   {
-    var token = props.QueryParameters["Token"];
+    var token = props.QueryParameters["token"];
     if (token == null || token == string.Empty)
       return new(400);
 

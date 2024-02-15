@@ -15,4 +15,15 @@ public static class Dictionary
 
     return result;
   }
+
+  public static IDictionary<string, TValue> ToLowerCaseKeys<TValue>(this IDictionary<string, TValue> self)
+  {
+    var result = new Dictionary<string, TValue>();
+    foreach (var (k, v) in self)
+    {
+      result[k.ToLowerInvariant()] = v;
+    }
+
+    return result;
+  }
 }

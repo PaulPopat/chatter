@@ -16,8 +16,8 @@ public class Login : IHandler
 
   public async Task<HandlerResponse> Handle(HandlerProps props)
   {
-    var email = props.QueryParameters["Email"];
-    var password = props.QueryParameters["Password"];
+    var email = props.QueryParameters["email"];
+    var password = props.QueryParameters["password"];
 
     var response = await this.authService.Login(email, password);
 
