@@ -20,6 +20,8 @@
     <ProjectReference Include="../Effuse.SSO.Integration/Effuse.SSO.Integration.csproj" />
     <ProjectReference Include="../Effuse.SSO.Services/Effuse.SSO.Services.csproj" />
     <ProjectReference Include="../Effuse.SSO.Handlers/Effuse.SSO.Handlers.csproj" />
+    <ProjectReference Include="../Effuse.Core.AWS.Integration/Effuse.Core.AWS.Integration.csproj" />
+    <ProjectReference Include="../Effuse.Core.Stubs/Effuse.Core.Stubs.csproj" />
   </ItemGroup>
 
 </Project>

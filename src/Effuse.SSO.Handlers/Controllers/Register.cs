@@ -1,5 +1,4 @@
 using Effuse.Core.Handlers.Contracts;
-using Effuse.SSO.Handlers.Models;
 using Effuse.SSO.Handlers.Models.Register;
 using Effuse.SSO.Services;
 

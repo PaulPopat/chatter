@@ -1,4 +1,3 @@
-using System.Globalization;
 
 namespace Effuse.Core.Utilities;
 
