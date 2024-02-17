@@ -8,46 +8,17 @@ namespace Effuse.Core.Integration.Implementations;
 public class StaticDatabase : IDatabase
 {
   private readonly IStatic @static;
-  private readonly IParameters parameters;
+  private readonly IEncryption encryption;
 
-  public StaticDatabase(IStatic @static, IParameters parameters)
+  public StaticDatabase(IStatic @static, IEncryption encryption)
   {
     this.@static = @static;
-    this.parameters = parameters;
-
-    this.EncryptionKey = new(async () =>
-      Convert.FromBase64String(await this.parameters.GetParameter("ENCRYPTION_KEY")));
-    this.EncryptionIv = new(async () =>
-      Convert.FromBase64String(await this.parameters.GetParameter("ENCRYPTION_IV")));
+    this.encryption = encryption;
   }
-
-  private readonly Lazy<Task<byte[]>> EncryptionKey;
-  private readonly Lazy<Task<byte[]>> EncryptionIv;
 
   private async Task<string> ItemPath(string tableName, string primaryKey)
   {
-    return $"database/{tableName}/{await this.Encrypt(primaryKey)}.json";
-  }
-
-  private async Task<ICryptoTransform> GetTransform()
-  {
-    return DES.Create().CreateEncryptor(await this.EncryptionKey.Value, await this.EncryptionIv.Value);
-  }
-
-  private async Task<string> Encrypt(string text)
-  {
-    var transform = await this.GetTransform();
-    var inputbuffer = Encoding.UTF8.GetBytes(text);
-    var outputBuffer = transform.TransformFinalBlock(inputbuffer, 0, inputbuffer.Length);
-    return Convert.ToHexString(outputBuffer);
-  }
-
-  private async Task<string> Decrypt(string text)
-  {
-    var transform = await this.GetTransform();
-    var inputbuffer = Convert.FromHexString(text);
-    var outputBuffer = transform.TransformFinalBlock(inputbuffer, 0, inputbuffer.Length);
-    return Encoding.UTF8.GetString(outputBuffer);
+    return $"database/{tableName}/{await this.encryption.Encrypt(primaryKey)}.json";
   }
 
   public async Task AddItem<T>(string tableName, string primaryKey, T item)
@@ -57,7 +28,7 @@ public class StaticDatabase : IDatabase
     if (existing != null) throw new Exception("Primary key already found");
 
     var json = JsonSerializer.Serialize(item);
-    var encrypted = await this.Encrypt(json);
+    var encrypted = await this.encryption.Encrypt(json);
     await this.@static.UploadText(new StaticTextFile
     {
       Mime = "application/json",
@@ -78,8 +49,7 @@ public class StaticDatabase : IDatabase
     {
       var response = await this.@static.DownloadText(await this.ItemPath(tableName, primaryKey));
       if (response.Data == null || response.Data == string.Empty) return null;
-      var decrypted = await this.Decrypt(response.Data);
-      Console.WriteLine($"Decrypted JSON: {decrypted}");
+      var decrypted = await this.encryption.Decrypt(response.Data);
       return JsonSerializer.Deserialize<TExpect>(decrypted);
     }
     catch (Exception error)
@@ -105,7 +75,7 @@ public class StaticDatabase : IDatabase
     await this.@static.UploadText(new StaticTextFile
     {
       Mime = "application/json",
-      Data = await this.Encrypt(json),
+      Data = await this.encryption.Encrypt(json),
       Name = await this.ItemPath(tableName, primaryKey)
     });
   }

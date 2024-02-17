@@ -20,6 +20,7 @@ public class Server
       container.RegisterType<Effuse.Core.Integration.Contracts.IDatabase, Effuse.Core.Integration.Implementations.StaticDatabase>();
       container.RegisterType<Effuse.Core.Integration.Contracts.IParameters, Effuse.SSO.Local.Integrations.SystemParameters>();
       container.RegisterType<Effuse.Core.Integration.Contracts.IStatic, Effuse.SSO.Local.Integrations.DiskStatics>();
+      container.RegisterType<Effuse.Core.Integration.Contracts.IEncryption, Effuse.Core.Integration.Implementations.Encryption>();
 
       // Generic Integrations
       container.RegisterType<Effuse.SSO.Integration.Clients.User.IUserClient, Effuse.SSO.Integration.Clients.User.DbUserClient>();
@@ -112,7 +113,7 @@ public class Server
           continue;
         }
 
-        var route = Handlers.First(h => h.Matches(req.Url.AbsolutePath));
+        var route = Handlers.First(h => h.Matches(req.Url.AbsolutePath, req.HttpMethod));
         var handler = (IHandler)container.Resolve(route.HandlerType);
         var response = await handler.Handle(await req.HandlerProps(route));
 

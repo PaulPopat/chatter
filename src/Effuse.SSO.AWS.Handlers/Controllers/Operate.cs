@@ -35,6 +35,7 @@ public class Operate
     container.RegisterType<Effuse.Core.Integration.Contracts.IDatabase, Effuse.Core.Integration.Implementations.StaticDatabase>();
     container.RegisterType<Effuse.Core.Integration.Contracts.IParameters, Effuse.Core.AWS.Integration.ParameterStore>();
     container.RegisterType<Effuse.Core.Integration.Contracts.IStatic, Effuse.Core.AWS.Integration.S3Statics>();
+    container.RegisterType<Effuse.Core.Integration.Contracts.IEncryption, Effuse.Core.Integration.Implementations.Encryption>();
 
     // Generic Integrations
     container.RegisterType<Effuse.SSO.Integration.Clients.User.IUserClient, Effuse.SSO.Integration.Clients.User.DbUserClient>();

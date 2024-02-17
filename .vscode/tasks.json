@@ -1,0 +1,10 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build_solution",
+      "command": "task solution:build",
+      "type": "shell"
+    }
+  ]
+}

@@ -40,8 +40,9 @@ public struct Route
     return result;
   }
 
-  public readonly bool Matches(string url)
+  public readonly bool Matches(string url, string method)
   {
+    if (this.Method.ToString() != method) return false;
     var actualParts = url.Split('/');
     var expectedParts = this.Path.Split('/');
 
