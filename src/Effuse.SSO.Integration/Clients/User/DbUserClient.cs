@@ -16,8 +16,6 @@ public class DbUserClient : IUserClient
 
   private struct UserDto
   {
-    public string UserId { get; set; }
-
     public string UserName { get; set; }
 
     public string Email { get; set; }
@@ -33,12 +31,17 @@ public class DbUserClient : IUserClient
     public string Biography { get; set; }
   }
 
+  private struct UserEmailDto
+  {
+    public string UserId { get; set; }
+  }
+
   private readonly IDatabase database;
   private readonly IStatic statics;
 
-  private static string TableName => Env.GetEnv("USER_TABLE_NAME");
+  private static string TableName => "Users";
 
-  private static string EmailIndexName => Env.GetEnv("USER_TABLE_EMAIL_INDEX");
+  private static string EmailsName => "UserEmails";
 
   public DbUserClient(IDatabase database, IStatic statics)
   {
@@ -46,10 +49,10 @@ public class DbUserClient : IUserClient
     this.statics = statics;
   }
 
-  private AppDomain.User FromDto(UserDto result)
+  private static AppDomain.User FromDto(string userId, UserDto result)
   {
     return new AppDomain.User(
-      userId: Guid.Parse(result.UserId),
+      userId: Guid.Parse(userId),
       email: result.Email,
       userName: result.UserName,
       encryptedPassword: result.EncryptedPassword,
@@ -60,11 +63,10 @@ public class DbUserClient : IUserClient
     );
   }
 
-  private UserDto ToDto(AppDomain.User user)
+  private static UserDto ToDto(AppDomain.User user)
   {
     return new UserDto
     {
-      UserId = user.UserId.ToString(),
       UserName = user.UserName,
       Biography = user.Biography,
       Email = user.Email,
@@ -79,63 +81,49 @@ public class DbUserClient : IUserClient
     };
   }
 
-  private string PictureName(AppDomain.User user)
+  private static string PictureName(AppDomain.User user)
   {
     return $"profile-pictures/{user.UserId.ToString()}";
   }
 
-  public Task CreateUser(AppDomain.User user)
+  public async Task CreateUser(AppDomain.User user)
   {
-    return this.database.AddItem(TableName, this.ToDto(user));
+    await this.database.AddItem(TableName, user.UserId.ToString(), ToDto(user));
+    await this.database.AddItem(EmailsName, user.Email, new UserEmailDto
+    {
+      UserId = user.UserId.ToString()
+    });
   }
 
-  public Task DeleteUser(AppDomain.User user)
+  public async Task DeleteUser(AppDomain.User user)
   {
-    return this.database.DeleteItem(new DeleteItemCommand
-    {
-      TableName = TableName,
-      KeyName = "UserId",
-      KeyValue = user.UserId.ToString()
-    });
+    await this.database.DeleteItem(TableName, user.UserId.ToString());
+    await this.database.DeleteItem(EmailsName, user.Email);
   }
 
   public async Task<AppDomain.User> GetUser(Guid userId)
   {
-    var result = await this.database.GetItem<UserDto>(new GetItemCommand
-    {
-      TableName = TableName,
-      KeyName = "UserId",
-      KeyValue = userId.ToString()
-    });
+    var result = await this.database.GetItem<UserDto>(TableName, userId.ToString());
 
-    return this.FromDto(result);
+    return FromDto(userId.ToString(), result);
   }
 
   public async Task<AppDomain.User> GetUserByEmail(string email)
   {
-    var results = await this.database.Query<UserDto>(new QueryCommand
-    {
-      TableName = TableName,
-      KeyName = "Email",
-      KeyValue = email,
-      IndexName = EmailIndexName
-    });
+    var userEmail = await this.database.GetItem<UserEmailDto>(EmailsName, email);
+    var result = await this.database.GetItem<UserDto>(TableName, userEmail.UserId);
 
-    var resultList = results.ToList();
-    if (resultList.Count != 1) throw new Exception("Could not find user via email");
-
-    var result = resultList[0];
-    return this.FromDto(result);
+    return FromDto(userEmail.UserId, result);
   }
 
   public Task UpdateUser(AppDomain.User user)
   {
-    return this.database.UpdateItem(TableName, this.ToDto(user));
+    return this.database.UpdateItem(TableName, user.UserId.ToString(), ToDto(user));
   }
 
   public async Task<MemoryStream> GetProfilePicture(AppDomain.User user)
   {
-    var file = await this.statics.Download(this.PictureName(user));
+    var file = await this.statics.Download(PictureName(user));
 
     return file.Data;
   }
@@ -144,7 +132,7 @@ public class DbUserClient : IUserClient
   {
     return this.statics.Upload(new StaticFile
     {
-      Name = this.PictureName(user),
+      Name = PictureName(user),
       Data = imageData,
       Mime = mime
     });

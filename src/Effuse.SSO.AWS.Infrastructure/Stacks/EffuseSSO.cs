@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using Amazon.CDK;
 using Amazon.CDK.AWS.Apigatewayv2;
-using Amazon.CDK.AWS.DynamoDB;
 using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.S3;
 using Amazon.CDK.AwsApigatewayv2Authorizers;
@@ -10,6 +9,7 @@ using Constructs;
 using Effuse.Core.AWS.Infrastructure.Constructs;
 using Effuse.Core.AWS.Infrastructure.Policies;
 using Effuse.Core.AWS.Infrastructure.Utilities;
+using Effuse.Core.Utilities;
 
 namespace Effuse.AWS.Infrastructure.Stacks;
 
@@ -20,27 +20,6 @@ public class EffuseSSO : Stack
     var logGroup = new Logs(this, "log-group", new LogProps
     {
       Name = "api-logs"
-    });
-
-    var usersTable = new Table(this, "users", new TableProps
-    {
-      PartitionKey = new Attribute
-      {
-        Name = "UserId",
-        Type = AttributeType.STRING
-      }
-    });
-
-    var emailIndexName = "EmailIndex";
-
-    usersTable.AddGlobalSecondaryIndex(new GlobalSecondaryIndexProps
-    {
-      IndexName = emailIndexName,
-      PartitionKey = new Attribute
-      {
-        Name = "Email",
-        Type = AttributeType.STRING
-      }
     });
 
     var assetsBucket = new Bucket(this, "assets-bucket", new BucketProps { });
@@ -57,11 +36,21 @@ public class EffuseSSO : Stack
       Value = File.ReadAllText(Config.ProjectPath("resources/private_key.pem"))
     });
 
+    var encryptionKey = new Parameter(this, "encryption-key", new()
+    {
+      Name = "ENCRYPTION_KEY",
+      Value = Env.GetEnv("ENCRYPTION_KEY")
+    });
+
+    var encryptionIv = new Parameter(this, "encryption-iv", new()
+    {
+      Name = "ENCRYPTION_IV",
+      Value = Env.GetEnv("ENCRYPTION_IV")
+    });
+
     var appEnv = new Dictionary<string, string>()
     {
       ["BUCKET_NAME"] = assetsBucket.BucketName,
-      ["USER_TABLE_NAME"] = usersTable.TableName,
-      ["USER_TABLE_EMAIL_INDEX"] = emailIndexName,
       ["APP_PREFIX"] = Config.AppPrefix
     };
 
@@ -73,9 +62,8 @@ public class EffuseSSO : Stack
       LogGroup = logGroup,
       Policies = new PolicyStatement[]
       {
-        new DynamoDBAdmin(usersTable),
         new S3Admin(assetsBucket),
-        new ParameterReader(secret, certificate)
+        new ParameterReader(secret, certificate, encryptionKey, encryptionIv)
       },
       Routes = new Route[] {
         new() {

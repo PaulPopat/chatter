@@ -44,4 +44,37 @@ public class S3Statics : IStatic
       ContentType = file.Mime
     });
   }
+
+  public async Task<StaticTextFile> DownloadText(string name)
+  {
+    using var response = await this.s3.GetObjectAsync(new GetObjectRequest
+    {
+      BucketName = BucketName,
+      Key = name
+    });
+
+    return new StaticTextFile
+    {
+      Name = name,
+      Data = await new StreamReader(response.ResponseStream).ReadToEndAsync(),
+      Mime = response.Headers.ContentType
+    };
+  }
+
+  public Task UploadText(StaticTextFile file)
+  {
+    var stream = new MemoryStream();
+    var writer = new StreamWriter(stream);
+    writer.Write(file.Data);
+    writer.Flush();
+    stream.Position = 0;
+
+    return this.s3.PutObjectAsync(new PutObjectRequest
+    {
+      BucketName = BucketName,
+      Key = file.Name,
+      InputStream = stream,
+      ContentType = file.Mime
+    });
+  }
 }

@@ -32,7 +32,7 @@ public class Operate
     container.RegisterFactory<Amazon.S3.IAmazonS3>((con) => new Amazon.S3.AmazonS3Client());
 
     // AWS Integrations
-    container.RegisterType<Effuse.Core.Integration.Contracts.IDatabase, Effuse.Core.AWS.Integration.DynamoDBDatabase>();
+    container.RegisterType<Effuse.Core.Integration.Contracts.IDatabase, Effuse.Core.Integration.Implementations.StaticDatabase>();
     container.RegisterType<Effuse.Core.Integration.Contracts.IParameters, Effuse.Core.AWS.Integration.ParameterStore>();
     container.RegisterType<Effuse.Core.Integration.Contracts.IStatic, Effuse.Core.AWS.Integration.S3Statics>();
 
