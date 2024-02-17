@@ -45,3 +45,9 @@ tasks:
       - cdk --app "{{.CDK_APP}}" deploy --require-approval never
     vars:
       CDK_APP: dotnet run --project src/Effuse.SSO.AWS.Infrastructure/Effuse.SSO.AWS.Infrastructure.csproj
+
+  sso:local:run:
+    dotenv: ['.sso.env']
+    cmds:
+      - task: solution:build
+      - ./src/Effuse.SSO.Local/bin/Debug/net6.0/Effuse.SSO.Local

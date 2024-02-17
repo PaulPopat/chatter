@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Effuse.SSO.Services\Effuse.SSO.Services.csproj" />
+    <ProjectReference Include="..\Effuse.SSO.Integration\Effuse.SSO.Integration.csproj" />
+    <ProjectReference Include="..\Effuse.SSO.Handlers\Effuse.SSO.Handlers.csproj" />
+    <ProjectReference Include="..\Effuse.SSO.Domain\Effuse.SSO.Domain.csproj" />
+    <ProjectReference Include="..\Effuse.Core.Utilities\Effuse.Core.Utilities.csproj" />
+    <ProjectReference Include="..\Effuse.Core.Integration\Effuse.Core.Integration.csproj" />
+    <ProjectReference Include="..\Effuse.Core.Handlers\Effuse.Core.Handlers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Unity" Version="5.11.10" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
