@@ -8,20 +8,23 @@ public class Encryption : IEncryption
 {
   private readonly IParameters parameters;
 
+  private readonly Lazy<Task<string>> passphrase;
+
   public Encryption(IParameters parameters)
   {
     this.parameters = parameters;
+
+    this.passphrase = new(() => this.parameters.GetParameter(ParameterName.ENCRYPTION_PASSPHRASE));
   }
 
   private static readonly byte[] Salt = new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 };
 
   public async Task<string> Encrypt(string clearText)
   {
-    var passPhrase = await this.parameters.GetParameter(ParameterName.ENCRYPTION_PASSPHRASE);
     var clearBytes = Encoding.UTF8.GetBytes(clearText);
     using (var encryptor = Aes.Create())
     {
-      var pdb = new Rfc2898DeriveBytes(passPhrase, Salt);
+      var pdb = new Rfc2898DeriveBytes(await this.passphrase.Value, Salt);
       encryptor.Key = pdb.GetBytes(32);
       encryptor.IV = pdb.GetBytes(16);
       using var ms = new MemoryStream();
@@ -37,12 +40,11 @@ public class Encryption : IEncryption
 
   public async Task<string> Decrypt(string cipherText)
   {
-    var passPhrase = await this.parameters.GetParameter(ParameterName.ENCRYPTION_PASSPHRASE);
     cipherText = cipherText.Replace(" ", "+");
     var cipherBytes = Convert.FromHexString(cipherText);
     using (var encryptor = Aes.Create())
     {
-      var pdb = new Rfc2898DeriveBytes(passPhrase, Salt);
+      var pdb = new Rfc2898DeriveBytes(await this.passphrase.Value, Salt);
       encryptor.Key = pdb.GetBytes(32);
       encryptor.IV = pdb.GetBytes(16);
       using var ms = new MemoryStream();

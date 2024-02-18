@@ -38,14 +38,8 @@ public class EffuseSSO : Stack
 
     var encryptionKey = new Parameter(this, "encryption-key", new()
     {
-      Name = "ENCRYPTION_KEY",
-      Value = Env.GetEnv("ENCRYPTION_KEY")
-    });
-
-    var encryptionIv = new Parameter(this, "encryption-iv", new()
-    {
-      Name = "ENCRYPTION_IV",
-      Value = Env.GetEnv("ENCRYPTION_IV")
+      Name = "ENCRYPTION_PASSPHRASE",
+      Value = Env.GetEnv("ENCRYPTION_PASSPHRASE")
     });
 
     var appEnv = new Dictionary<string, string>()
@@ -63,7 +57,7 @@ public class EffuseSSO : Stack
       Policies = new PolicyStatement[]
       {
         new S3Admin(assetsBucket),
-        new ParameterReader(secret, certificate, encryptionKey, encryptionIv)
+        new ParameterReader(secret, certificate, encryptionKey)
       },
       Routes = new Route[] {
         new() {
