@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.Local", "Effuse.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.Local", "Effuse.Core.Local\Effuse.Core.Local.csproj", "{2B6996DD-B290-4F1F-9B58-D530CD258D5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Server.Domain", "Effuse.Server.Domain\Effuse.Server.Domain.csproj", "{E080097A-2A9D-46DE-91B9-879724EF3FBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -195,6 +197,18 @@ Global
 		{2B6996DD-B290-4F1F-9B58-D530CD258D5C}.Release|x64.Build.0 = Release|Any CPU
 		{2B6996DD-B290-4F1F-9B58-D530CD258D5C}.Release|x86.ActiveCfg = Release|Any CPU
 		{2B6996DD-B290-4F1F-9B58-D530CD258D5C}.Release|x86.Build.0 = Release|Any CPU
+		{E080097A-2A9D-46DE-91B9-879724EF3FBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E080097A-2A9D-46DE-91B9-879724EF3FBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E080097A-2A9D-46DE-91B9-879724EF3FBA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E080097A-2A9D-46DE-91B9-879724EF3FBA}.Debug|x64.Build.0 = Debug|Any CPU
+		{E080097A-2A9D-46DE-91B9-879724EF3FBA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E080097A-2A9D-46DE-91B9-879724EF3FBA}.Debug|x86.Build.0 = Debug|Any CPU
+		{E080097A-2A9D-46DE-91B9-879724EF3FBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E080097A-2A9D-46DE-91B9-879724EF3FBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E080097A-2A9D-46DE-91B9-879724EF3FBA}.Release|x64.ActiveCfg = Release|Any CPU
+		{E080097A-2A9D-46DE-91B9-879724EF3FBA}.Release|x64.Build.0 = Release|Any CPU
+		{E080097A-2A9D-46DE-91B9-879724EF3FBA}.Release|x86.ActiveCfg = Release|Any CPU
+		{E080097A-2A9D-46DE-91B9-879724EF3FBA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

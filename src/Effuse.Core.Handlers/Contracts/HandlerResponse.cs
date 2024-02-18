@@ -8,7 +8,7 @@ public class HandlerResponse
     (
       int statusCode,
       [Optional] object? body,
-      [Optional] IDictionary<string, string>? headers 
+      [Optional] IDictionary<string, string>? headers
     )
   {
     this.StatusCode = statusCode;
