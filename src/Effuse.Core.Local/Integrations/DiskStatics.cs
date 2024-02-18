@@ -1,7 +1,7 @@
 ﻿using Effuse.Core.Integration.Contracts;
 using Effuse.Core.Utilities;
 
-namespace Effuse.SSO.Local.Integrations;
+namespace Effuse.Core.Local.Integrations;
 
 public class DiskStatics : IStatic
 {

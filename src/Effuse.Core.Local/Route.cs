@@ -1,6 +1,4 @@
-﻿using Effuse.SSO.Handlers.Controllers;
-
-namespace Effuse.SSO.Local;
+﻿namespace Effuse.Core.Local;
 
 public struct Route
 {
@@ -8,16 +6,7 @@ public struct Route
 
   public string Path { get; set; }
 
-  public string Handler { get; set; }
-
-  public readonly Type HandlerType
-  {
-    get
-    {
-      var asm = typeof(GetProfile).Assembly;
-      return asm.GetType($"Effuse.SSO.Handlers.Controllers.{this.Handler}") ?? throw new Exception("Could not find handler");
-    }
-  }
+  public Type Handler { get; set; }
 
   public readonly IDictionary<string, string> PathParameters(string url)
   {

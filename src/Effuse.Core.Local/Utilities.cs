@@ -6,7 +6,7 @@ using System.Web;
 using Effuse.Core.Handlers.Contracts;
 using Effuse.Core.Utilities;
 
-namespace Effuse.SSO.Local;
+namespace Effuse.Core.Local;
 
 public static class Utilities
 {

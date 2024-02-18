@@ -17,7 +17,7 @@ public class Encryption : IEncryption
 
   public async Task<string> Encrypt(string clearText)
   {
-    var passPhrase = await this.parameters.GetParameter("ENCRYPTION_PASSPHRASE");
+    var passPhrase = await this.parameters.GetParameter(ParameterName.ENCRYPTION_PASSPHRASE);
     var clearBytes = Encoding.UTF8.GetBytes(clearText);
     using (var encryptor = Aes.Create())
     {
@@ -37,7 +37,7 @@ public class Encryption : IEncryption
 
   public async Task<string> Decrypt(string cipherText)
   {
-    var passPhrase = await this.parameters.GetParameter("ENCRYPTION_PASSPHRASE");
+    var passPhrase = await this.parameters.GetParameter(ParameterName.ENCRYPTION_PASSPHRASE);
     cipherText = cipherText.Replace(" ", "+");
     var cipherBytes = Convert.FromHexString(cipherText);
     using (var encryptor = Aes.Create())

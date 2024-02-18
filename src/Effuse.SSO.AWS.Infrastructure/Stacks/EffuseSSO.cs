@@ -27,13 +27,13 @@ public class EffuseSSO : Stack
     var secret = new Parameter(this, "jwt-parameter", new()
     {
       Name = "JWT_SECRET",
-      Value = File.ReadAllText(Config.ProjectPath("resources/signing_key.key"))
+      Value = File.ReadAllText(Config.ProjectPath("resources/data/signing_key.key"))
     });
 
     var certificate = new Parameter(this, "jwt-certificate", new()
     {
       Name = "JWT_CERTIFICATE",
-      Value = File.ReadAllText(Config.ProjectPath("resources/private_key.pem"))
+      Value = File.ReadAllText(Config.ProjectPath("resources/data/private_key.pem"))
     });
 
     var encryptionKey = new Parameter(this, "encryption-key", new()

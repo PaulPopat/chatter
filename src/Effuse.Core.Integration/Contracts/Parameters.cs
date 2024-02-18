@@ -1,6 +1,13 @@
 namespace Effuse.Core.Integration.Contracts;
 
+public enum ParameterName
+{
+  ENCRYPTION_PASSPHRASE,
+  JWT_CERTIFICATE,
+  JWT_SECRET
+}
+
 public interface IParameters
 {
-  Task<string> GetParameter(string name);
+  Task<string> GetParameter(ParameterName name);
 }

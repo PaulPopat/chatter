@@ -17,8 +17,8 @@ public class ParameterJwtClient : IJwtClient
 
     this.certificate = new(async () =>
     {
-      var cert = await this.parameters.GetParameter("JWT_CERTIFICATE");
-      var key = await this.parameters.GetParameter("JWT_SECRET");
+      var cert = await this.parameters.GetParameter(ParameterName.JWT_CERTIFICATE);
+      var key = await this.parameters.GetParameter(ParameterName.JWT_SECRET);
       return X509Certificate2.CreateFromPem(cert, key);
     });
   }

@@ -16,11 +16,11 @@ public class ParameterStore : IParameters
 
   private static string AppPrefix => Env.GetEnv("APP_PREFIX");
 
-  public async Task<string> GetParameter(string name)
+  public async Task<string> GetParameter(ParameterName name)
   {
     var response = await this.ssm.GetParameterAsync(new GetParameterRequest
     {
-      Name = $"/{AppPrefix}/{name}"
+      Name = $"/{AppPrefix}/{Enum.GetName(name)}"
     });
 
     if (response.Parameter == null || response.Parameter.Value == string.Empty)
