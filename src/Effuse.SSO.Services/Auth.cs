@@ -1,7 +1,6 @@
 using System.Security.Cryptography;
-using System.Text.Json;
+using Effuse.Core.Integration.Contracts;
 using Effuse.SSO.Domain;
-using Effuse.SSO.Integration.Clients.Jwt;
 using Effuse.SSO.Integration.Clients.User;
 
 namespace Effuse.SSO.Services;

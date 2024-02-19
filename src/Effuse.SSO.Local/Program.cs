@@ -18,7 +18,7 @@ class HttpServer
 
     // Generic Integrations
     container.RegisterType<Effuse.SSO.Integration.Clients.User.IUserClient, Effuse.SSO.Integration.Clients.User.DbUserClient>();
-    container.RegisterType<Effuse.SSO.Integration.Clients.Jwt.IJwtClient, Effuse.SSO.Integration.Clients.Jwt.ParameterJwtClient>();
+    container.RegisterType<Effuse.Core.Integration.Contracts.IJwtClient, Effuse.Core.Integration.Implementations.ParameterJwtClient>();
 
     // Services
     container.RegisterType<Effuse.SSO.Services.AuthService>();

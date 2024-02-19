@@ -8,6 +8,10 @@ namespace Effuse.Core.Local;
 
 public class WebSocketHandler : WebSocketBehavior
 {
+  private static readonly IDictionary<string, WebSocketHandler> connections = new Dictionary<string, WebSocketHandler>();
+
+  public static IReadOnlyDictionary<string, WebSocketHandler> Connections => (IReadOnlyDictionary<string, WebSocketHandler>)connections;
+
   private readonly IWebSocketHandler handler;
 
   public WebSocketHandler(IWebSocketHandler handler)
@@ -17,6 +21,7 @@ public class WebSocketHandler : WebSocketBehavior
 
   protected override void OnOpen()
   {
+    connections[this.ID] = this;
     base.OnOpen();
     this.handler.OnConnect(new HandlerProps(
       this.Context.RequestUri.AbsolutePath,
@@ -31,18 +36,25 @@ public class WebSocketHandler : WebSocketBehavior
   {
     base.OnMessage(e);
     var response = await this.handler.OnMessage(this.ID, e.Data);
-    this.Send(JsonSerializer.Serialize(response));
+    this.Send(response);
   }
 
   protected override void OnClose(CloseEventArgs e)
   {
+    connections.Remove(this.ID);
     base.OnClose(e);
     this.handler.OnClose(this.ID);
   }
 
   protected override void OnError(WebSocketSharp.ErrorEventArgs e)
   {
+    connections.Remove(this.ID);
     base.OnError(e);
     this.handler.OnClose(this.ID);
+  }
+
+  public void Send(object data)
+  {
+    base.Send(JsonSerializer.Serialize(data));
   }
 }
