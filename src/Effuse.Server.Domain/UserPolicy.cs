@@ -2,12 +2,11 @@
 
 public class UserPolicy
 {
-  public UserPolicy(Guid channelId, bool read, bool write, bool admin)
+  public UserPolicy(Guid channelId, bool read, bool write)
   {
     ChannelId = channelId;
     Read = read;
     Write = write;
-    Admin = admin;
   }
 
   public Guid ChannelId { get; }
@@ -15,6 +14,4 @@ public class UserPolicy
   public bool Read { get; }
 
   public bool Write { get; }
-
-  public bool Admin { get; }
 }

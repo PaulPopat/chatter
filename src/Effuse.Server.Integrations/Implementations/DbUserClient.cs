@@ -19,8 +19,6 @@ public class DbUserClient : IUserClient
     public bool Read { get; set; }
 
     public bool Write { get; set; }
-
-    public bool Admin { get; set; }
   }
 
   private struct UserDto
@@ -30,6 +28,8 @@ public class DbUserClient : IUserClient
     public string LastLoggedIn { get; set; }
 
     public bool Banned { get; set; }
+
+    public bool Admin { get; set; }
 
     public List<UserPolicyDto> Policies { get; set; }
   }
@@ -59,12 +59,12 @@ public class DbUserClient : IUserClient
       JoinedServer = user.JoinedServer.ToISOString(),
       LastLoggedIn = user.LastLoggedIn.ToISOString(),
       Banned = user.Banned,
+      Admin = user.Admin,
       Policies = user.Policies.Select(p => new UserPolicyDto
       {
         ChannelId = p.ChannelId.ToString(),
         Read = p.Read,
-        Write = p.Write,
-        Admin = p.Admin
+        Write = p.Write
       }).ToList()
     };
   }
@@ -79,8 +79,8 @@ public class DbUserClient : IUserClient
       dto.Policies.Select(p => new UserPolicy(
         channelId: Guid.Parse(p.ChannelId),
         read: p.Read,
-        write: p.Write,
-        admin: p.Admin)));
+        write: p.Write)),
+      dto.Admin);
   }
 
   public async Task UpdateUser(User user)
@@ -105,8 +105,8 @@ public class DbUserClient : IUserClient
         .Select(c => new UserPolicy(
           channelId: c.ChannelId,
           read: true,
-          write: true,
-          admin: false)).ToListAsync());
+          write: true)).ToListAsync(),
+      false);
 
     await this.database.AddItem(TableName, userId.ToString(), ToDto(input));
 
@@ -139,5 +139,12 @@ public class DbUserClient : IUserClient
     {
       yield return await this.GetUser(Guid.Parse(userId));
     }
+  }
+
+  public async Task<User?> FindUser(Guid userId)
+  {
+    var dto = await this.database.FindItem<UserDto>(TableName, userId.ToString());
+    if (dto == null) return null;
+    return FromDto(userId, dto.Value);
   }
 }

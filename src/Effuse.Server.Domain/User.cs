@@ -9,13 +9,15 @@ public class User
     DateTime joinedServer,
     DateTime lastLoggedIn,
     bool banned,
-    IEnumerable<UserPolicy> policies)
+    IEnumerable<UserPolicy> policies,
+    bool admin)
   {
     UserId = userId;
     JoinedServer = joinedServer;
     LastLoggedIn = lastLoggedIn;
     Banned = banned;
     Policies = policies;
+    Admin = admin;
   }
 
   public Guid UserId { get; }
@@ -28,6 +30,8 @@ public class User
 
   public IEnumerable<UserPolicy> Policies { get; }
 
+  public bool Admin { get; }
+
   public bool MayRead(Channel channel)
   {
     return this.Policies.FirstOrDefault(p => p.ChannelId == channel.ChannelId)?.Read ?? false;
@@ -38,10 +42,44 @@ public class User
     return this.Policies.FirstOrDefault(p => p.ChannelId == channel.ChannelId)?.Write ?? false;
   }
 
-  public bool MayAdmin(Channel channel)
+  public User WithChannelAccess(Channel channel, bool read, bool write)
   {
-    return this.Policies.FirstOrDefault(p => p.ChannelId == channel.ChannelId)?.Admin ?? false;
+    return new User(
+      userId: this.UserId,
+      joinedServer: JoinedServer,
+      lastLoggedIn: LastLoggedIn,
+      banned: Banned,
+      admin: Admin,
+      policies: this.Policies.Append(new UserPolicy(
+        channelId: channel.ChannelId,
+        read: read,
+        write: write)));
   }
 
-  public User AsBanned => new(UserId, JoinedServer, LastLoggedIn, true, Policies);
+  public User RevokeChannelAccess(Channel channel)
+  {
+    return new User(
+      userId: this.UserId,
+      joinedServer: JoinedServer,
+      lastLoggedIn: LastLoggedIn,
+      banned: Banned,
+      admin: Admin,
+      policies: this.Policies.Where(p => p.ChannelId != channel.ChannelId));
+  }
+
+  public User AsBanned => new(
+      userId: this.UserId,
+      joinedServer: JoinedServer,
+      lastLoggedIn: LastLoggedIn,
+      banned: true,
+      admin: Admin,
+      policies: Policies);
+
+  public User AsAdmin => new(
+      userId: this.UserId,
+      joinedServer: JoinedServer,
+      lastLoggedIn: LastLoggedIn,
+      banned: Banned,
+      admin: true,
+      policies: Policies);
 }

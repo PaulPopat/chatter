@@ -17,4 +17,9 @@ public class Channel
   public string Name { get; }
 
   public bool Public { get; }
+
+  public Channel WithName(string name)
+  {
+    return new Channel(this.ChannelId, this.Type, name, this.Public);
+  }
 }
