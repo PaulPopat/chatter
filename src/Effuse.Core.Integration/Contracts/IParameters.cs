@@ -4,7 +4,7 @@ public enum ParameterName
 {
   ENCRYPTION_PASSPHRASE,
   JWT_CERTIFICATE,
-  JWT_SECRET
+  JWT_SECRET,
 }
 
 public interface IParameters

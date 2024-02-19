@@ -10,6 +10,8 @@ public class DbChannelClient : IChannelClient
     public int Type { get; set; }
 
     public string Name { get; set; }
+
+    public bool Public { get; set; }
   }
 
   private struct ChannelListDto
@@ -33,18 +35,19 @@ public class DbChannelClient : IChannelClient
     return new ChannelDto
     {
       Type = (int)channel.Type,
-      Name = channel.Name
+      Name = channel.Name,
+      Public = channel.Public
     };
   }
 
   private static Channel FromDto(Guid id, ChannelDto dto)
   {
-    return new Channel(id, (ChannelType)dto.Type, dto.Name);
+    return new Channel(id, (ChannelType)dto.Type, dto.Name, dto.Public);
   }
 
-  public async Task<Channel> CreateChannel(string name, ChannelType type)
+  public async Task<Channel> CreateChannel(string name, ChannelType type, bool @public)
   {
-    var result = new Channel(Guid.NewGuid(), type, name);
+    var result = new Channel(Guid.NewGuid(), type, name, @public);
     await this.database.AddItem(TableName, result.ChannelId.ToString(), ToDto(result));
 
     var channels = await this.database.FindItem<ChannelListDto>(ListTableName, ListItemName);

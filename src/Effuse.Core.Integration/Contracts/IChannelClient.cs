@@ -4,7 +4,7 @@ namespace Effuse.Core.Integration.Contracts;
 
 public interface IChannelClient
 {
-  Task<Channel> CreateChannel(string name, ChannelType type);
+  Task<Channel> CreateChannel(string name, ChannelType type, bool @public);
 
   Task<Channel> UpdateChannel(Channel channel);
 

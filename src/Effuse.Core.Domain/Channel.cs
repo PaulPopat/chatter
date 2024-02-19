@@ -2,11 +2,12 @@
 
 public class Channel
 {
-  public Channel(Guid channelId, ChannelType type, string name)
+  public Channel(Guid channelId, ChannelType type, string name, bool @public)
   {
     ChannelId = channelId;
     Type = type;
     Name = name;
+    Public = @public;
   }
 
   public Guid ChannelId { get; }
@@ -14,4 +15,6 @@ public class Channel
   public ChannelType Type { get; }
 
   public string Name { get; }
+
+  public bool Public { get; }
 }

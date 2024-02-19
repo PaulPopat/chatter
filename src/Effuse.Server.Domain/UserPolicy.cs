@@ -2,15 +2,15 @@
 
 public class UserPolicy
 {
-  public UserPolicy(Guid resourceId, bool read, bool write, bool admin)
+  public UserPolicy(Guid channelId, bool read, bool write, bool admin)
   {
-    ResourceId = resourceId;
+    ChannelId = channelId;
     Read = read;
     Write = write;
     Admin = admin;
   }
 
-  public Guid ResourceId { get; }
+  public Guid ChannelId { get; }
 
   public bool Read { get; }
 
