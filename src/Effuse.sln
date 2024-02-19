@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.Domain", "Effus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Server.Integrations", "Effuse.Server.Integrations\Effuse.Server.Integrations.csproj", "{84DBA50F-9D9D-4272-9372-7967B46B53A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Server.Services", "Effuse.Server.Services\Effuse.Server.Services.csproj", "{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -237,6 +239,18 @@ Global
 		{84DBA50F-9D9D-4272-9372-7967B46B53A0}.Release|x64.Build.0 = Release|Any CPU
 		{84DBA50F-9D9D-4272-9372-7967B46B53A0}.Release|x86.ActiveCfg = Release|Any CPU
 		{84DBA50F-9D9D-4272-9372-7967B46B53A0}.Release|x86.Build.0 = Release|Any CPU
+		{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}.Debug|x64.Build.0 = Debug|Any CPU
+		{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}.Debug|x86.Build.0 = Debug|Any CPU
+		{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}.Release|x64.ActiveCfg = Release|Any CPU
+		{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}.Release|x64.Build.0 = Release|Any CPU
+		{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}.Release|x86.ActiveCfg = Release|Any CPU
+		{19D79A13-5939-41B4-A4CB-C66E1F4F4B31}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
