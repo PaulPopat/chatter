@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Web;
 using Effuse.Core.Integration.Contracts;
+using Effuse.Server.Integrations.Contracts;
 
 namespace Effuse.Server.Integrations;
 

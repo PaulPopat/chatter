@@ -3,21 +3,21 @@ version: '3'
 dotenv: ['.env']
 
 tasks:
+  integration:prepare:
+    cmds:
+      - rm -rf resources/data/database
+      - rm -rf resources/server-data/database
+    dir: "{{.TASKFILE_DIR}}"
+
   integration:test:
     cmds:
+      - task: integration:prepare
       - npx jest
     dir: "{{.TASKFILE_DIR}}/tests"
-
-  solution:key:generate:
-    cmds:
-      - openssl req -new -newkey rsa:4096 -nodes -keyout signing_key.key -out public_key.csr -subj "/C=UK/CN=local"
-      - openssl x509 -req -sha512 -days 365 -in public_key.csr -signkey signing_key.key -out private_key.pem
-    dir: "{{.TASKFILE_DIR}}/resources/data"
 
   solution:build:
     cmds:
       - dotnet build
-      - task: solution:key:generate
     dir: "{{.TASKFILE_DIR}}/src"
   
   solution:test:
@@ -35,16 +35,23 @@ tasks:
     cmds:
       - dotnet tool install -g Amazon.Lambda.Tools
 
+  solution:key:generate:
+    cmds:
+      - openssl req -new -newkey rsa:4096 -nodes -keyout signing_key.key -out public_key.csr -subj "/C=UK/CN=local"
+      - openssl x509 -req -sha512 -days 365 -in public_key.csr -signkey signing_key.key -out private_key.pem
+    dir: "{{.TASKFILE_DIR}}/resources/{{.DATA_DIR}}"
+    internal: true
+
   sso:aws:package:
-    dotenv: ['.sso.env']
     cmds:
       - dotnet lambda package
     dir: "{{.TASKFILE_DIR}}/src/Effuse.SSO.AWS.Handlers"
 
   sso:aws:deploy:
-    dotenv: ['.sso.env']
+    deps: [solution:build]
     cmds:
-      - task: solution:build
+      - task: solution:key:generate
+        vars: { DATA_DIR: 'data' }
       - task: sso:aws:package
       - cdk --app "{{.CDK_APP}}" bootstrap
       - cdk --app "{{.CDK_APP}}" deploy --require-approval never
@@ -53,14 +60,24 @@ tasks:
       APP_PREFIX: single-signon
 
   sso:local:run:
-    dotenv: ['.sso.env']
+    deps: [solution:build]
     cmds:
-      - task: solution:build
+      - task: solution:key:generate
+        vars: { DATA_DIR: 'data' }
       - ./src/Effuse.SSO.Local/bin/Debug/net6.0/Effuse.SSO.Local
     env:
       APP_PREFIX: single-signon
       DATA_DIR: ./resources/data
-      JWT_SECRET:
-        sh: echo $(<resources/signing_key.key)
-      JWT_CERTIFICATE:
-        sh: echo $(<resources/private_key.pem)
+
+  server:local:run:
+    deps: [solution:build]
+    cmds:
+      - task: solution:key:generate
+        vars: { DATA_DIR: 'server-data' }
+      - ./src/Effuse.Server.Local/bin/Debug/net6.0/Effuse.Server.Local
+    env:
+      APP_PREFIX: effuse-server
+      DATA_DIR: ./resources/server-data
+
+  all:local:run:
+    deps: [sso:local:run, server:local:run]

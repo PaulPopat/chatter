@@ -19,6 +19,24 @@ public class Encryption : IEncryption
 
   private static readonly byte[] Salt = new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 };
 
+  private static readonly char[] Padding = { '=' };
+
+  private static string ToBase64String(byte[] data)
+  {
+    return Convert.ToBase64String(data)
+        .TrimEnd(Padding).Replace('+', '-').Replace('/', '_');
+  }
+
+  private static byte[] FromBase64String(string data)
+  {
+    var incoming = data.Replace('_', '/').Replace('-', '+');
+    switch (data.Length % 4)
+    {
+      case 2: incoming += "=="; break;
+      case 3: incoming += "="; break;
+    }
+    return Convert.FromBase64String(incoming);
+  }
   public async Task<string> Encrypt(string clearText)
   {
     var clearBytes = Encoding.UTF8.GetBytes(clearText);
@@ -33,7 +51,7 @@ public class Encryption : IEncryption
         cs.Write(clearBytes, 0, clearBytes.Length);
         cs.Close();
       }
-      clearText = Convert.ToHexString(ms.ToArray());
+      clearText = ToBase64String(ms.ToArray());
     }
     return clearText;
   }
@@ -41,7 +59,7 @@ public class Encryption : IEncryption
   public async Task<string> Decrypt(string cipherText)
   {
     cipherText = cipherText.Replace(" ", "+");
-    var cipherBytes = Convert.FromHexString(cipherText);
+    var cipherBytes = FromBase64String(cipherText);
     using (var encryptor = Aes.Create())
     {
       var pdb = new Rfc2898DeriveBytes(await this.passphrase.Value, Salt);

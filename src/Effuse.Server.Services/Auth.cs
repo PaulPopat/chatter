@@ -1,7 +1,6 @@
 ﻿using Effuse.Core.Integration;
 using Effuse.Core.Integration.Contracts;
 using Effuse.Server.Domain;
-using Effuse.Server.Integrations;
 using Effuse.Server.Integrations.Contracts;
 
 namespace Effuse.Server.Services;
@@ -35,8 +34,17 @@ public class Auth
     {
       var serverPassword = await this.parameters.GetParameter(ParameterName.SERVER_PASSWORD);
       if (serverPassword != password)
-        throw new AuthException("Invalid password");
-      await this.userClient.RegisterUser(userId);
+      {
+        var adminPassword = await this.parameters.GetParameter(ParameterName.SERVER_ADMIN_PASSWORD);
+        if (adminPassword != string.Empty && adminPassword != password)
+          throw new AuthException("Invalid password");
+
+        await this.userClient.RegisterUser(userId, true);
+      }
+      else
+      {
+        await this.userClient.RegisterUser(userId, false);
+      }
     }
 
     return await this.jwtClient.CreateJwt(new UserGrant

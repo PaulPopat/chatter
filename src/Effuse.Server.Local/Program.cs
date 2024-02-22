@@ -21,6 +21,9 @@ class HttpServer
     container.RegisterType<Effuse.Core.Integration.Contracts.IChatLog, Effuse.Core.Integration.Implementations.ChatLog>();
     container.RegisterType<Effuse.Core.Integration.Contracts.IJwtClient, Effuse.Core.Integration.Implementations.ParameterJwtClient>();
 
+    container.RegisterType<Effuse.Server.Integrations.Contracts.IUserClient, Effuse.Server.Integrations.DbUserClient>();
+    container.RegisterType<Effuse.Server.Integrations.Contracts.ISsoClient, Effuse.Server.Integrations.HttpSsoClient>();
+
     // Services
     container.RegisterType<Effuse.Server.Services.Admin>();
     container.RegisterType<Effuse.Server.Services.Auth>();
@@ -29,6 +32,7 @@ class HttpServer
     // Handlers
     container.RegisterType<Effuse.Server.Handlers.Controllers.Authenticate>();
     container.RegisterType<Effuse.Server.Handlers.Controllers.Chat>();
+    container.RegisterType<Effuse.Server.Handlers.Controllers.Channels>();
     container.RegisterType<Effuse.Server.Handlers.Controllers.Admin.AddUserToChannel>();
     container.RegisterType<Effuse.Server.Handlers.Controllers.Admin.BanUser>();
     container.RegisterType<Effuse.Server.Handlers.Controllers.Admin.CreateChatChannel>();
@@ -63,6 +67,11 @@ class HttpServer
           Method = HttpMethod.Post,
           Path = "/api/v1/banned-users",
           Handler = typeof(Effuse.Server.Handlers.Controllers.Admin.BanUser)
+        },
+        new() {
+          Method = HttpMethod.Get,
+          Path = "/api/v1/channels",
+          Handler = typeof(Effuse.Server.Handlers.Controllers.Channels)
         },
         new() {
           Method = HttpMethod.Post,

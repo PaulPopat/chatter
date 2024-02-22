@@ -6,7 +6,8 @@ public enum ParameterName
   JWT_CERTIFICATE,
   JWT_SECRET,
   SSO_BASE_URL,
-  SERVER_PASSWORD
+  SERVER_PASSWORD,
+  SERVER_ADMIN_PASSWORD
 }
 
 public interface IParameters

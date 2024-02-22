@@ -1,4 +1,4 @@
-﻿namespace Effuse.Server.Integrations;
+﻿namespace Effuse.Server.Integrations.Contracts;
 
 public interface ISsoClient
 {

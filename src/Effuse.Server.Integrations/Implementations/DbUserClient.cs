@@ -93,20 +93,20 @@ public class DbUserClient : IUserClient
     return FromDto(userId, await this.database.GetItem<UserDto>(TableName, userId.ToString())); ;
   }
 
-  public async Task<User> RegisterUser(Guid userId)
+  public async Task<User> RegisterUser(Guid userId, bool admin)
   {
     var input = new User(
-      userId,
-      DateTime.Now,
-      DateTime.Now,
-      false,
-      await this.channelClient.ListChannels()
+      userId: userId,
+      joinedServer: DateTime.Now,
+      lastLoggedIn: DateTime.Now,
+      banned: false,
+      policies: await this.channelClient.ListChannels()
         .Where(c => c.Public)
         .Select(c => new UserPolicy(
           channelId: c.ChannelId,
           read: true,
           write: true)).ToListAsync(),
-      false);
+      admin: admin);
 
     await this.database.AddItem(TableName, userId.ToString(), ToDto(input));
 

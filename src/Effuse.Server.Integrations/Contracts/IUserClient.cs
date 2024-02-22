@@ -10,7 +10,7 @@ public interface IUserClient
 
   Task UpdateUser(User user);
 
-  Task<User> RegisterUser(Guid userId);
+  Task<User> RegisterUser(Guid userId, bool admin);
 
   IAsyncEnumerable<User> ListUsers();
 }
