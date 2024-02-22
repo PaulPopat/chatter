@@ -1,17 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\Effuse.Server.Services\Effuse.Server.Services.csproj" />
+    <ProjectReference Include="..\Effuse.Server.Integration\Effuse.Server.Integration.csproj" />
+    <ProjectReference Include="..\Effuse.Server.Handlers\Effuse.Server.Handlers.csproj" />
     <ProjectReference Include="..\Effuse.Core.Utilities\Effuse.Core.Utilities.csproj" />
     <ProjectReference Include="..\Effuse.Core.Integration\Effuse.Core.Integration.csproj" />
     <ProjectReference Include="..\Effuse.Core.Handlers\Effuse.Core.Handlers.csproj" />
+    <ProjectReference Include="..\Effuse.Core.Local\Effuse.Core.Local.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Unity" Version="5.11.10" />
-    <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
   </ItemGroup>
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

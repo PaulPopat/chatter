@@ -22,4 +22,9 @@ public class Channel
   {
     return new Channel(this.ChannelId, this.Type, name, this.Public);
   }
+
+  public Channel WithPublicity(bool @public)
+  {
+    return new Channel(this.ChannelId, this.Type, this.Name, @public);
+  }
 }

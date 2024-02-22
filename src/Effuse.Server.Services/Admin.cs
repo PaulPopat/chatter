@@ -23,11 +23,11 @@ public class Admin
     return await this.channelClient.CreateChannel(name, ChannelType.Messages, @public);
   }
 
-  public async Task<Channel> RenameChannel(string localToken, Guid channelId, string name)
+  public async Task<Channel> UpdateChannel(string localToken, Guid channelId, string name, bool @public)
   {
     await this.authService.RequireAdmin(localToken);
     var channel = await this.channelClient.GetChannel(channelId);
-    return await this.channelClient.UpdateChannel(channel.WithName(name));
+    return await this.channelClient.UpdateChannel(channel.WithName(name).WithPublicity(@public));
   }
 
   public async Task AddUserToChannel(string localToken, Guid channelId, Guid userId, bool allowWrite)

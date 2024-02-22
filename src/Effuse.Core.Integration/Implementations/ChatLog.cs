@@ -2,7 +2,7 @@
 using Effuse.Core.Integration.Contracts;
 using Effuse.Core.Utilities;
 
-namespace Effuse.Core.Integration;
+namespace Effuse.Core.Integration.Implementations;
 
 public class ChatLog : IChatLog
 {

@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Server.Services", "E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Server.Handlers", "Effuse.Server.Handlers\Effuse.Server.Handlers.csproj", "{F9A900BD-BC0F-4D19-ABF5-B73A37C335B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Server.Local", "Effuse.Server.Local\Effuse.Server.Local.csproj", "{1945DFEB-9D34-4607-BD40-5BBCD4B34894}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -265,6 +267,18 @@ Global
 		{F9A900BD-BC0F-4D19-ABF5-B73A37C335B9}.Release|x64.Build.0 = Release|Any CPU
 		{F9A900BD-BC0F-4D19-ABF5-B73A37C335B9}.Release|x86.ActiveCfg = Release|Any CPU
 		{F9A900BD-BC0F-4D19-ABF5-B73A37C335B9}.Release|x86.Build.0 = Release|Any CPU
+		{1945DFEB-9D34-4607-BD40-5BBCD4B34894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1945DFEB-9D34-4607-BD40-5BBCD4B34894}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1945DFEB-9D34-4607-BD40-5BBCD4B34894}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1945DFEB-9D34-4607-BD40-5BBCD4B34894}.Debug|x64.Build.0 = Debug|Any CPU
+		{1945DFEB-9D34-4607-BD40-5BBCD4B34894}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1945DFEB-9D34-4607-BD40-5BBCD4B34894}.Debug|x86.Build.0 = Debug|Any CPU
+		{1945DFEB-9D34-4607-BD40-5BBCD4B34894}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1945DFEB-9D34-4607-BD40-5BBCD4B34894}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1945DFEB-9D34-4607-BD40-5BBCD4B34894}.Release|x64.ActiveCfg = Release|Any CPU
+		{1945DFEB-9D34-4607-BD40-5BBCD4B34894}.Release|x64.Build.0 = Release|Any CPU
+		{1945DFEB-9D34-4607-BD40-5BBCD4B34894}.Release|x86.ActiveCfg = Release|Any CPU
+		{1945DFEB-9D34-4607-BD40-5BBCD4B34894}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

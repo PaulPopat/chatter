@@ -8,6 +8,8 @@ public class RenameChannel : IHandler
   private struct Request
   {
     public string Name { get; set; }
+
+    public bool Public { get; set; }
   }
 
   private struct Response
@@ -32,13 +34,13 @@ public class RenameChannel : IHandler
   {
     var data = props.Body<Request>();
     var token = props.AuthToken;
-    if (token == null) return new (403);
+    if (token == null) return new(403);
 
     var channel = props.PathParameters["channelId"];
 
-    var response = await this.admin.RenameChannel(token, Guid.Parse(channel), data.Name);
+    var response = await this.admin.UpdateChannel(token, Guid.Parse(channel), data.Name, data.Public);
 
-    return new (201, new Response
+    return new(201, new Response
     {
       ChannelId = response.ChannelId.ToString(),
       Type = Enum.GetName(response.Type) ?? throw new Exception("Could not get enum name"),

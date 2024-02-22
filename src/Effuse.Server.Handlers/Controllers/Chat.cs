@@ -3,7 +3,7 @@ using Effuse.Core.Handlers.Contracts;
 using Effuse.Core.Utilities;
 using Effuse.Server.Services;
 
-namespace Effuse.Server.Handlers;
+namespace Effuse.Server.Handlers.Controllers;
 
 public class Chat : IWebSocketHandler
 {
