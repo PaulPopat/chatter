@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Effuse.Core.Local\Effuse.Core.Local.csproj" />
+    <ProjectReference Include="..\Effuse.Core.Utilities\Effuse.Core.Utilities.csproj" />
+    <ProjectReference Include="..\Effuse.Core.Domain\Effuse.Core.Domain.csproj" />
+    <ProjectReference Include="..\Effuse.Server.Domain\Effuse.Server.Domain.csproj" />
+    <ProjectReference Include="..\Effuse.Server.Services\Effuse.Server.Services.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

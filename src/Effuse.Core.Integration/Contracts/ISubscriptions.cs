@@ -4,7 +4,11 @@ namespace Effuse.Core.Integration.Contracts;
 
 public interface ISubscriptions
 {
-  Task Subscribe(Channel channel, string connectionId);
+  Task Subscribe(Subscription subscription);
 
-  Task Broadcast(Channel channel, Message message);
+  Task Unsubscribe(string subscriptionId);
+
+  Task<Subscription> GetSubscription(string subscriptionId);
+
+  Task Broadcast(Subscription subscription, Message message);
 }
