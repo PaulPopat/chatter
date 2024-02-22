@@ -3,6 +3,11 @@ version: '3'
 dotenv: ['.env']
 
 tasks:
+  integration:test:
+    cmds:
+      - npx jest
+    dir: "{{.TASKFILE_DIR}}/tests"
+
   solution:key:generate:
     cmds:
       - openssl req -new -newkey rsa:4096 -nodes -keyout signing_key.key -out public_key.csr -subj "/C=UK/CN=local"
