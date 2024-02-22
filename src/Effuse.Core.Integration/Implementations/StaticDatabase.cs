@@ -52,9 +52,8 @@ public class StaticDatabase : IDatabase
       var decrypted = await this.encryption.Decrypt(response.Data);
       return JsonSerializer.Deserialize<TExpect>(decrypted);
     }
-    catch (Exception error)
+    catch
     {
-      Console.WriteLine(error);
       return null;
     }
   }

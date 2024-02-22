@@ -9,7 +9,7 @@ describe("auth", () => {
     expect(authenticated.local_token).toEqual(expect.any(String));
   });
 
-  it("bans admin tasks", async () => {
+  it("blocks admin tasks", async () => {
     const authenticated = await addUserToServer();
 
     expect(

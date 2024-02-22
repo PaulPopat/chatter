@@ -143,12 +143,9 @@ public class AuthService
 
   public async Task<Guid> Verify(string token, UserAccess access)
   {
-    Console.WriteLine("Attempting to verify token");
     var grant = await this.jwtClient.DecodeJwt<UserTokenPayload>(token);
 
     if (grant.Access != access) throw new Exception("Invalid token");
-
-    Console.WriteLine($"Found user for token {grant.UserId}");
     return Guid.Parse(grant.UserId);
   }
 

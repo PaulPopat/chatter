@@ -48,10 +48,8 @@ public static class Utilities
     return await reader.ReadToEndAsync();
   }
 
-  public static async Task<HandlerProps> HandlerProps(this HttpListenerRequest req, Route route)
+  public static async Task<HandlerProps> HandlerProps(this HttpListenerRequest req, Route route, Guid connectionId)
   {
-    var connectionId = Guid.NewGuid();
-
     if (req.Url == null) throw new Exception("This should not be reachable");
 
     return new HandlerProps(

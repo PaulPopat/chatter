@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Unity;
 using Effuse.Core.Handlers.Contracts;
+using Effuse.Core.Integration;
 
 namespace Effuse.Core.Local;
 
@@ -29,6 +30,9 @@ public class Server
       var req = ctx.Request;
       var res = ctx.Response;
 
+      var connectionId = Guid.NewGuid();
+      Console.WriteLine($"Handling {connectionId} {req.HttpMethod}: {req.Url?.AbsolutePath}");
+
       try
       {
 
@@ -40,15 +44,24 @@ public class Server
 
         var route = this.routes.First(h => h.Matches(req.Url.AbsolutePath, req.HttpMethod));
         var handler = (IHandler)container.Resolve(route.Handler);
-        var response = await handler.Handle(await req.HandlerProps(route));
+        var response = await handler.Handle(await req.HandlerProps(route, connectionId));
 
         await res.ApplyResponse(response);
       }
-      catch (Exception err)
+      catch (Exception error)
       {
-        Console.WriteLine(err);
-        await res.ApplyResponse(new(500));
+        if (error is AuthException)
+        {
+          await res.ApplyResponse(new(403));
+        }
+        else
+        {
+          Console.WriteLine(error);
+          await res.ApplyResponse(new(500));
+        }
       }
+
+      Console.WriteLine($"Finished {connectionId}");
     }
   }
 
