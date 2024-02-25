@@ -122,5 +122,5 @@ describe("chat", () => {
         Who: expect.any(String),
       })),
     ]);
-  }, 65_000);
+  });
 });
