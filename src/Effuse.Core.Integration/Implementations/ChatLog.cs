@@ -79,11 +79,11 @@ public class ChatLog : IChatLog
     var count = await this.NumberOfMessages(channel);
     if (count <= offset) throw new Exception("At end of messages");
 
-    var messageIndex = count - offset;
+    var messageIndex = count - offset - 1;
 
     var file = await this.@static.DownloadText(this.LogPath(channel, messageIndex));
     var lines = file.Data.Split('\n');
-    var start = this.LineNumber(messageIndex) - 1;
+    var start = this.LineNumber(messageIndex);
 
     for (var i = start; start - i < LogsPerRequest && i >= 0; i--)
     {

@@ -84,4 +84,43 @@ describe("chat", () => {
       ],
     ]);
   });
+
+  it("paginates backlog", async () => {
+    const data = await createTwoUsersAndChannel();
+
+    adminCon = await webSocket("/ws/chat", {
+      token: data.adminUser.local_token,
+      channelId: data.createdChannel.ChannelId,
+    });
+
+    await sleep(100);
+    for (let i = 0; i < 400; i++) {
+      await adminCon.sendMessage(`test message ${i}`);
+    }
+
+    localCon = await webSocket("/ws/chat", {
+      token: data.localUser.local_token,
+      channelId: data.createdChannel.ChannelId,
+    });
+
+    await sleep(1000);
+
+    await localCon.sendBacklog(0);
+    await localCon.sendBacklog(25);
+
+    expect(localCon.messages).toEqual([
+      Array.apply(null, Array(20)).map((_, i) => ({
+        Text: `test message ${399 - i}`,
+        Type: "Message",
+        When: expect.any(String),
+        Who: expect.any(String),
+      })),
+      Array.apply(null, Array(20)).map((_, i) => ({
+        Text: `test message ${374 - i}`,
+        Type: "Message",
+        When: expect.any(String),
+        Who: expect.any(String),
+      })),
+    ]);
+  }, 65_000);
 });
