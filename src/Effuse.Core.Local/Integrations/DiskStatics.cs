@@ -17,6 +17,13 @@ public class DiskStatics : IStatic
     return Path.Combine(BaseDir, name + ".mime");
   }
 
+  public Task Delete(string name)
+  {
+    File.Delete(Location(name));
+    File.Delete(MimeLocation(name));
+    return new Task(() => {});
+  }
+
   public async Task<StaticFile> Download(string name)
   {
     return new StaticFile

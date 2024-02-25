@@ -1,5 +1,6 @@
 ﻿using Effuse.Core.Domain;
 using Effuse.Core.Integration.Contracts;
+using Effuse.Core.Utilities;
 
 namespace Effuse.Core.Local.Integrations;
 
@@ -17,6 +18,17 @@ public class WebsocketSubscriptions : ISubscriptions
     public string UserId { get; set; }
   }
 
+  private struct MessageDto
+  {
+    public string Type { get; set; }
+
+    public string Text { get; set; }
+
+    public string When { get; set; }
+
+    public string Who { get; set; }
+  }
+
   private static string TableName => "Subscriptions";
 
   private readonly IDatabase database;
@@ -32,11 +44,19 @@ public class WebsocketSubscriptions : ISubscriptions
 
     if (!subscriptions.HasValue) return;
 
+    MessageDto dto = new()
+    {
+      Type = "Message",
+      Text = message.Text,
+      When = message.When.ToISOString(),
+      Who = message.UserId.ToString()
+    };
+
     foreach (var connectionId in subscriptions.Value.ConnectionIds ?? new List<string>())
     {
-      if (connectionId == null) continue;
+      if (connectionId == null || connectionId == subscription.SubscriptionId) continue;
 
-      WebSocketHandler.Connections[connectionId]?.Send(message);
+      WebSocketHandler.Connections[connectionId]?.Send(dto);
     }
   }
 

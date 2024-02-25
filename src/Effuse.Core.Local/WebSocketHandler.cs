@@ -14,47 +14,76 @@ public class WebSocketHandler : WebSocketBehavior
 
   private readonly IWebSocketHandler handler;
 
+  private Task? setup;
+
   public WebSocketHandler(IWebSocketHandler handler)
   {
     this.handler = handler;
   }
 
-  protected override void OnOpen()
+  protected override async void OnOpen()
   {
-    connections[this.ID] = this;
-    base.OnOpen();
-    this.handler.OnConnect(new HandlerProps(
-      this.Context.RequestUri.AbsolutePath,
-      "GET",
-      this.ID,
-      new Dictionary<string, string>(),
-      this.Context.RequestUri.GetQueryString(),
-      this.Context.Headers.ToDictionary().ToLowerCaseKeys()));
+    try
+    {
+      connections[this.ID] = this;
+      base.OnOpen();
+      this.setup = this.handler
+        .OnConnect(
+          new HandlerProps(
+            this.Context.RequestUri.AbsolutePath,
+            "GET",
+            this.ID,
+            new Dictionary<string, string>(),
+            this.Context.RequestUri.GetQueryString().ToLowerCaseKeys(),
+            this.Context.Headers.ToDictionary().ToLowerCaseKeys()));
+      await this.setup;
+    }
+    catch (Exception err)
+    {
+      Console.WriteLine(err);
+      Sessions.CloseSession(ID);
+    }
   }
 
   protected override async void OnMessage(MessageEventArgs e)
   {
-    base.OnMessage(e);
-    var response = await this.handler.OnMessage(this.ID, e.Data);
-    this.Send(response);
+    try
+    {
+      if (this.setup is not null)
+        await this.setup;
+      base.OnMessage(e);
+      var response = await this.handler.OnMessage(this.ID, e.Data);
+      this.Send(response);
+    }
+    catch (Exception err)
+    {
+      Console.WriteLine(err);
+    }
   }
 
-  protected override void OnClose(CloseEventArgs e)
+  protected override async void OnClose(CloseEventArgs e)
   {
+    if (this.setup is not null)
+      await this.setup;
+    this.setup?.Wait();
     connections.Remove(this.ID);
     base.OnClose(e);
-    this.handler.OnClose(this.ID);
+    await this.handler.OnClose(this.ID);
   }
 
-  protected override void OnError(WebSocketSharp.ErrorEventArgs e)
+  protected override async void OnError(WebSocketSharp.ErrorEventArgs e)
   {
+    if (this.setup is not null)
+      await this.setup;
     connections.Remove(this.ID);
     base.OnError(e);
-    this.handler.OnClose(this.ID);
+    await this.handler.OnClose(this.ID);
   }
 
-  public void Send(object data)
+  public async void Send(object data)
   {
+    if (this.setup is not null)
+      await this.setup;
     base.Send(JsonSerializer.Serialize(data));
   }
 }

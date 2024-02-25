@@ -34,11 +34,17 @@ public class User
 
   public bool MayRead(Channel channel)
   {
+    if (this.Admin)
+      return true;
+
     return this.Policies.FirstOrDefault(p => p.ChannelId == channel.ChannelId)?.Read ?? false;
   }
 
   public bool MayWrite(Channel channel)
   {
+    if (this.Admin)
+      return true;
+
     return this.Policies.FirstOrDefault(p => p.ChannelId == channel.ChannelId)?.Write ?? false;
   }
 

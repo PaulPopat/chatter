@@ -48,6 +48,32 @@ public class ChatLog : IChatLog
     }
   }
 
+
+  private async Task AddMessageNumber(Channel channel)
+  {
+    var path = $"chat/{channel.ChannelId}/message-count";
+    try
+    {
+      var text = await this.@static.DownloadText(path);
+      var current = long.Parse(text.Data);
+      await this.@static.UploadText(new()
+      {
+        Name = path,
+        Data = (current + 1).ToString(),
+        Mime = "text"
+      });
+    }
+    catch
+    {
+      await this.@static.UploadText(new()
+      {
+        Name = path,
+        Data = 1.ToString(),
+        Mime = "text"
+      });
+    }
+  }
+
   public async IAsyncEnumerable<Message> GetMessageLogs(Channel channel, long offset)
   {
     var count = await this.NumberOfMessages(channel);
@@ -57,9 +83,9 @@ public class ChatLog : IChatLog
 
     var file = await this.@static.DownloadText(this.LogPath(channel, messageIndex));
     var lines = file.Data.Split('\n');
-    var start = this.LineNumber(messageIndex);
+    var start = this.LineNumber(messageIndex) - 1;
 
-    for (var i = start; i - start < LogsPerRequest && i < BundleSize; i++)
+    for (var i = start; start - i < LogsPerRequest && i >= 0; i--)
     {
       var line = await this.encryption.Decrypt(lines[i]);
       var lineParts = line.Split(Delimiter);
@@ -94,9 +120,11 @@ public class ChatLog : IChatLog
       await this.@static.UploadText(new StaticTextFile
       {
         Name = this.LogPath(channel, count),
-        Data = existing + "\n" + (await this.encryption.Encrypt(this.FormatMessage(message))),
+        Data = existing.Data + "\n" + (await this.encryption.Encrypt(this.FormatMessage(message))),
         Mime = "text"
       });
     }
+
+    await this.AddMessageNumber(channel);
   }
 }

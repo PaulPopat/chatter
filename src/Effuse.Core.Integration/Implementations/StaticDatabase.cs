@@ -37,9 +37,9 @@ public class StaticDatabase : IDatabase
     });
   }
 
-  public Task DeleteItem(string tableName, string primaryKey)
+  public async Task DeleteItem(string tableName, string primaryKey)
   {
-    throw new NotImplementedException();
+    await this.@static.Delete(await this.ItemPath(tableName, primaryKey));
   }
 
   public async Task<TExpect?> FindItem<TExpect>(string tableName, string primaryKey)

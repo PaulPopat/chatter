@@ -77,4 +77,13 @@ public class S3Statics : IStatic
       ContentType = file.Mime
     });
   }
+
+  public Task Delete(string name)
+  {
+    return this.s3.DeleteObjectAsync(new DeleteObjectRequest
+    {
+      BucketName = BucketName,
+      Key = name
+    });
+  }
 }

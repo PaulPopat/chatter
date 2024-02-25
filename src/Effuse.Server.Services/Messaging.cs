@@ -44,7 +44,7 @@ public class Messaging
     var channel = await this.channelClient.GetChannel(channelId);
     if (!user.MayRead(channel))
     {
-      throw new AuthException("No write access");
+      throw new AuthException("No read access");
     }
 
     await this.subscriptions.Subscribe(new Subscription(

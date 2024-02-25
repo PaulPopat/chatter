@@ -14,15 +14,19 @@ public class Chat : IWebSocketHandler
 
   private struct MessageResponse
   {
+    public string Type { get; set; }
+
     public string Text { get; set; }
 
     public string When { get; set; }
 
-    public string UserId { get; set; }
+    public string Who { get; set; }
   }
 
   private struct UnknownResponse
   {
+    public string Type { get; set; }
+
     public string Message { get; set; }
   }
 
@@ -47,26 +51,35 @@ public class Chat : IWebSocketHandler
 
   public async Task<object> OnMessage(string connectionId, string message)
   {
-    var parts = message.Split(':');
-    var command = parts[0];
-    var data = string.Join(':', parts.Skip(1));
-
-    switch (command)
+    try
     {
-      case "backlog":
-        var body = JsonSerializer.Deserialize<BacklogRequest>(data);
-        var response = await this.messaging.GetBackLog(connectionId, body.Offset);
-        return response.Select(m => new MessageResponse
-        {
-          Text = m.Text,
-          When = m.When.ToISOString(),
-          UserId = m.UserId.ToString()
-        }).ToList();
-      case "send":
-        await this.messaging.PostMessage(connectionId, data);
-        return new UnknownResponse { Message = "MESSAGE_SENT" };
-      default:
-        return new UnknownResponse { Message = "UNKNOWN_COMMAND" };
+      var parts = message.Split(':');
+      var command = parts[0];
+      var data = string.Join(':', parts.Skip(1));
+
+      switch (command)
+      {
+        case "backlog":
+          var body = JsonSerializer.Deserialize<BacklogRequest>(data);
+          var response = await this.messaging.GetBackLog(connectionId, body.Offset);
+          return response.Select(m => new MessageResponse
+          {
+            Type = "Message",
+            Text = m.Text,
+            When = m.When.ToISOString(),
+            Who = m.UserId.ToString()
+          }).ToList();
+        case "send":
+          await this.messaging.PostMessage(connectionId, data);
+          return new UnknownResponse { Type = "Info", Message = "MESSAGE_SENT" };
+        default:
+          return new UnknownResponse { Type = "Error", Message = "UNKNOWN_COMMAND" };
+      }
+    }
+    catch (Exception err)
+    {
+      Console.WriteLine(err);
+      return new UnknownResponse { Type = "Error", Message = "INTERNAL_ERROR" };
     }
   }
 }

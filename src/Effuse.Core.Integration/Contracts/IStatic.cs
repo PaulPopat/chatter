@@ -27,4 +27,6 @@ public interface IStatic
   Task UploadText(StaticTextFile file);
 
   Task<StaticTextFile> DownloadText(string name);
+
+  Task Delete(string name);
 }

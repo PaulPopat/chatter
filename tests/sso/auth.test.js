@@ -23,7 +23,10 @@ describe("auth", () => {
   it("Allows private actions with admin", async () => {
     const user = await createUser();
 
-    const profile = await sso.get(url("/api/v1/user/profile"), auth(user.admin_token));
+    const profile = await sso.get(
+      url("/api/v1/user/profile"),
+      auth(user.admin_token)
+    );
 
     expect(profile.data).toEqual({
       UserId: user.user_id,
@@ -31,7 +34,29 @@ describe("auth", () => {
       Biography: "",
       Servers: [],
       LastSignIn: expect.any(String),
-      RegisteredAt: expect.any(String)
+      RegisteredAt: expect.any(String),
+    });
+  });
+
+  it("Allows login", async () => {
+    const user = await createUser();
+
+    const logInResponse = await sso.get(
+      url("/api/v1/auth/token", { email: user.email, password: user.password })
+    );
+
+    const profile = await sso.get(
+      url("/api/v1/user/profile"),
+      auth(logInResponse.data.AdminToken)
+    );
+
+    expect(profile.data).toEqual({
+      UserId: user.user_id,
+      UserName: user.username,
+      Biography: "",
+      Servers: [],
+      LastSignIn: expect.any(String),
+      RegisteredAt: expect.any(String),
     });
   });
 });
