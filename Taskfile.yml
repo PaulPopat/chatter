@@ -1,6 +1,6 @@
-version: '3'
+version: "3"
 
-dotenv: ['.env']
+dotenv: [".env"]
 
 tasks:
   integration:prepare:
@@ -19,7 +19,7 @@ tasks:
     cmds:
       - dotnet build
     dir: "{{.TASKFILE_DIR}}/src"
-  
+
   solution:test:
     cmds:
       - task: solution:build
@@ -51,7 +51,7 @@ tasks:
     deps: [solution:build]
     cmds:
       - task: solution:key:generate
-        vars: { DATA_DIR: 'data' }
+        vars: { DATA_DIR: "data" }
       - task: sso:aws:package
       - cdk --app "{{.CDK_APP}}" bootstrap
       - cdk --app "{{.CDK_APP}}" deploy --require-approval never
@@ -63,7 +63,7 @@ tasks:
     deps: [solution:build]
     cmds:
       - task: solution:key:generate
-        vars: { DATA_DIR: 'data' }
+        vars: { DATA_DIR: "data" }
       - ./src/Effuse.SSO.Local/bin/Debug/net6.0/Effuse.SSO.Local
     env:
       APP_PREFIX: single-signon
@@ -73,7 +73,7 @@ tasks:
     deps: [solution:build]
     cmds:
       - task: solution:key:generate
-        vars: { DATA_DIR: 'server-data' }
+        vars: { DATA_DIR: "server-data" }
       - ./src/Effuse.Server.Local/bin/Debug/net6.0/Effuse.Server.Local
     env:
       APP_PREFIX: effuse-server
@@ -81,3 +81,14 @@ tasks:
 
   all:local:run:
     deps: [sso:local:run, server:local:run]
+
+  ui:watch:
+    dir: "{{.TASKFILE_DIR}}/user-interface"
+    cmds:
+      - npx webpack serve
+  ui:build:
+    dir: "{{.TASKFILE_DIR}}/user-interface"
+    cmds:
+      - npx webpack
+    env:
+      PROD: "true"
