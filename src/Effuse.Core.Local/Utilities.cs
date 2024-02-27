@@ -71,6 +71,11 @@ public static class Utilities
     res.ContentEncoding = Encoding.UTF8;
     res.ContentLength64 = data.LongLength;
 
+    foreach (var (key, value) in response.Headers)
+    {
+      res.AddHeader(key, value);
+    }
+
     res.StatusCode = response.StatusCode;
 
     await res.OutputStream.WriteAsync(data);
