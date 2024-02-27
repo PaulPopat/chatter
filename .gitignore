@@ -343,3 +343,4 @@ ASALocalRun/
 
 
 # End of https://www.gitignore.io/api/csharp
+**/.DS_Store
