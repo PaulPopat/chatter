@@ -8,20 +8,15 @@ COPY . ./
 
 RUN task solution:publish
 
-RUN openssl req -new -newkey rsa:4096 -nodes -keyout signing_key.key -out public_key.csr -subj "/C=UK/CN=local"
-RUN openssl x509 -req -sha512 -days 365 -in public_key.csr -signkey signing_key.key -out private_key.pem
-
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
 WORKDIR /App
 
 COPY --from=build-env /App/src/Effuse.SSO.Local/bin/Release/net8.0 .
-COPY --from=build-env /App/private_key.pem /data/private_key.pem
-COPY --from=build-env /App/signing_key.key /data/signing_key.key
 
 ENV APP_PREFIX single-signon
 ENV DATA_DIR /data
 
 EXPOSE 3000
 
-ENTRYPOINT ["./Effuse.SSO.Local"]
+ENTRYPOINT ["./docker-scripts/start-sso.sh"]
