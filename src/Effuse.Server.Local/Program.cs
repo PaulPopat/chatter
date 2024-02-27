@@ -17,11 +17,6 @@ class HttpServer
 
     var assembly = Assembly.Load("Effuse.Server.Handlers") ?? throw new Exception("Could not find server assembly");
 
-    _ = new WebSocketServer(3003, container, assembly);
-
-    new Effuse.Core.Local.Server(3002, container, assembly)
-      .StartServer()
-      .GetAwaiter()
-      .GetResult();
+    new Effuse.Core.Local.Server(3002, container, assembly).Start();
   }
 }

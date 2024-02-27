@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="Unity" Version="5.11.10" />
-    <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -6,20 +6,15 @@ using System.Text.Json;
 
 namespace Effuse.Core.Local;
 
-public class WebSocketHandler : WebSocketBehavior
+public class WebSocketHandler(IWebSocketHandler handler) : WebSocketBehavior
 {
   private static readonly IDictionary<string, WebSocketHandler> connections = new Dictionary<string, WebSocketHandler>();
 
   public static IReadOnlyDictionary<string, WebSocketHandler> Connections => (IReadOnlyDictionary<string, WebSocketHandler>)connections;
 
-  private readonly IWebSocketHandler handler;
+  private readonly IWebSocketHandler handler = handler;
 
   private Task? setup;
-
-  public WebSocketHandler(IWebSocketHandler handler)
-  {
-    this.handler = handler;
-  }
 
   protected override async void OnOpen()
   {

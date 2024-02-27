@@ -1,10 +1,9 @@
 ﻿using System.Collections.Specialized;
-using System.Net;
 using System.Text;
 using System.Text.Json;
-using System.Web;
 using Effuse.Core.Handlers.Contracts;
 using Effuse.Core.Utilities;
+using WebSocketSharp.Net;
 
 namespace Effuse.Core.Local;
 
@@ -15,7 +14,7 @@ public static class Utilities
     if (uri == null) return new Dictionary<string, string>();
 
     var queryString = uri.Query;
-    var queryParts = HttpUtility.ParseQueryString(queryString);
+    var queryParts = System.Web.HttpUtility.ParseQueryString(queryString);
     return queryParts.ToDictionary();
   }
 

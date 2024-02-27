@@ -3,7 +3,7 @@ const { WebSocket } = require("ws");
 const promiseWithTimeout = require("./promise-with-timeout");
 const sleep = require("./sleep");
 
-let base = process.env.SERVER_WS_BASE_URL;
+let base = process.env.SERVER_BASE_URL;
 if (!base.endsWith("/")) base = base + "/";
 
 let connections = 0;

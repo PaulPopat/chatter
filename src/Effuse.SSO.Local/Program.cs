@@ -18,9 +18,6 @@ class HttpServer
 
     var assembly = Assembly.Load("Effuse.SSO.Handlers") ?? throw new Exception("Could not find server assembly");
 
-    new Server(3000, container, assembly)
-      .StartServer()
-      .GetAwaiter()
-      .GetResult();
+    new Server(3000, container, assembly).Start();
   }
 }
