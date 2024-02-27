@@ -44,7 +44,7 @@ public class Server
       {
         await ctx.Response.ApplyResponse(new(200, null, new Dictionary<string, string>()
         {
-          ["Access-Control-Allow-Origin"] = Env.GetEnv("SSO_BASE_URL"),
+          ["Access-Control-Allow-Origin"] = Env.GetEnv("UI_URL"),
           ["Access-Control-Allow-Methods"] = "OPTIONS, GET, PUT, POST, DELETE",
           ["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
         }));
