@@ -23,8 +23,6 @@ tasks:
   solution:publish:
     cmds:
       - dotnet publish
-      - task: solution:key:generate
-        vars: { DATA_DIR: "data" }
     dir: "{{.TASKFILE_DIR}}/src"
 
   solution:test:
