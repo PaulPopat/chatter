@@ -1,10 +1,11 @@
+using Effuse.Core.Handlers;
 using Effuse.Core.Handlers.Contracts;
 using Effuse.SSO.Handlers.Models.Server;
 using Effuse.SSO.Services;
 
 namespace Effuse.SSO.Handlers.Controllers;
 
-
+[Route(Method.Post, "/api/v1/user/servers")]
 public class JoinServer : IHandler
 {
   private readonly ServersService serversService;

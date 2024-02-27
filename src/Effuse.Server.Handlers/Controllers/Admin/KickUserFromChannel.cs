@@ -1,8 +1,10 @@
-﻿using Effuse.Core.Handlers.Contracts;
+﻿using Effuse.Core.Handlers;
+using Effuse.Core.Handlers.Contracts;
 using Service = Effuse.Server.Services.Admin;
 
 namespace Effuse.Server.Handlers.Controllers.Admin;
 
+[Route(Method.Delete, "/api/v1/channels/{channelId}/users/{userId}")]
 public class KickUserFromChannel : IHandler
 {
   private struct Response

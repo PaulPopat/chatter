@@ -1,3 +1,4 @@
+using Effuse.Core.Handlers;
 using Effuse.Core.Handlers.Contracts;
 using Effuse.Core.Utilities;
 using Effuse.SSO.Handlers.Models.Profile;
@@ -5,7 +6,7 @@ using Effuse.SSO.Services;
 
 namespace Effuse.SSO.Handlers.Controllers;
 
-
+[Route(Method.Get, "/api/v1/user/profile")]
 public class GetProfile : IHandler
 {
   private readonly ProfileService profileService;

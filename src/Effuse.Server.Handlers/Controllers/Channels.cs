@@ -1,8 +1,10 @@
-﻿using Effuse.Core.Handlers.Contracts;
+﻿using Effuse.Core.Handlers;
+using Effuse.Core.Handlers.Contracts;
 using Base = Effuse.Server.Services.Channels;
 
 namespace Effuse.Server.Handlers.Controllers;
 
+[Route(Method.Get, "/api/v1/channels")]
 public class Channels : IHandler
 {
   private struct Response

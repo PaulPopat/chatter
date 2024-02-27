@@ -25,7 +25,7 @@ public class StaticDatabase : IDatabase
     where T : struct
   {
     var existing = await this.FindItem<T>(tableName, primaryKey);
-    if (existing != null) throw new Exception("Primary key already found");
+    if (existing != null) throw new ConflictException();
 
     var json = JsonSerializer.Serialize(item);
     var encrypted = await this.encryption.Encrypt(json);
@@ -61,14 +61,14 @@ public class StaticDatabase : IDatabase
   public async Task<TExpect> GetItem<TExpect>(string tableName, string primaryKey)
     where TExpect : struct
   {
-    return (await this.FindItem<TExpect>(tableName, primaryKey)) ?? throw new Exception("Could not find item");
+    return (await this.FindItem<TExpect>(tableName, primaryKey)) ?? throw new NotFoundException();
   }
 
   public async Task UpdateItem<T>(string tableName, string primaryKey, T item)
     where T : struct
   {
     var existing = await this.FindItem<T>(tableName, primaryKey);
-    if (existing == null) throw new Exception("Could not find item");
+    if (existing == null) throw new NotFoundException();
 
     var json = JsonSerializer.Serialize(item);
     await this.@static.UploadText(new StaticTextFile

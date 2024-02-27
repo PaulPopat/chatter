@@ -1,10 +1,11 @@
+using Effuse.Core.Handlers;
 using Effuse.Core.Handlers.Contracts;
 using Effuse.SSO.Handlers.Models.Register;
 using Effuse.SSO.Services;
 
 namespace Effuse.SSO.Handlers.Controllers;
 
-
+[Route(Method.Post, "/api/v1/users")]
 public class Register : IHandler
 {
   private readonly AuthService authService;

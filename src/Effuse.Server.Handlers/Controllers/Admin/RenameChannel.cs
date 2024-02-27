@@ -1,8 +1,10 @@
-﻿using Effuse.Core.Handlers.Contracts;
+﻿using Effuse.Core.Handlers;
+using Effuse.Core.Handlers.Contracts;
 using Service = Effuse.Server.Services.Admin;
 
 namespace Effuse.Server.Handlers.Controllers.Admin;
 
+[Route(Method.Put, "/api/v1/channels/{channelId}")]
 public class RenameChannel : IHandler
 {
   private struct Request

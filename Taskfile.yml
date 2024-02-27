@@ -64,7 +64,7 @@ tasks:
     cmds:
       - task: solution:key:generate
         vars: { DATA_DIR: "data" }
-      - ./src/Effuse.SSO.Local/bin/Debug/net6.0/Effuse.SSO.Local
+      - ./src/Effuse.SSO.Local/bin/Debug/net8.0/Effuse.SSO.Local
     env:
       APP_PREFIX: single-signon
       DATA_DIR: ./resources/data
@@ -74,7 +74,7 @@ tasks:
     cmds:
       - task: solution:key:generate
         vars: { DATA_DIR: "server-data" }
-      - ./src/Effuse.Server.Local/bin/Debug/net6.0/Effuse.Server.Local
+      - ./src/Effuse.Server.Local/bin/Debug/net8.0/Effuse.Server.Local
     env:
       APP_PREFIX: effuse-server
       DATA_DIR: ./resources/server-data

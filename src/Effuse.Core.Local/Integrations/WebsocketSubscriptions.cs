@@ -1,4 +1,5 @@
 ﻿using Effuse.Core.Domain;
+using Effuse.Core.Integration;
 using Effuse.Core.Integration.Contracts;
 using Effuse.Core.Utilities;
 
@@ -66,10 +67,19 @@ public class WebsocketSubscriptions : ISubscriptions
 
     if (!subscriptions.HasValue)
     {
-      await this.database.AddItem(TableName, subscription.ChannelId.ToString(), new ChannelSubscriptionsDto
+      try
       {
-        ConnectionIds = new List<string>() { subscription.SubscriptionId }
-      });
+
+        await this.database.AddItem(TableName, subscription.ChannelId.ToString(), new ChannelSubscriptionsDto
+        {
+          ConnectionIds = [subscription.SubscriptionId]
+        });
+      }
+      catch (ConflictException)
+      {
+        await this.Subscribe(subscription);
+        return;
+      }
     }
     else
     {

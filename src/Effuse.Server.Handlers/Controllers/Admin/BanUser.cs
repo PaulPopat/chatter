@@ -1,8 +1,10 @@
-﻿using Effuse.Core.Handlers.Contracts;
+﻿using Effuse.Core.Handlers;
+using Effuse.Core.Handlers.Contracts;
 using Service = Effuse.Server.Services.Admin;
 
 namespace Effuse.Server.Handlers.Controllers.Admin;
 
+[Route(Method.Post, "/api/v1/banned-users")]
 public class BanUser : IHandler
 {
   private struct Request

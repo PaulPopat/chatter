@@ -1,10 +1,12 @@
 ﻿using System.Text.Json;
+using Effuse.Core.Handlers;
 using Effuse.Core.Handlers.Contracts;
 using Effuse.Core.Utilities;
 using Effuse.Server.Services;
 
 namespace Effuse.Server.Handlers.Controllers;
 
+[WebSocketRoute("/ws/chat")]
 public class Chat : IWebSocketHandler
 {
   private struct BacklogRequest

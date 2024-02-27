@@ -1,4 +1,5 @@
-﻿using Effuse.Core.Local;
+﻿using System.Reflection;
+using Effuse.Core.Local;
 using Unity;
 
 namespace Effuse.Server.Local;
@@ -40,60 +41,13 @@ class HttpServer
     container.RegisterType<Effuse.Server.Handlers.Controllers.Admin.KickUserFromChannel>();
     container.RegisterType<Effuse.Server.Handlers.Controllers.Admin.RenameChannel>();
 
-    _ = new WebSocketServer(3003, container, new List<Route>()
-    {
-      new() {
-        Path = "/ws/chat",
-        Handler = typeof(Effuse.Server.Handlers.Controllers.Chat)
-      },
-    });
+    var assembly = Assembly.Load("Effuse.Server.Handlers") ?? throw new Exception("Could not find server assembly");
 
-    new Effuse.Core.Local.Server(
-      3002,
-      container,
-      new List<Route>()
-      {
-        new() {
-          Method = HttpMethod.Get,
-          Path = "/api/v1/auth/token",
-          Handler = typeof(Effuse.Server.Handlers.Controllers.Authenticate)
-        },
-        new() {
-          Method = HttpMethod.Post,
-          Path = "/api/v1/channels/{channelId}/users",
-          Handler = typeof(Effuse.Server.Handlers.Controllers.Admin.AddUserToChannel)
-        },
-        new() {
-          Method = HttpMethod.Post,
-          Path = "/api/v1/banned-users",
-          Handler = typeof(Effuse.Server.Handlers.Controllers.Admin.BanUser)
-        },
-        new() {
-          Method = HttpMethod.Get,
-          Path = "/api/v1/channels",
-          Handler = typeof(Effuse.Server.Handlers.Controllers.Channels)
-        },
-        new() {
-          Method = HttpMethod.Post,
-          Path = "/api/v1/channels",
-          Handler = typeof(Effuse.Server.Handlers.Controllers.Admin.CreateChatChannel)
-        },
-        new() {
-          Method = HttpMethod.Post,
-          Path = "/api/v1/admin-users",
-          Handler = typeof(Effuse.Server.Handlers.Controllers.Admin.GiveUserAdmin)
-        },
-        new() {
-          Method = HttpMethod.Delete,
-          Path = "/api/v1/channels/{channelId}/users/{userId}",
-          Handler = typeof(Effuse.Server.Handlers.Controllers.Admin.KickUserFromChannel)
-        },
-        new() {
-          Method = HttpMethod.Put,
-          Path = "/api/v1/channels/{channelId}",
-          Handler = typeof(Effuse.Server.Handlers.Controllers.Admin.RenameChannel)
-        },
-      }
-    ).StartServer().GetAwaiter().GetResult();
+    _ = new WebSocketServer(3003, container, assembly);
+
+    new Effuse.Core.Local.Server(3002, container, assembly)
+      .StartServer()
+      .GetAwaiter()
+      .GetResult();
   }
 }

@@ -1,9 +1,11 @@
-﻿using Effuse.Core.Handlers.Contracts;
+﻿using Effuse.Core.Handlers;
+using Effuse.Core.Handlers.Contracts;
 using Effuse.SSO.Handlers.Models.GetUserFromToken;
 using Effuse.SSO.Services;
 
 namespace Effuse.SSO.Handlers.Controllers;
 
+[Route(Method.Get, "/api/v1/auth/user")]
 public class GetUserFromToken : IHandler
 {
   private readonly AuthService authService;
@@ -20,8 +22,8 @@ public class GetUserFromToken : IHandler
       return new(400);
 
     var userId = await this.authService.Verify(token, UserAccess.Identify);
-    
-    return new (200, new GetUserFromTokenResponse
+
+    return new(200, new GetUserFromTokenResponse
     {
       UserId = userId.ToString()
     });

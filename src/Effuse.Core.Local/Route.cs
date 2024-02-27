@@ -1,4 +1,7 @@
-﻿namespace Effuse.Core.Local;
+﻿using System.Reflection;
+using Effuse.Core.Handlers;
+
+namespace Effuse.Core.Local;
 
 public struct Route
 {
@@ -49,5 +52,22 @@ public struct Route
     }
 
     return true;
+  }
+
+  public static List<Route> FromAssembly(Assembly assembly)
+  {
+    return RouteInstance.FromAssembly(assembly)
+      .Select(route =>
+      {
+        var method = Enum.GetName(route.Method) ?? throw new Exception("No method");
+
+        return new Route
+        {
+          Method = (HttpMethod)Enum.Parse(typeof(HttpMethod), method),
+          Path = route.Endpoint,
+          Handler = route.Type
+        };
+      })
+      .ToList();
   }
 }

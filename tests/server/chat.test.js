@@ -26,7 +26,7 @@ describe("chat", () => {
       channelId: data.createdChannel.ChannelId,
     });
 
-    await sleep(100);
+    await sleep(1000);
 
     await Promise.all([
       localCon.waitForMessage(),

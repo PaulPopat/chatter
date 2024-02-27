@@ -1,8 +1,10 @@
-﻿using Effuse.Core.Handlers.Contracts;
+﻿using Effuse.Core.Handlers;
+using Effuse.Core.Handlers.Contracts;
 using Effuse.Server.Services;
 
 namespace Effuse.Server.Handlers.Controllers;
 
+[Route(Method.Get, "/api/v1/auth/token")]
 public class Authenticate : IHandler
 {
   private struct Response

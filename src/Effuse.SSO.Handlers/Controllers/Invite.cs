@@ -1,9 +1,11 @@
-﻿using Effuse.Core.Handlers.Contracts;
+﻿using Effuse.Core.Handlers;
+using Effuse.Core.Handlers.Contracts;
 using Effuse.SSO.Handlers.Models.Invite;
 using Effuse.SSO.Services;
 
 namespace Effuse.SSO.Handlers.Controllers;
 
+[Route(Method.Get, "/api/v1/auth/invite")]
 public class Invite : IHandler
 {
   private readonly AuthService authService;
@@ -18,7 +20,7 @@ public class Invite : IHandler
   {
     var email = props.QueryParameters["email"];
 
-    if (email == null) return new (400);
+    if (email == null) return new(400);
 
     return new(200, new InviteResponse()
     {

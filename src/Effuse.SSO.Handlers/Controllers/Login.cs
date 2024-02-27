@@ -1,10 +1,11 @@
+using Effuse.Core.Handlers;
 using Effuse.Core.Handlers.Contracts;
 using Effuse.SSO.Handlers.Models.Login;
 using Effuse.SSO.Services;
 
 namespace Effuse.SSO.Handlers.Controllers;
 
-
+[Route(Method.Get, "/api/v1/auth/token")]
 public class Login : IHandler
 {
   private readonly AuthService authService;

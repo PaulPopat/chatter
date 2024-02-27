@@ -2,6 +2,7 @@
 using Unity;
 using Effuse.Core.Handlers.Contracts;
 using Effuse.Core.Integration;
+using System.Reflection;
 
 namespace Effuse.Core.Local;
 
@@ -12,12 +13,12 @@ public class Server
   private readonly UnityContainer container;
   private readonly IEnumerable<Route> routes;
 
-  public Server(int port, UnityContainer container, IEnumerable<Route> routes)
+  public Server(int port, UnityContainer container, Assembly assembly)
   {
     this.listener = new HttpListener();
     this.url = $"http://localhost:{port}/";
     this.container = container;
-    this.routes = routes;
+    this.routes = Route.FromAssembly(assembly);
   }
 
 

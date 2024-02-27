@@ -31,7 +31,7 @@ public class Lambda : Function
     new FunctionProps
     {
       Runtime = Runtime.DOTNET_6,
-      Code = Code.FromAsset(Config.ProjectPath($"src/{Config.HandlersProject(props.Area)}/bin/Release/net6.0/{Config.HandlersProject(props.Area)}.zip")),
+      Code = Code.FromAsset(Config.ProjectPath($"src/{Config.HandlersProject(props.Area)}/bin/Release/net8.0/{Config.HandlersProject(props.Area)}.zip")),
       Handler = $"{Config.HandlersProject(props.Area)}::Effuse.{props.Area}.AWS.Handlers.Controllers.Operate::Handle",
       Environment = props.Environment.WithKeyValue("HANDLER_NAME", props.Handler),
       Timeout = Duration.Seconds(30),

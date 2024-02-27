@@ -1,4 +1,5 @@
-﻿using Effuse.Core.Local;
+﻿using System.Reflection;
+using Effuse.Core.Local;
 using Effuse.SSO.Handlers.Controllers;
 using Unity;
 
@@ -34,57 +35,11 @@ class HttpServer
     container.RegisterType<Effuse.SSO.Handlers.Controllers.Register>();
     container.RegisterType<Effuse.SSO.Handlers.Controllers.UpdateProfile>();
 
-    new Server(
-      3000,
-      container,
-      new List<Route>()
-      {
-        new() {
-          Method = HttpMethod.Get,
-          Path = "/api/v1/heartbeat",
-          Handler = typeof(HeartBeat)
-        },
-        new() {
-          Method = HttpMethod.Post,
-          Path = "/api/v1/users",
-          Handler = typeof(Register)
-        },
-        new() {
-          Method = HttpMethod.Get,
-          Path = "/api/v1/users/{userId}/profile",
-          Handler = typeof(GetPublicProfile)
-        },
-        new() {
-          Method = HttpMethod.Get,
-          Path = "/api/v1/user/profile",
-          Handler = typeof(GetProfile)
-        },
-        new() {
-          Method = HttpMethod.Put,
-          Path = "/api/v1/user/profile",
-          Handler = typeof(UpdateProfile)
-        },
-        new() {
-          Method = HttpMethod.Post,
-          Path = "/api/v1/user/servers",
-          Handler = typeof(JoinServer)
-        },
-        new() {
-          Method = HttpMethod.Get,
-          Path = "/api/v1/auth/token",
-          Handler = typeof(Login)
-        },
-        new() {
-          Method = HttpMethod.Get,
-          Path = "/api/v1/auth/user",
-          Handler = typeof(GetUserFromToken)
-        },
-        new() {
-          Method = HttpMethod.Get,
-          Path = "/api/v1/auth/invite",
-          Handler = typeof(Invite)
-        },
-      }
-    ).StartServer().GetAwaiter().GetResult();
+    var assembly = Assembly.Load("Effuse.SSO.Handlers") ?? throw new Exception("Could not find server assembly");
+
+    new Server(3000, container, assembly)
+      .StartServer()
+      .GetAwaiter()
+      .GetResult();
   }
 }
