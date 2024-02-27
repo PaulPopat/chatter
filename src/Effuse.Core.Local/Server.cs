@@ -16,7 +16,7 @@ public class Server
   public Server(int port, UnityContainer container, Assembly assembly)
   {
     this.listener = new HttpListener();
-    this.url = $"http://localhost:{port}/";
+    this.url = $"http://*:{port}/";
     this.container = container;
     this.routes = Route.FromAssembly(assembly);
   }
