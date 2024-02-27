@@ -29,11 +29,6 @@ public enum UserAccess
 
 public class AuthService
 {
-  private struct InvitePayload
-  {
-    public string Email { get; set; }
-  }
-
   private struct UserTokenPayload
   {
     public string UserId { get; set; }
@@ -107,13 +102,8 @@ public class AuthService
         user.UserId);
   }
 
-  public async Task<UserGrant> Register(string username, string email, string password, string invite)
+  public async Task<UserGrant> Register(string username, string email, string password)
   {
-    var invitation = await this.jwtClient.DecodeJwt<InvitePayload>(invite);
-
-    if (invitation.Email != email)
-      throw new Exception("User not invited");
-
     var user = new User(
       userId: Guid.NewGuid(),
       userName: username,
@@ -147,10 +137,5 @@ public class AuthService
 
     if (grant.Access != access) throw new Exception("Invalid token");
     return Guid.Parse(grant.UserId);
-  }
-
-  public async Task<string> CreateInvite(string email)
-  {
-    return await this.jwtClient.CreateJwt(new InvitePayload { Email = email }, TimeSpan.FromDays(7));
   }
 }

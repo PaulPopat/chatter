@@ -24,8 +24,7 @@ public class Register : IHandler
     var response = await this.authService.Register(
       body.UserName,
       body.Email,
-      body.Password,
-      body.InviteToken);
+      body.Password);
 
     return new(201, new RegisterResponse()
     {
