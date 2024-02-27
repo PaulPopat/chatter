@@ -1,4 +1,5 @@
 <script>
+  import AuthManager from "./app/auth/auth-manager.svelte";
   import Button from "./atoms/button.svelte";
   import TextInput from "./atoms/forms/text-input.svelte";
   import Col from "./atoms/grid/col.svelte";
@@ -6,14 +7,16 @@
 </script>
 
 <div>
-  <Row>
-    <Col>
-      <TextInput name="TestInput">Test Input</TextInput>
-    </Col>
-    <Col>
-      <Button type="submit">Submit</Button>
-    </Col>
-  </Row>
+  <AuthManager>
+    <Row>
+      <Col>
+        <TextInput name="TestInput">Test Input</TextInput>
+      </Col>
+      <Col>
+        <Button type="submit">Submit</Button>
+      </Col>
+    </Row>
+  </AuthManager>
 </div>
 
 <style>

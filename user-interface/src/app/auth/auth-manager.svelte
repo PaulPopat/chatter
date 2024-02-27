@@ -2,10 +2,12 @@
   import { setContext } from "svelte";
   import TextInput from "../../atoms/forms/text-input.svelte";
   import Button from "../../atoms/button.svelte";
+  import Form from "../../atoms/forms/form.svelte";
 
   let auth = {
     admin_token: "",
     server_token: "",
+    user_id: "",
   };
 
   setContext("auth", {
@@ -15,12 +17,12 @@
     },
   });
 
-  /**
-   * @param {Event} e
-   */
-  function on_submit(e) {
-    const t = e.target;
-    if (!(t instanceof HTMLFormElement)) return;
+  function on_login(e) {
+    auth = {
+      admin_token: e.detail.data.AdminToken,
+      server_token: e.detail.data.ServerToken,
+      user_id: e.detail.data.UserId,
+    };
   }
 </script>
 
@@ -28,10 +30,16 @@
   <slot />
 {:else}
   <div>
-    <form on:submit={on_submit}>
+    <Form method="GET" url="/api/v1/auth/token" on:success={on_login}>
       <TextInput type="text" name="email">Email</TextInput>
       <TextInput type="password" name="password">Password</TextInput>
-      <Button>Login</Button>
-    </form>
+      <Button type="submit">Login</Button>
+    </Form>
+    <Form method="POST" url="/api/v1/users" on:success={on_login}>
+      <TextInput type="text" name="UserName">User Name</TextInput>
+      <TextInput type="text" name="Email">Email</TextInput>
+      <TextInput type="password" name="Password">Password</TextInput>
+      <Button type="submit">Register</Button>
+    </Form>
   </div>
 {/if}
