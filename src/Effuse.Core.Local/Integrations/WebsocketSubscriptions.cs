@@ -57,7 +57,7 @@ public class WebsocketSubscriptions : ISubscriptions
     {
       if (connectionId == null || connectionId == subscription.SubscriptionId) continue;
 
-      WebSocketHandler.Connections[connectionId]?.Send(dto);
+      Server.WebSockets[connectionId]?.SendJson(dto);
     }
   }
 
@@ -69,7 +69,6 @@ public class WebsocketSubscriptions : ISubscriptions
     {
       try
       {
-
         await this.database.AddItem(TableName, subscription.ChannelId.ToString(), new ChannelSubscriptionsDto
         {
           ConnectionIds = [subscription.SubscriptionId]

@@ -17,6 +17,6 @@ class HttpServer
 
     var assembly = Assembly.Load("Effuse.Server.Handlers") ?? throw new Exception("Could not find server assembly");
 
-    new Effuse.Core.Local.Server(3002, container, assembly).Start();
+    new Effuse.Core.Local.Server(3002, container, assembly).Start().GetAwaiter().GetResult();
   }
 }

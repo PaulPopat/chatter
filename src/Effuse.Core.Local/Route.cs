@@ -70,4 +70,19 @@ public struct Route
       })
       .ToList();
   }
+
+  public static List<Route> WebSocketsFromAssembly(Assembly assembly)
+  {
+    return WebSocketRouteInstance.FromAssembly(assembly)
+      .Select(route =>
+      {
+        return new Route
+        {
+          Method = HttpMethod.Get,
+          Path = route.Endpoint,
+          Handler = route.Type
+        };
+      })
+      .ToList();
+  }
 }

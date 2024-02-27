@@ -1,9 +1,10 @@
 ﻿using System.Collections.Specialized;
+using System.Net;
+using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using Effuse.Core.Handlers.Contracts;
 using Effuse.Core.Utilities;
-using WebSocketSharp.Net;
 
 namespace Effuse.Core.Local;
 
@@ -74,5 +75,39 @@ public static class Utilities
 
     await res.OutputStream.WriteAsync(data);
     res.Close();
+  }
+
+  public static Task GetContextAsync(this HttpListener listener)
+  {
+    return Task.Factory.FromAsync(listener.BeginGetContext, listener.EndGetContext, TaskCreationOptions.None);
+  }
+
+  public static async Task<string> ReadMessage(this WebSocket ws)
+  {
+    using var ms = new MemoryStream();
+
+    WebSocketReceiveResult result;
+    do
+    {
+      var messageBuffer = WebSocket.CreateClientBuffer(1024, 16);
+      result = await ws.ReceiveAsync(messageBuffer, CancellationToken.None);
+      ms.Write(messageBuffer.Array ?? [], messageBuffer.Offset, result.Count);
+    }
+    while (!result.EndOfMessage);
+
+    if (result.MessageType != WebSocketMessageType.Text)
+      throw new Exception("Invalid websocket message type");
+
+    return Encoding.UTF8.GetString(ms.ToArray());
+  }
+
+  public static async Task SendJson(this WebSocket ws, object data)
+  {
+    await ws.SendAsync(
+      Encoding.UTF8.GetBytes(
+        JsonSerializer.Serialize(data)),
+      WebSocketMessageType.Text,
+      true,
+      CancellationToken.None);
   }
 }
