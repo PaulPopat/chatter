@@ -22,4 +22,6 @@ COPY --from=build-env /App/signing_key.key /data/signing_key.key
 ENV APP_PREFIX single-signon
 ENV DATA_DIR /data
 
+EXPOSE 3000
+
 ENTRYPOINT ["./Effuse.SSO.Local"]

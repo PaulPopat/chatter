@@ -24,4 +24,6 @@ ENV DATA_DIR /data
 
 ENV SSO_BASE_URL https://effuse-sso.taylorhousehold.uk
 
+EXPOSE 3002
+
 ENTRYPOINT ["./Effuse.Server.Local"]
