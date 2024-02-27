@@ -1,4 +1,3 @@
-const inviter = require("../clients/invite");
 const sso = require("../clients/sso");
 const { v4: guid } = require("uuid");
 const url = require("../clients/url");
@@ -8,13 +7,10 @@ module.exports = async function () {
   const password = guid();
   const username = guid();
 
-  const invite = await inviter.get(url("/api/v1/auth/invite", { email }));
-
-  const createdUser = await sso.post("/api/v1/users", {
+  const createdUser = await sso.post(url("/api/v1/users"), {
     UserName: username,
     Email: email,
     Password: password,
-    InviteToken: invite.data.Code,
   });
 
   return {

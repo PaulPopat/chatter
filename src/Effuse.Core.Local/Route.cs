@@ -63,7 +63,7 @@ public struct Route
 
         return new Route
         {
-          Method = (HttpMethod)Enum.Parse(typeof(HttpMethod), method),
+          Method = HttpMethod.Parse(method),
           Path = route.Endpoint,
           Handler = route.Type
         };

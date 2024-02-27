@@ -6,7 +6,7 @@
   "configurations": [
     {
       "name": "Launch SSO",
-      "program": "${workspaceFolder}/src/Effuse.SSO.Local/bin/Debug/net6.0/Effuse.SSO.Local",
+      "program": "${workspaceFolder}/src/Effuse.SSO.Local/bin/Debug/net8.0/Effuse.SSO.Local",
       "console": "integratedTerminal",
       "type": "coreclr",
       "request": "launch",
@@ -18,7 +18,7 @@
     },
     {
       "name": "Launch Server",
-      "program": "${workspaceFolder}/src/Effuse.Server.Local/bin/Debug/net6.0/Effuse.Server.Local",
+      "program": "${workspaceFolder}/src/Effuse.Server.Local/bin/Debug/net8.0/Effuse.Server.Local",
       "console": "integratedTerminal",
       "type": "coreclr",
       "request": "launch",
