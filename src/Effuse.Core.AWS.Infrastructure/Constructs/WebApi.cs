@@ -5,6 +5,8 @@ using HttpMethod = Amazon.CDK.AWS.Apigatewayv2.HttpMethod;
 using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.Logs;
 using Effuse.Core.AWS.Infrastructure.Utilities;
+using System.Reflection;
+using Effuse.Core.Handlers;
 
 namespace Effuse.Core.AWS.Infrastructure.Constructs;
 
@@ -14,22 +16,37 @@ public struct Route
 
   public string Path { get; set; }
 
-  public string Handler { get; set; }
+  public Type Handler { get; set; }
 
-  public IHttpRouteAuthorizer? Authorizer { get; set; }
+  public static List<Route> FromAssembly(Assembly assembly)
+  {
+    return RouteInstance.FromAssembly(assembly)
+      .Select(route =>
+      {
+        var method = Enum.GetName(route.Method) ?? throw new Exception("No method");
+
+        return new Route
+        {
+          Method = (HttpMethod)Enum.Parse(typeof(HttpMethod), method),
+          Path = route.Endpoint,
+          Handler = route.Type
+        };
+      })
+      .ToList();
+  }
 }
 
 public struct WebApiProps
 {
   public string Description { get; set; }
 
-  public IEnumerable<Route> Routes { get; set; }
+  public Assembly Assembly { get; set; }
+
+  public string Area { get; set; }
 
   public IDictionary<string, string> Environment { get; set; }
 
   public ILogGroup LogGroup { get; set; }
-
-  public string Area { get; set; }
 
   public PolicyStatement[]? Policies { get; set; }
 }
@@ -46,23 +63,23 @@ public class WebApi : HttpApi
       Description = props.Description,
     })
   {
-    foreach (var route in props.Routes)
+    foreach (var route in Route.FromAssembly(props.Assembly))
     {
       var lambda = new Lambda(this, route.Method.ToString() + route.Path + "_handler", new LambdaProps
       {
         Handler = route.Handler,
-        Area = props.Area,
         Environment = props.Environment,
         LogGroup = props.LogGroup,
-        Policies = props.Policies
+        Policies = props.Policies,
+        Area = props.Area,
+        Assembly = props.Assembly
       });
 
       this.AddRoutes(new AddRoutesOptions
       {
         Path = route.Path,
-        Methods = new HttpMethod[] { route.Method },
+        Methods = [route.Method],
         Integration = new HttpLambdaIntegration(route.Path, lambda),
-        Authorizer = route.Authorizer
       });
 
       this.lambdas.Add(lambda);

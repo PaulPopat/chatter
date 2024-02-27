@@ -1,10 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Amazon.CDK;
-using Amazon.CDK.AWS.Apigatewayv2;
 using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.S3;
-using Amazon.CDK.AwsApigatewayv2Authorizers;
 using Constructs;
 using Effuse.Core.AWS.Infrastructure.Constructs;
 using Effuse.Core.AWS.Infrastructure.Policies;
@@ -48,6 +48,8 @@ public class EffuseSSO : Stack
       ["APP_PREFIX"] = Config.AppPrefix
     };
 
+    var assembly = Assembly.Load("Effuse.Server.Handlers") ?? throw new Exception("Could not find server assembly");
+
     _ = new WebApi(this, "core-services", new()
     {
       Description = "The core services API",
@@ -59,54 +61,7 @@ public class EffuseSSO : Stack
         new S3Admin(assetsBucket),
         new ParameterReader(secret, certificate, encryptionKey)
       },
-      Routes = new Route[] {
-        new() {
-          Method = HttpMethod.GET,
-          Path = "/api/v1/heartbeat",
-          Handler = "HeartBeat"
-        },
-        new() {
-          Method = HttpMethod.POST,
-          Path = "/api/v1/users",
-          Handler = "Register"
-        },
-        new() {
-          Method = HttpMethod.GET,
-          Path = "/api/v1/users/{userId}/profile",
-          Handler = "GetPublicProfile"
-        },
-        new() {
-          Method = HttpMethod.GET,
-          Path = "/api/v1/user/profile",
-          Handler = "GetProfile"
-        },
-        new() {
-          Method = HttpMethod.PUT,
-          Path = "/api/v1/user/profile",
-          Handler = "UpdateProfile"
-        },
-        new() {
-          Method = HttpMethod.POST,
-          Path = "/api/v1/user/servers",
-          Handler = "JoinServer"
-        },
-        new() {
-          Method = HttpMethod.GET,
-          Path = "/api/v1/auth/token",
-          Handler = "Login",
-        },
-        new() {
-          Method = HttpMethod.GET,
-          Path = "/api/v1/auth/user",
-          Handler = "GetUserFromToken",
-        },
-        new() {
-          Method = HttpMethod.GET,
-          Path = "/api/v1/auth/invite",
-          Handler = "Invite",
-          Authorizer = new HttpIamAuthorizer()
-        }
-      }
+      Assembly = assembly
     });
   }
 }

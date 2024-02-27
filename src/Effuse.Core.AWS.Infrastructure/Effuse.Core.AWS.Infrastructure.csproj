@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Effuse.Core.Utilities/Effuse.Core.Utilities.csproj" />
+    <ProjectReference Include="..\Effuse.Core.Handlers\Effuse.Core.Handlers.csproj" />
   </ItemGroup>
 
 </Project>

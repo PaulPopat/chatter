@@ -1,6 +1,5 @@
 using Amazon.Lambda.APIGatewayEvents;
 using System.Threading.Tasks;
-using Effuse.SSO.Handlers.Controllers;
 using Unity;
 using System;
 using Effuse.Core.Handlers.Contracts;
@@ -9,17 +8,13 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.Serialization.SystemTextJson;
 using Effuse.Core.Utilities;
 using System.Collections.Generic;
+using System.Reflection;
 
 [assembly: LambdaSerializer(typeof(DefaultLambdaJsonSerializer))]
 
-namespace Effuse.SSO.AWS.Handlers.Controllers;
+namespace Effuse.SSO.AWS.Handlers;
 
-public class InviteProps
-{
-  public string Email { get; set; }
-}
-
-public class Operate
+public class Operate : Effuse.Core.AWS.Handlers.Operate
 {
 
   private static UnityContainer GetContainer()
@@ -57,64 +52,11 @@ public class Operate
     return container;
   }
 
-  private readonly static Lazy<UnityContainer> Container = new Lazy<UnityContainer>(() =>
+  private readonly static Lazy<UnityContainer> Container = new Lazy<UnityContainer>(GetContainer);
+
+
+  protected override UnityContainer GetAppContainer()
   {
-    return GetContainer();
-  });
-
-  private static async Task<APIGatewayProxyResponse> Process
-    (
-      APIGatewayProxyRequest request,
-      Type type
-    )
-  {
-    try
-    {
-      var handler = Container.Value.Resolve(type);
-
-      var input = new HandlerProps
-        (
-          request.Path,
-          request.HttpMethod,
-          request.RequestContext.ConnectionId,
-          request.PathParameters,
-          request.QueryStringParameters.ToLowerCaseKeys(),
-          request.Headers,
-          request.Body
-        );
-
-      var response = await ((IHandler)handler).Handle(input);
-
-      return new APIGatewayProxyResponse
-      {
-        StatusCode = response.StatusCode,
-        Body = response.Body != null ? JsonSerializer.Serialize(response.Body) : string.Empty,
-        Headers = response.Headers.WithKeyValue("Content-Type", "application/json")
-      };
-    }
-    catch (Exception e)
-    {
-      Console.WriteLine(e);
-      return new APIGatewayProxyResponse
-      {
-        StatusCode = 500,
-        Body = JsonSerializer.Serialize(new { Message = "Internal Server Error" }),
-        Headers = new Dictionary<string, string>()
-        {
-          ["Content-Type"] = "application/json"
-        }
-      };
-    }
-  }
-
-  private static Type GetHandlerType()
-  {
-    var asm = typeof(GetProfile).Assembly;
-    return asm.GetType($"Effuse.SSO.Handlers.Controllers.{Env.GetEnv("HANDLER_NAME")}") ?? throw new Exception("Could not find handler");
-  }
-
-  public async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request)
-  {
-    return await Process(request, GetHandlerType());
+    return Container.Value;
   }
 }

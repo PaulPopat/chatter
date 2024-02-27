@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <AWSProjectType>Lambda</AWSProjectType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,10 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Effuse.Core.Handlers/Effuse.Core.Handlers.csproj" />
-    <ProjectReference Include="../Effuse.SSO.Handlers/Effuse.SSO.Handlers.csproj" />
     <ProjectReference Include="../Effuse.Core.AWS.Integration/Effuse.Core.AWS.Integration.csproj" />
-    <ProjectReference Include="../Effuse.SSO.Integration/Effuse.SSO.Integration.csproj" />
-    <ProjectReference Include="../Effuse.SSO.Services/Effuse.SSO.Services.csproj" />
-    <ProjectReference Include="../Effuse.Core.AWS.Handlers/Effuse.Core.AWS.Handlers.csproj" />
   </ItemGroup>
+
 </Project>

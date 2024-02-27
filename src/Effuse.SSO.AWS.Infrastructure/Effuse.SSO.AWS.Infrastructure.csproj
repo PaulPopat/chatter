@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Effuse.Core.AWS.Infrastructure/Effuse.Core.AWS.Infrastructure.csproj" />
+    <ProjectReference Include="..\Effuse.SSO.Handlers\Effuse.SSO.Handlers.csproj" />
   </ItemGroup>
 
 </Project>
