@@ -16,5 +16,6 @@
 
   <ItemGroup>
     <PackageReference Include="JWT" Version="10.1.1" />
+    <PackageReference Include="Unity" Version="5.11.10" />
   </ItemGroup>
 </Project>

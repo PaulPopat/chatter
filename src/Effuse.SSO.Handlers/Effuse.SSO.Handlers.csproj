@@ -12,4 +12,8 @@
     <ProjectReference Include="../Effuse.SSO.Services/Effuse.SSO.Services.csproj" />
     <ProjectReference Include="../Effuse.Core.Utilities/Effuse.Core.Utilities.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Unity" Version="5.11.10" />
+  </ItemGroup>
 </Project>
