@@ -3,6 +3,7 @@ using System.Net.WebSockets;
 using System.Reflection;
 using Effuse.Core.Handlers.Contracts;
 using Effuse.Core.Integration;
+using Effuse.Core.Utilities;
 using Unity;
 
 namespace Effuse.Core.Local;
@@ -34,14 +35,23 @@ public class Server
 
     while (true)
     {
-      var listenerContext = await listener.GetContextAsync();
-      if (listenerContext.Request.IsWebSocketRequest)
+      var ctx = await listener.GetContextAsync();
+      if (ctx.Request.IsWebSocketRequest)
       {
-        ProcessWebSocketRequest(listenerContext);
+        ProcessWebSocketRequest(ctx);
+      }
+      else if (ctx.Request.HttpMethod.ToString().Equals("options", StringComparison.InvariantCultureIgnoreCase))
+      {
+        await ctx.Response.ApplyResponse(new(200, null, new Dictionary<string, string>()
+        {
+          ["Access-Control-Allow-Origin"] = Env.GetEnv("SSO_BASE_URL"),
+          ["Access-Control-Allow-Methods"] = "OPTIONS, GET, PUT, POST, DELETE",
+          ["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
+        }));
       }
       else
       {
-        ProcessHttpRequest(listenerContext);
+        ProcessHttpRequest(ctx);
       }
     }
   }
