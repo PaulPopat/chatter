@@ -6,7 +6,7 @@ const isProd = process.env.PROD === "true";
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
-  entry: path.resolve(__dirname, "src", "index.js"),
+  entry: path.resolve(__dirname, "src", "index.ts"),
   output: {
     publicPath: "/_/",
     path: path.join(__dirname, "dist"),
@@ -24,25 +24,21 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(html|svelte)$/,
-        use: {
-          loader: "svelte-loader",
-          options: {
-            emitCss: true,
-          },
-        },
-      },
-      {
-        test: /node_modules\/svelte\/.*\.mjs$/,
-        resolve: {
-          fullySpecified: false,
-        },
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
       },
       {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
     ],
+  },
+  resolve: {
+    alias: {
+      "react-native$": "react-native-web",
+    },
+    extensions: [".tsx", ".ts", ".js"],
   },
   plugins: [
     new MiniCssExtractPlugin(),
