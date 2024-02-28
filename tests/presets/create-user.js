@@ -20,5 +20,6 @@ module.exports = async function () {
     admin_token: createdUser.data.AdminToken,
     server_token: createdUser.data.ServerToken,
     user_id: createdUser.data.UserId,
+    refresh_token: createdUser.data.RefreshToken,
   };
 };

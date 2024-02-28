@@ -5,20 +5,17 @@ using Effuse.SSO.Integration.Clients.User;
 
 namespace Effuse.SSO.Services;
 
-public class UserGrant
+public class UserGrant(string userToken, string serverToken, string refreshToken, Guid userId, DateTime expires)
 {
-  public UserGrant(string userToken, string serverToken, Guid userId)
-  {
-    this.UserToken = userToken;
-    this.ServerToken = serverToken;
-    this.UserId = userId;
-  }
+  public string UserToken { get; } = userToken;
 
-  public string UserToken { get; }
+  public string ServerToken { get; } = serverToken;
 
-  public string ServerToken { get; }
+  public string RefreshToken { get; } = refreshToken;
 
-  public Guid UserId { get; }
+  public Guid UserId { get; } = userId;
+
+  public DateTime Expires { get; } = expires;
 }
 
 public enum UserAccess
@@ -27,7 +24,7 @@ public enum UserAccess
   Identify = 1,
 }
 
-public class AuthService
+public class AuthService(IUserClient userClient, IJwtClient jwtClient)
 {
   private struct UserTokenPayload
   {
@@ -36,15 +33,14 @@ public class AuthService
     public UserAccess Access { get; set; }
   }
 
-
-  private readonly IUserClient userClient;
-  private readonly IJwtClient jwtClient;
-
-  public AuthService(IUserClient userClient, IJwtClient jwtClient)
+  private struct UserRefreshPayload
   {
-    this.userClient = userClient;
-    this.jwtClient = jwtClient;
+    public string UserId { get; set; }
   }
+
+
+  private readonly IUserClient userClient = userClient;
+  private readonly IJwtClient jwtClient = jwtClient;
 
   private string EncryptPassowrd(string input)
   {
@@ -99,7 +95,14 @@ public class AuthService
           Access = UserAccess.Identify
         },
         TimeSpan.FromHours(1)),
-        user.UserId);
+        await this.jwtClient.CreateJwt(
+        new UserRefreshPayload
+        {
+          UserId = user.UserId.ToString()
+        },
+        TimeSpan.FromDays(7)),
+        user.UserId,
+        DateTime.Now + TimeSpan.FromHours(12));
   }
 
   public async Task<UserGrant> Register(string username, string email, string password)
@@ -128,6 +131,14 @@ public class AuthService
 
     await this.userClient.UpdateUser(user.LoggedIn());
 
+    return await this.CreateGrant(user);
+  }
+
+  public async Task<UserGrant> Refresh(string refreshToken)
+  {
+    var grant = await this.jwtClient.DecodeJwt<UserRefreshPayload>(refreshToken);
+
+    var user = await this.userClient.GetUser(Guid.Parse(grant.UserId));
     return await this.CreateGrant(user);
   }
 
