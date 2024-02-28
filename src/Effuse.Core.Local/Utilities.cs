@@ -76,6 +76,10 @@ public static class Utilities
       res.AddHeader(key, value);
     }
 
+    res.AddHeader("Access-Control-Allow-Origin", Env.GetEnv("UI_URL"));
+    res.AddHeader("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE");
+    res.AddHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+
     res.StatusCode = response.StatusCode;
 
     await res.OutputStream.WriteAsync(data);

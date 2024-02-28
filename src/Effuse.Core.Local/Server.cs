@@ -22,7 +22,7 @@ public class Server
   public Server(int port, UnityContainer container, Assembly assembly)
   {
     this.listener = new();
-    this.listener.Prefixes.Add($"http://+:{port}/");
+    this.listener.Prefixes.Add($"http://*:{port}/");
     this.routes = Route.FromAssembly(assembly);
     this.webSocketRoutes = Route.WebSocketsFromAssembly(assembly);
     this.container = container;
@@ -31,7 +31,7 @@ public class Server
   public async Task Start()
   {
     listener.Start();
-    Console.WriteLine("Listening...");
+    Console.WriteLine($"Listening at {string.Join(", ", this.listener.Prefixes)}");
 
     while (true)
     {
@@ -42,12 +42,7 @@ public class Server
       }
       else if (ctx.Request.HttpMethod.ToString().Equals("options", StringComparison.InvariantCultureIgnoreCase))
       {
-        await ctx.Response.ApplyResponse(new(200, null, new Dictionary<string, string>()
-        {
-          ["Access-Control-Allow-Origin"] = Env.GetEnv("UI_URL"),
-          ["Access-Control-Allow-Methods"] = "OPTIONS, GET, PUT, POST, DELETE",
-          ["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
-        }));
+        await ctx.Response.ApplyResponse(new(200));
       }
       else
       {
