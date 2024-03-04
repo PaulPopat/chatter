@@ -1,8 +1,13 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const VirtualModulesPlugin = require("webpack-virtual-modules");
 const path = require("path");
 
 const isProd = process.env.PROD === "true";
+
+const config = {
+  SSO_BASE: process.env.SSO_BASE_URL,
+};
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
@@ -44,6 +49,11 @@ module.exports = {
     new MiniCssExtractPlugin(),
     new CopyWebpackPlugin({
       patterns: [{ from: "index.html", to: "index.html" }],
+    }),
+    new VirtualModulesPlugin({
+      "node_modules/@effuse/config.js": `module.exports = ${JSON.stringify(
+        config
+      )};`,
     }),
   ],
   mode: isProd ? "production" : "development",

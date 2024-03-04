@@ -6,18 +6,17 @@ import {
   useEffect,
   useState,
 } from "react";
-import Url from "../utils/url";
 import { z } from "zod";
-import { UseSso } from "../auth/sso";
-import { SSO_BASE } from "../constants";
+import UseFetcher from "../utils/fetch";
 
-type FormProps = {
+type FormProps<TExpect> = {
   url: string;
   method: "GET" | "PUT" | "POST" | "DELETE";
   area: "server" | "sso";
   no_auth?: boolean;
+  expect?: z.ZodType<TExpect>;
 
-  on_success?: (response: Response, data: unknown) => void;
+  on_success?: (response: Response, data: TExpect) => void;
   on_fail?: (response: Response) => void;
 };
 
@@ -75,35 +74,28 @@ export function UseSubmitter() {
   return data.submit;
 }
 
-export default (props: PropsWithChildren<FormProps>) => {
+export default function Form<TExpect>(
+  props: PropsWithChildren<FormProps<TExpect>>
+) {
   const [data, set_data] = useState<Record<string, unknown>>({});
   const [callbacks, set_callbacks] = useState<Array<() => void>>([]);
-
-  const token = props.area === "sso" ? UseSso().admin_token : "";
-  const base = props.area === "sso" ? SSO_BASE : "";
+  const fetcher = UseFetcher(props.url, {
+    method: props.method,
+    area: props.area,
+    no_auth: props.no_auth,
+    expect: props.expect,
+  });
 
   const on_submit = useCallback(async () => {
-    const is_body_type = BodyTypes.includes(props.method);
-    const uri = new Url(props.url, !is_body_type ? UrlInput.parse(data) : {});
-
-    const headers: Record<string, string> = {};
-
-    if (!props.no_auth) headers["Authorization"] = `Bearer ${token}`;
-    if (is_body_type) headers["Content-Type"] = "application/json";
-
-    const response = await fetch(uri.href(base), {
-      body: is_body_type ? JSON.stringify(data) : undefined,
-      headers: headers,
-    });
-
-    if (!response.ok)
-      if (props.on_fail) props.on_fail(response);
+    try {
+      const { response, data: json } = await fetcher(data);
+      if (props.on_success) props.on_success(response, json);
+    } catch (response: unknown) {
+      if (response instanceof Response && props.on_fail)
+        props.on_fail(response);
       else throw response;
-
-    const json = await response.json();
-
-    if (props.on_success) props.on_success(response, json);
-  }, [data, callbacks, props]);
+    }
+  }, [data, callbacks, props, fetcher]);
 
   return (
     <FormContext.Provider
@@ -127,4 +119,4 @@ export default (props: PropsWithChildren<FormProps>) => {
       {props.children}
     </FormContext.Provider>
   );
-};
+}
