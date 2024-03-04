@@ -39,8 +39,12 @@ export async function Fetch<TExpect = unknown>(
 
   if (token) headers["Authorization"] = `Bearer ${token}`;
   const response = await fetch(uri.href(base), {
+    ...props,
     body: is_body_type ? Json.ToString(body) : undefined,
-    headers: headers,
+    headers: {
+      ...(props.headers ?? {}),
+      ...headers,
+    },
   });
 
   if (!response.ok) throw response;

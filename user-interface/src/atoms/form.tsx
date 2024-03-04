@@ -8,6 +8,7 @@ import {
 } from "react";
 import { z } from "zod";
 import UseFetcher from "../utils/fetch";
+import { StyleProp, View, ViewStyle } from "react-native";
 
 type FormProps<TExpect> = {
   url: string;
@@ -18,6 +19,8 @@ type FormProps<TExpect> = {
 
   on_success?: (response: Response, data: TExpect) => void;
   on_fail?: (response: Response) => void;
+
+  style?: StyleProp<ViewStyle>;
 };
 
 type InputValidation =
@@ -116,7 +119,7 @@ export default function Form<TExpect>(
         submit: on_submit,
       }}
     >
-      {props.children}
+      <View style={props.style}>{props.children}</View>
     </FormContext.Provider>
   );
 }
