@@ -46,12 +46,14 @@ export const SsoProvider = (props: PropsWithChildren) => {
     };
   }, [auth]);
 
+  const orientation = UseOrientation();
+
   if (!auth.AdminToken) {
     return (
       <View
         style={{
           ...styles.container,
-          flexDirection: UseOrientation() === "landscape" ? "row" : "column",
+          flexDirection: orientation === "landscape" ? "row" : "column",
         }}
       >
         <Form
@@ -87,10 +89,10 @@ export const SsoProvider = (props: PropsWithChildren) => {
         >
           <Text style={styles.form_title}>Alternatively</Text>
           <Textbox name="UserName">User Name</Textbox>
-          <Textbox name="email" keyboard="email-address">
+          <Textbox name="Email" keyboard="email-address">
             Email
           </Textbox>
-          <Textbox name="password" password>
+          <Textbox name="Password" password>
             Password
           </Textbox>
           <Submitter>Register</Submitter>

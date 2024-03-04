@@ -48,7 +48,7 @@ export async function Fetch<TExpect = unknown>(
   });
 
   if (!response.ok) throw response;
-  const json = await response.json();
+  const json = Json.Parse(await response.text());
 
   if (props?.expect)
     return {
