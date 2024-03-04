@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
+using System.Web;
 using Effuse.Core.Handlers.Contracts;
 using Effuse.Core.Utilities;
 
@@ -56,8 +57,8 @@ public static class Utilities
       path: req.Url.AbsolutePath,
       method: req.HttpMethod,
       connectionId: connectionId.ToString(),
-      pathParameters: route.PathParameters(req.Url.AbsolutePath),
-      queryParameter: req.Url.GetQueryString().ToLowerCaseKeys(),
+      pathParameters: route.PathParameters(req.Url.AbsolutePath).UrlDecodeValues(),
+      queryParameter: req.Url.GetQueryString().ToLowerCaseKeys().UrlDecodeValues(),
       headers: req.Headers.ToDictionary().ToLowerCaseKeys(),
       body: await req.GetBody() ?? string.Empty
     );
@@ -118,5 +119,16 @@ public static class Utilities
       WebSocketMessageType.Text,
       true,
       CancellationToken.None);
+  }
+
+  public static Dictionary<string, string> UrlDecodeValues(this IDictionary<string, string> self)
+  {
+    var result = new Dictionary<string, string>();
+    foreach (var (k, v) in self ?? new Dictionary<string, string>())
+    {
+      result[k] = HttpUtility.UrlDecode(v);
+    }
+
+    return result;
   }
 }

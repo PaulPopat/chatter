@@ -3,7 +3,6 @@ using System.Net.WebSockets;
 using System.Reflection;
 using Effuse.Core.Handlers.Contracts;
 using Effuse.Core.Integration;
-using Effuse.Core.Utilities;
 using Unity;
 
 namespace Effuse.Core.Local;
