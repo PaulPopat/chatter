@@ -13,14 +13,17 @@ export default function UseRemoteState<TExpect>(
   const update = useCallback(
     () =>
       fetcher({})
-        .then(({ data }) => {
+        .then(({ data, response }) => {
           set_data(data);
-          Session[url] = data;
+          Session[response.url] = data;
         })
         .catch((err) => {
-          console.error(err);
-          const d = Session[url];
-          set_data(props.expect?.parse(d) ?? (d as any));
+          if (err instanceof Response) {
+            const d = Session[err.url];
+            set_data(props.expect?.parse(d) ?? (d as any));
+          } else {
+            throw err;
+          }
         }),
     [fetcher]
   );

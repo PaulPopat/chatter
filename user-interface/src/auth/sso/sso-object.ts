@@ -34,7 +34,7 @@ export class Sso {
   }
 
   get #expires_in_seconds() {
-    return (new Date().getTime() - this.#expires.getTime()) / 1000;
+    return (this.#expires.getTime() - new Date().getTime()) / 1000;
   }
 
   get ShouldRefresh() {
@@ -51,6 +51,7 @@ export class Sso {
       {
         method: "GET",
         expect: Auth,
+        area: "sso",
       },
       {
         token: this.#refresh_token,

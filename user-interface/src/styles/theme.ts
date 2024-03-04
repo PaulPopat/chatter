@@ -1,5 +1,7 @@
 export const Margins = 6;
 export const Padding = 6;
+export const BorderRadius = 4;
+export const BorderWidth = 2;
 
 export const FontSizes = {
   Title: 24,
@@ -11,6 +13,10 @@ export const Colours = {
     Foreground: "black",
     Background: "white",
   },
+  Highlight: {
+    Foreground: "#333",
+    Background: "#fafafa",
+  },
   Primary: {
     Foreground: "white",
     Background: "blue",
@@ -18,5 +24,9 @@ export const Colours = {
   Secondary: {
     Foreground: "white",
     Background: "purple",
+  },
+  Danger: {
+    Foreground: "white",
+    Background: "red",
   },
 };

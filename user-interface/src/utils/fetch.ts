@@ -13,6 +13,7 @@ export type FetchConfig<TExpect> = Omit<RequestInit, "body"> & {
   expect?: z.ZodType<TExpect>;
   area?: Area;
   no_auth?: boolean;
+  cachable?: boolean;
 };
 
 export type FetchResponse<TExpect> = {

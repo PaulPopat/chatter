@@ -1,28 +1,18 @@
 import { Colours, Margins } from "../styles/theme";
 import { UseSubmitter } from "./form";
-import { Button, StyleSheet, View } from "react-native";
+import Button from "./button";
+import { PropsWithChildren } from "react";
 
 type Props = {
-  children: string;
+  colour?: keyof typeof Colours;
 };
 
-const styles = StyleSheet.create({
-  container: {
-    marginTop: Margins,
-    marginBottom: Margins,
-  },
-});
-
-export default (props: Props) => {
+export default (props: PropsWithChildren<Props>) => {
   const submit = UseSubmitter();
 
   return (
-    <View style={styles.container}>
-      <Button
-        title={props.children}
-        color={Colours.Primary.Background}
-        onPress={submit}
-      />
-    </View>
+    <Button colour={props.colour} on_click={submit}>
+      {props.children}
+    </Button>
   );
 };

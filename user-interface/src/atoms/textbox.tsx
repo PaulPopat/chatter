@@ -10,7 +10,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { z } from "zod";
-import { Colours, FontSizes, Margins, Padding } from "../styles/theme";
+import {
+  BorderRadius,
+  BorderWidth,
+  Colours,
+  FontSizes,
+  Margins,
+  Padding,
+} from "../styles/theme";
 
 type Props = {
   name: string;
@@ -23,8 +30,8 @@ const styles = StyleSheet.create({
     marginTop: Margins,
     marginBottom: Margins,
     borderColor: Colours.Secondary.Background,
-    borderWidth: 2,
-    borderRadius: 4,
+    borderWidth: BorderWidth,
+    borderRadius: BorderRadius,
   },
   viewFocus: {
     borderColor: Colours.Primary.Background,

@@ -1,14 +1,16 @@
+import JoinUrl from "./url-join";
+
 export default class Url {
   readonly #url: string;
   readonly #parameters: Record<string, unknown>;
   readonly #include_query: boolean;
 
   constructor(
-    url: string,
+    url: string | Array<string>,
     parameters: Record<string, unknown>,
     include_query: boolean
   ) {
-    this.#url = url;
+    this.#url = Array.isArray(url) ? JoinUrl(...url) : url;
     this.#parameters = parameters;
     this.#include_query = include_query;
   }

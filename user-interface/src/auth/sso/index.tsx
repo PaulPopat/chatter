@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import Form from "../../atoms/form";
+import { Form } from "../../atoms/form";
 import Textbox from "../../atoms/textbox";
 import Submitter from "../../atoms/submitter";
 import { Session } from "../../utils/storage";
