@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { Fetch } from "../../utils/fetch";
-import { Session } from "../../utils/storage";
+import { Fetch } from "../utils/fetch";
+import { Session } from "../utils/storage";
+import { createContext, useContext } from "react";
 
 export const Auth = z.object({
   AdminToken: z.string(),
@@ -46,18 +47,25 @@ export class Sso {
   }
 
   async AsRefreshed() {
-    const { data } = await Fetch(
-      "/api/v1/auth/refresh-token",
-      {
-        method: "GET",
-        expect: Auth,
-        area: "sso",
-      },
-      {
-        token: this.#refresh_token,
-      }
-    );
-    return new Sso(data);
+    try {
+      const { data } = await Fetch(
+        "/api/v1/auth/refresh-token",
+        {
+          method: "GET",
+          expect: Auth,
+          area: "sso",
+        },
+        {
+          token: this.#refresh_token,
+        }
+      );
+
+      Session.auth = data;
+      return new Sso(data);
+    } catch {
+      Session.auth = EmptyAuth;
+      return Sso.Stored;
+    }
   }
 
   get AdminToken() {
@@ -71,4 +79,10 @@ export class Sso {
   static get Stored() {
     return new Sso(Auth.parse(Session.auth ?? EmptyAuth));
   }
+}
+
+export const AuthContext = createContext(Sso.Stored);
+
+export function UseSso() {
+  return useContext(AuthContext);
 }
