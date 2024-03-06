@@ -4,17 +4,24 @@ import { UseSso } from "../auth/sso";
 import { useCallback } from "react";
 import Json from "./json";
 import { SSO_BASE } from "@effuse/config";
+import { UseServerAuth } from "../auth/server";
 
 const BodyTypes = ["PUT", "POST"];
 
-export type Area = "server" | "sso";
-
-export type FetchConfig<TExpect> = Omit<RequestInit, "body"> & {
+export type FetchConfig<TExpect> = {
   expect?: z.ZodType<TExpect>;
-  area?: Area;
-  no_auth?: boolean;
   cachable?: boolean;
-};
+  method: string;
+  headers?: Record<string, string>;
+} & (
+  | {
+      area: "sso";
+    }
+  | {
+      area: "server";
+      base_url: string;
+    }
+);
 
 export type FetchResponse<TExpect> = {
   response: Response;
@@ -27,11 +34,11 @@ export type Fetcher<TExpect> = (
 
 export async function Fetch<TExpect = unknown>(
   url: string,
-  props: Omit<FetchConfig<TExpect>, "no_auth">,
+  props: FetchConfig<TExpect>,
   body: Record<string, unknown>,
   token?: string
 ): Promise<FetchResponse<TExpect>> {
-  const base = props?.area === "sso" ? SSO_BASE : "";
+  const base = props.area === "sso" ? SSO_BASE : props.base_url;
 
   const is_body_type = BodyTypes.includes(props?.method ?? "GET");
   const uri = new Url(url, body, !is_body_type);
@@ -65,13 +72,14 @@ export async function Fetch<TExpect = unknown>(
 
 export default function UseFetcher<TExpect = unknown>(
   url: string,
-  props?: FetchConfig<TExpect>
+  props: FetchConfig<TExpect> & { no_auth?: boolean }
 ): Fetcher<TExpect> {
-  const token = props?.area === "sso" ? UseSso().AdminToken : "";
+  const token =
+    props.area === "sso" ? UseSso().AdminToken : UseServerAuth().LocalToken;
 
   return useCallback(
     (body: Record<string, unknown>) =>
-      Fetch(url, props ?? {}, body, !props?.no_auth ? token : undefined),
+      Fetch(url, props, body, !props?.no_auth ? token : undefined),
     [url, props, token]
   );
 }

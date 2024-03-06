@@ -1,6 +1,6 @@
 import { PropsWithChildren, useState } from "react";
 import UseProfile from "../data/use-profile";
-import { View, Text, Image, StyleSheet, Modal } from "react-native";
+import { View, Text, Image, StyleSheet, Modal, Pressable } from "react-native";
 import {
   BorderRadius,
   BorderWidth,
@@ -43,7 +43,7 @@ const JoinForm = z.object({
   url: z.string(),
 });
 
-export default (props: PropsWithChildren) => {
+export default (props: { on_open: (server: string) => void }) => {
   const { profile, join_server } = UseProfile();
   const [joining, set_joining] = useState(false);
 
@@ -78,14 +78,18 @@ export default (props: PropsWithChildren) => {
 
       <View style={styles.server_list_container}>
         {profile?.Servers.map((s) => (
-          <View style={styles.server_container} key={s.Url}>
+          <Pressable
+            style={styles.server_container}
+            key={s.Url}
+            onPress={() => props.on_open(s.Url)}
+          >
             <Image
               source={{
                 uri: JoinUrl(s.Url, "/_/images/icon"),
               }}
             />
             <Text style={styles.server_text}>{new URL(s.Url).host}</Text>
-          </View>
+          </Pressable>
         ))}
       </View>
 

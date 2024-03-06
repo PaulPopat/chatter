@@ -1,30 +1,15 @@
 import { useEffect, useState } from "react";
-import { Form } from "./atoms/form";
-import Textbox from "./atoms/textbox";
-import Submitter from "./atoms/submitter";
-import { Session } from "./utils/storage";
-import { StyleSheet, Text, View } from "react-native";
-import { Auth, AuthContext, Sso } from "./auth/sso";
-import UseOrientation from "./utils/orientation";
-import { FontSizes, Margins } from "./styles/theme";
+import { View } from "react-native";
+import { AuthContext, Sso } from "./auth/sso";
 import { Colours, Padding } from "./styles/theme";
 import ServerList from "./constructs/server-list";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  form: {
-    flex: 1,
-    padding: Margins,
-  },
-  form_title: {
-    fontSize: FontSizes.Title,
-  },
-});
+import Authenticate from "./constructs/authenticate";
+import Server from "./constructs/server";
+import { ServerAuthProvider } from "./auth/server";
 
 export default () => {
   const [auth, set_auth] = useState(Sso.Stored);
+  const [open, set_open] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -36,72 +21,38 @@ export default () => {
     };
   }, [auth]);
 
-  const orientation = UseOrientation();
-
   if (!auth.AdminToken) {
-    return (
-      <View
-        style={{
-          ...styles.container,
-          flexDirection: orientation === "landscape" ? "row" : "column",
-        }}
-      >
-        <Form
-          style={styles.form}
-          area="sso"
-          method="GET"
-          url="/api/v1/auth/token"
-          on_success={(_, d) => {
-            set_auth(new Sso(d));
-            Session.auth = d;
-          }}
-          expect={Auth}
-        >
-          <Text style={styles.form_title}>Already have an account?</Text>
-          <Textbox name="email" keyboard="email-address">
-            Email
-          </Textbox>
-          <Textbox name="password" password>
-            Password
-          </Textbox>
-          <Submitter>Log In</Submitter>
-        </Form>
-        <Form
-          style={styles.form}
-          area="sso"
-          method="POST"
-          url="/api/v1/users"
-          on_success={(_, d) => {
-            set_auth(new Sso(d));
-            Session.auth = d;
-          }}
-          expect={Auth}
-        >
-          <Text style={styles.form_title}>Alternatively</Text>
-          <Textbox name="UserName">User Name</Textbox>
-          <Textbox name="Email" keyboard="email-address">
-            Email
-          </Textbox>
-          <Textbox name="Password" password>
-            Password
-          </Textbox>
-          <Submitter>Register</Submitter>
-        </Form>
-      </View>
-    );
+    return <Authenticate set_auth={set_auth} />;
   }
 
   return (
     <AuthContext.Provider value={auth}>
       <View
         style={{
-          maxWidth: 200,
+          flexDirection: "row",
           minHeight: "100%",
-          backgroundColor: Colours.Highlight.Background,
-          padding: Padding,
         }}
       >
-        <ServerList />
+        <View
+          style={{
+            maxWidth: 200,
+            backgroundColor: Colours.Highlight.Background,
+            padding: Padding,
+          }}
+        >
+          <ServerList on_open={set_open} />
+        </View>
+        <View
+          style={{
+            flex: 1,
+          }}
+        >
+          {open && (
+            <ServerAuthProvider url={open}>
+              <Server url={open} />
+            </ServerAuthProvider>
+          )}
+        </View>
       </View>
     </AuthContext.Provider>
   );
