@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { View } from "react-native";
-import { AuthContext, Sso } from "./auth/sso";
 import { Colours, Padding } from "./styles/theme";
 import ServerList from "./constructs/server-list";
 import Authenticate from "./constructs/authenticate";
 import Server from "./constructs/server";
-import { ServerAuthProvider } from "./auth/server";
+import UseSso, { SsoProvider, UseSsoControls } from "./data/use-sso";
+import { ServerProvider } from "./data/use-server";
 
-export default () => {
-  const [auth, set_auth] = useState(Sso.Stored);
+const Main = () => {
+  const auth = UseSso();
+  const { refresh } = UseSsoControls();
   const [open, set_open] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (auth.IsExpired) auth.AsRefreshed().then(set_auth);
+      if (auth.IsExpired) refresh({ token: auth.RefreshToken });
     }, 10000);
 
     return () => {
@@ -22,38 +23,44 @@ export default () => {
   }, [auth]);
 
   if (!auth.AdminToken) {
-    return <Authenticate set_auth={set_auth} />;
+    return <Authenticate />;
   }
 
   return (
-    <AuthContext.Provider value={auth}>
+    <View
+      style={{
+        flexDirection: "row",
+        minHeight: "100%",
+      }}
+    >
       <View
         style={{
-          flexDirection: "row",
-          minHeight: "100%",
+          maxWidth: 200,
+          backgroundColor: Colours.Highlight.Background,
+          padding: Padding,
         }}
       >
-        <View
-          style={{
-            maxWidth: 200,
-            backgroundColor: Colours.Highlight.Background,
-            padding: Padding,
-          }}
-        >
-          <ServerList on_open={set_open} />
-        </View>
-        <View
-          style={{
-            flex: 1,
-          }}
-        >
-          {open && (
-            <ServerAuthProvider url={open}>
-              <Server />
-            </ServerAuthProvider>
-          )}
-        </View>
+        <ServerList on_open={set_open} />
       </View>
-    </AuthContext.Provider>
+      <View
+        style={{
+          flex: 1,
+        }}
+      >
+        {open && (
+          <ServerProvider url={open}>
+            <Server />
+          </ServerProvider>
+        )}
+      </View>
+    </View>
+  );
+};
+
+export default () => {
+  return (
+    <SsoProvider>
+      <Main />
+    </SsoProvider>
   );
 };

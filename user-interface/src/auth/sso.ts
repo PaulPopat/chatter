@@ -76,13 +76,15 @@ export class Sso {
     return this.#server_token;
   }
 
+  get RefreshToken() {
+    return this.#refresh_token;
+  }
+
+  get UserId() {
+    return this.#user_id;
+  }
+
   static get Stored() {
     return new Sso(Auth.parse(Session.auth ?? EmptyAuth));
   }
-}
-
-export const AuthContext = createContext(Sso.Stored);
-
-export function UseSso() {
-  return useContext(AuthContext);
 }

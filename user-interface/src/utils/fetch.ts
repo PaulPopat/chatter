@@ -1,10 +1,10 @@
 import { z } from "zod";
 import Url from "./url";
-import { UseSso } from "../auth/sso";
 import { useCallback } from "react";
 import Json from "./json";
 import { SSO_BASE } from "@effuse/config";
-import { UseServerAuth } from "../auth/server";
+import UseSso from "../data/use-sso";
+import UseServer from "../data/use-server";
 
 const BodyTypes = ["PUT", "POST"];
 
@@ -93,7 +93,7 @@ export default function UseFetcher<TExpect = unknown>(
   url: string,
   props: UseFetcherConfig<TExpect>
 ): Fetcher<TExpect> {
-  const server = UseServerAuth();
+  const server = UseServer();
   const token = props.area === "sso" ? UseSso().AdminToken : server.LocalToken;
 
   return useCallback(

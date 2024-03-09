@@ -18,13 +18,11 @@ export default function UseChannels() {
   const create_channel = UseFetcher("/api/v1/channels", {
     method: "POST",
     area: "server",
+    on_success: refresh,
   });
 
   return {
     channels,
-    async create_channel(name: string, is_public: boolean) {
-      await create_channel({ Name: name, Public: is_public });
-      refresh();
-    },
+    create_channel,
   };
 }

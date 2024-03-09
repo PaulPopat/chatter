@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { Fetch } from "../utils/fetch";
-import { Session } from "../utils/storage";
 import {
   PropsWithChildren,
   createContext,
@@ -9,19 +8,12 @@ import {
   useState,
 } from "react";
 import { addHours } from "date-fns";
-import { Sso, UseSso } from "./sso";
+import { Sso } from "./sso";
+import UseSso from "../data/use-sso";
 
 export const Auth = z.object({
   LocalToken: z.string(),
 });
-
-const EmptyAuth = {
-  AdminToken: "",
-  ServerToken: "",
-  UserId: "",
-  RefreshToken: "",
-  Expires: new Date(),
-};
 
 export class Server {
   readonly #server_url: string;
@@ -75,36 +67,3 @@ export class Server {
     return new Server(data, url);
   }
 }
-
-const ServerAuthContext = createContext<Server>(null as any);
-
-export function UseServerAuth() {
-  return useContext(ServerAuthContext);
-}
-
-export const ServerAuthProvider = (
-  props: PropsWithChildren<{ url: string }>
-) => {
-  const [server, set_server] = useState<Server | undefined>();
-  const sso = UseSso();
-
-  useEffect(() => {
-    if (!server) return;
-
-    const interval = setInterval(() => {
-      if (server.IsExpired) server.AsRefreshed(sso).then(set_server);
-    }, 10000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [server, sso]);
-
-  if (!server) throw Server.ForServer(props.url, sso).then(set_server);
-
-  return (
-    <ServerAuthContext.Provider value={server}>
-      {props.children}
-    </ServerAuthContext.Provider>
-  );
-};

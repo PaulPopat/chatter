@@ -2,11 +2,10 @@ import { View, StyleSheet, Text } from "react-native";
 import { Form } from "../atoms/form";
 import Submitter from "../atoms/submitter";
 import Textbox from "../atoms/textbox";
-import { Sso, Auth } from "../auth/sso";
-import { Session } from "../utils/storage";
+import { Sso } from "../auth/sso";
 import UseOrientation from "../utils/orientation";
 import { FontSizes, Margins } from "../styles/theme";
-import UseFetcher from "../utils/fetch";
+import { UseSsoControls } from "../data/use-sso";
 
 const styles = StyleSheet.create({
   container: {
@@ -21,28 +20,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default (props: { set_auth: (sso: Sso) => void }) => {
+export default () => {
   const orientation = UseOrientation();
-
-  const login = UseFetcher("/api/v1/auth/token", {
-    area: "sso",
-    method: "GET",
-    expect: Auth,
-    on_success(_, d) {
-      props.set_auth(new Sso(d));
-      Session.auth = d;
-    },
-  });
-
-  const register = UseFetcher("/api/v1/users", {
-    method: "POST",
-    area: "sso",
-    expect: Auth,
-    on_success(_, d) {
-      props.set_auth(new Sso(d));
-      Session.auth = d;
-    },
-  });
+  const { login, register } = UseSsoControls();
 
   return (
     <View
