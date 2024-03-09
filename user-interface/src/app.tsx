@@ -49,7 +49,7 @@ export default () => {
         >
           {open && (
             <ServerAuthProvider url={open}>
-              <Server url={open} />
+              <Server />
             </ServerAuthProvider>
           )}
         </View>

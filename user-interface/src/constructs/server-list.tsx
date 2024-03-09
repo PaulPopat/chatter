@@ -9,7 +9,7 @@ import {
   Padding,
 } from "../styles/theme";
 import JoinUrl from "../utils/url-join";
-import { RawForm } from "../atoms/form";
+import { Form, RawForm } from "../atoms/form";
 import { z } from "zod";
 import Textbox from "../atoms/textbox";
 import Submitter from "../atoms/submitter";
@@ -39,10 +39,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const JoinForm = z.object({
-  url: z.string(),
-});
-
 export default (props: { on_open: (server: string) => void }) => {
   const { profile, join_server } = UseProfile();
   const [joining, set_joining] = useState(false);
@@ -61,18 +57,13 @@ export default (props: { on_open: (server: string) => void }) => {
         }}
       >
         <View style={styles.modal_body}>
-          <RawForm
-            form_type={JoinForm}
-            on_submit={(data): void => {
-              join_server(data.url);
-            }}
-          >
-            <Textbox name="url">Server URL</Textbox>
+          <Form fetcher={join_server}>
+            <Textbox name="ServerUrl">Server URL</Textbox>
             <Submitter>Join Server</Submitter>
             <Button on_click={() => set_joining(false)} colour="Danger">
               Cancel
             </Button>
-          </RawForm>
+          </Form>
         </View>
       </Modal>
 

@@ -6,6 +6,7 @@ import { Sso, Auth } from "../auth/sso";
 import { Session } from "../utils/storage";
 import UseOrientation from "../utils/orientation";
 import { FontSizes, Margins } from "../styles/theme";
+import UseFetcher from "../utils/fetch";
 
 const styles = StyleSheet.create({
   container: {
@@ -23,6 +24,26 @@ const styles = StyleSheet.create({
 export default (props: { set_auth: (sso: Sso) => void }) => {
   const orientation = UseOrientation();
 
+  const login = UseFetcher("/api/v1/auth/token", {
+    area: "sso",
+    method: "GET",
+    expect: Auth,
+    on_success(_, d) {
+      props.set_auth(new Sso(d));
+      Session.auth = d;
+    },
+  });
+
+  const register = UseFetcher("/api/v1/users", {
+    method: "POST",
+    area: "sso",
+    expect: Auth,
+    on_success(_, d) {
+      props.set_auth(new Sso(d));
+      Session.auth = d;
+    },
+  });
+
   return (
     <View
       style={{
@@ -30,17 +51,7 @@ export default (props: { set_auth: (sso: Sso) => void }) => {
         flexDirection: orientation === "landscape" ? "row" : "column",
       }}
     >
-      <Form
-        style={styles.form}
-        area="sso"
-        method="GET"
-        url="/api/v1/auth/token"
-        on_success={(_, d) => {
-          props.set_auth(new Sso(d));
-          Session.auth = d;
-        }}
-        expect={Auth}
-      >
+      <Form style={styles.form} fetcher={login}>
         <Text style={styles.form_title}>Already have an account?</Text>
         <Textbox name="email" keyboard="email-address">
           Email
@@ -50,17 +61,7 @@ export default (props: { set_auth: (sso: Sso) => void }) => {
         </Textbox>
         <Submitter>Log In</Submitter>
       </Form>
-      <Form
-        style={styles.form}
-        area="sso"
-        method="POST"
-        url="/api/v1/users"
-        on_success={(_, d) => {
-          props.set_auth(new Sso(d));
-          Session.auth = d;
-        }}
-        expect={Auth}
-      >
+      <Form style={styles.form} fetcher={register}>
         <Text style={styles.form_title}>Alternatively</Text>
         <Textbox name="UserName">User Name</Textbox>
         <Textbox name="Email" keyboard="email-address">

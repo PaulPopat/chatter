@@ -8,11 +8,16 @@ import { UseServerAuth } from "../auth/server";
 
 const BodyTypes = ["PUT", "POST"];
 
+type Mapper = (
+  body: Record<string, unknown>
+) => Record<string, unknown> | Promise<Record<string, unknown>>;
+
 export type FetchConfig<TExpect> = {
   expect?: z.ZodType<TExpect>;
   cachable?: boolean;
   method: string;
   headers?: Record<string, string>;
+  mapper?: Mapper;
 } & (
   | {
       area: "sso";
@@ -38,6 +43,7 @@ export async function Fetch<TExpect = unknown>(
   body: Record<string, unknown>,
   token?: string
 ): Promise<FetchResponse<TExpect>> {
+  body = props.mapper ? await Promise.resolve(props.mapper(body)) : body;
   const base = props.area === "sso" ? SSO_BASE : props.base_url;
 
   const is_body_type = BodyTypes.includes(props?.method ?? "GET");
@@ -70,16 +76,44 @@ export async function Fetch<TExpect = unknown>(
   };
 }
 
+export type UseFetcherConfig<TExpect = unknown> = {
+  no_auth?: boolean;
+  expect?: z.ZodType<TExpect>;
+  cachable?: boolean;
+  method: string;
+  headers?: Record<string, string>;
+  area: "sso" | "server";
+  mapper?: Mapper;
+
+  on_success?: (response: Response, data: TExpect) => void;
+  on_fail?: (response: Response) => void;
+};
+
 export default function UseFetcher<TExpect = unknown>(
   url: string,
-  props: FetchConfig<TExpect> & { no_auth?: boolean }
+  props: UseFetcherConfig<TExpect>
 ): Fetcher<TExpect> {
-  const token =
-    props.area === "sso" ? UseSso().AdminToken : UseServerAuth().LocalToken;
+  const server = UseServerAuth();
+  const token = props.area === "sso" ? UseSso().AdminToken : server.LocalToken;
 
   return useCallback(
     (body: Record<string, unknown>) =>
-      Fetch(url, props, body, !props?.no_auth ? token : undefined),
+      Fetch(
+        url,
+        props.area === "sso"
+          ? { ...props, area: "sso" }
+          : { ...props, area: "server", base_url: server.BaseUrl },
+        body,
+        !props?.no_auth ? token : undefined
+      )
+        .then((r) => {
+          if (props.on_success) props.on_success(r.response, r.data);
+          return r;
+        })
+        .catch((response) => {
+          if (props.on_fail) props.on_fail(response);
+          throw response;
+        }),
     [url, props, token]
   );
 }

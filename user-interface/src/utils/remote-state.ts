@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import UseFetcher, { FetchConfig } from "./fetch";
+import UseFetcher, { FetchConfig, UseFetcherConfig } from "./fetch";
 import { Session } from "./storage";
 
 export default function UseRemoteState<TExpect>(
   url: string,
-  props: FetchConfig<TExpect>
+  props: UseFetcherConfig<TExpect>
 ) {
   const fetcher = UseFetcher(url, props);
 

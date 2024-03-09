@@ -1,6 +1,5 @@
 import { z } from "zod";
 import UseRemoteState from "../utils/remote-state";
-import { useCallback } from "react";
 import UseFetcher from "../utils/fetch";
 
 const Profile = z.object({
@@ -15,6 +14,14 @@ const Profile = z.object({
       JoinedAt: z.date(),
     })
   ),
+});
+
+export type Profile = z.infer<typeof Profile>;
+
+const ProfileBody = z.object({
+  UserName: z.string(),
+  Biography: z.string(),
+  Picture: z.instanceof(File),
 });
 
 function ToBase64(file: File) {
@@ -41,38 +48,30 @@ export default function UseProfile() {
     area: "sso",
   });
 
-  const join_server_fetcher = UseFetcher("/api/v1/user/servers", {
+  const join_server = UseFetcher("/api/v1/user/servers", {
     method: "POST",
     expect: z.object({ Success: z.literal(true) }),
     area: "sso",
+    on_success: refresh,
   });
-  const join_server = useCallback(
-    async (server_url: string) => {
-      await join_server_fetcher({ ServerUrl: server_url });
-      refresh();
-    },
-    [join_server_fetcher]
-  );
 
-  const update_profile_fetcher = UseFetcher("/api/v1/user/profile", {
+  const update_profile = UseFetcher("/api/v1/user/profile", {
     method: "PUT",
     expect: z.any(),
     area: "sso",
-  });
-  const update_profile = useCallback(
-    async (user_name: string, biography: string, picture: File) => {
-      await update_profile_fetcher({
-        UserName: user_name,
-        Biography: biography,
+    on_success: refresh,
+    async mapper(body) {
+      const { UserName, Biography, Picture } = ProfileBody.parse(body);
+      return {
+        UserName: UserName,
+        Biography: Biography,
         Picture: {
-          MimeType: picture.type,
-          Base64Data: await ToBase64(picture),
+          MimeType: Picture.type,
+          Base64Data: await ToBase64(Picture),
         },
-      });
-      refresh();
+      };
     },
-    [join_server_fetcher]
-  );
+  });
 
   return {
     profile,

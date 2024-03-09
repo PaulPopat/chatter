@@ -1,9 +1,12 @@
 import { Text, View } from "react-native";
+import UseChannels from "../data/use-channels";
 
-export default (props: { url: string }) => {
+export default () => {
+  const { channels, create_channel } = UseChannels();
+
   return (
     <View>
-      <Text>{props.url}</Text>
+      <Text>{JSON.stringify(channels)}</Text>
     </View>
   );
 };

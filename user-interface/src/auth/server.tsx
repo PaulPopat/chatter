@@ -54,6 +54,10 @@ export class Server {
     return this.#local_token;
   }
 
+  get BaseUrl() {
+    return this.#server_url;
+  }
+
   static async ForServer(url: string, sso: Sso) {
     const { data } = await Fetch(
       "/api/v1/auth/token",
