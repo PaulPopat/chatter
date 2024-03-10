@@ -1,4 +1,5 @@
 ﻿using Effuse.Server.Integrations.Contracts;
+using Effuse.Server.Integrations.Implementations;
 using Unity;
 
 namespace Effuse.Server.Integrations;
@@ -9,5 +10,6 @@ public static class Deps
   {
     container.RegisterType<ISsoClient, HttpSsoClient>();
     container.RegisterType<IUserClient, DbUserClient>();
+    container.RegisterType<IServerMetadataClient, ServerMetadataClient>();
   }
 }

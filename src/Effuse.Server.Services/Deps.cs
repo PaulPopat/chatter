@@ -10,5 +10,6 @@ public static class Deps
     container.RegisterType<Auth>();
     container.RegisterType<Channels>();
     container.RegisterType<Messaging>();
+    container.RegisterType<Metadata>();
   }
 }
