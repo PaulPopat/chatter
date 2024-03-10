@@ -1,6 +1,5 @@
 import { z } from "zod";
 import UseRemoteState from "../utils/remote-state";
-import UseFetcher from "../utils/fetch";
 
 const Profile = z.object({
   UserId: z.string(),
@@ -41,41 +40,41 @@ function ToBase64(file: File) {
   });
 }
 
-export default function UseProfile() {
-  const [profile, refresh] = UseRemoteState("/api/v1/user/profile", {
+export default UseRemoteState(
+  "/api/v1/user/profile",
+  {
     method: "GET",
     expect: Profile,
     area: "sso",
-  });
-
-  const join_server = UseFetcher("/api/v1/user/servers", {
-    method: "POST",
-    expect: z.object({ Success: z.literal(true) }),
-    area: "sso",
-    on_success: refresh,
-  });
-
-  const update_profile = UseFetcher("/api/v1/user/profile", {
-    method: "PUT",
-    expect: z.any(),
-    area: "sso",
-    on_success: refresh,
-    async mapper(body) {
-      const { UserName, Biography, Picture } = ProfileBody.parse(body);
-      return {
-        UserName: UserName,
-        Biography: Biography,
-        Picture: {
-          MimeType: Picture.type,
-          Base64Data: await ToBase64(Picture),
+  },
+  {
+    join_server: [
+      "/api/v1/user/servers",
+      {
+        method: "POST",
+        expect: z.object({ Success: z.literal(true) }),
+        area: "sso",
+        body_type: z.object({ ServerUrl: z.string() }),
+      },
+    ],
+    update_profile: [
+      "/api/v1/user/profile",
+      {
+        method: "PUT",
+        expect: z.any(),
+        area: "sso",
+        async mapper(body: any) {
+          const { UserName, Biography, Picture } = ProfileBody.parse(body);
+          return {
+            UserName: UserName,
+            Biography: Biography,
+            Picture: {
+              MimeType: Picture.type,
+              Base64Data: await ToBase64(Picture),
+            },
+          };
         },
-      };
-    },
-  });
-
-  return {
-    profile,
-    join_server,
-    update_profile,
-  };
-}
+      },
+    ],
+  }
+);

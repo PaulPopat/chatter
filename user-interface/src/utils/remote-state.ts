@@ -1,36 +1,67 @@
-import { useCallback, useEffect, useState } from "react";
-import UseFetcher, { FetchConfig, UseFetcherConfig } from "./fetch";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import UseFetcher, { FetcherOf, UseFetcherConfig } from "./fetch";
 import { Session } from "./storage";
 
-export default function UseRemoteState<TExpect>(
-  url: string,
-  props: UseFetcherConfig<TExpect>
-) {
-  const fetcher = UseFetcher(url, props);
+type RemoteStateFetchers = Record<string, [string, UseFetcherConfig<any, any>]>;
 
-  const [data, set_data] = useState<TExpect>();
+type Actions<TActions extends RemoteStateFetchers> = {
+  [TKey in keyof TActions]: FetcherOf<TActions[TKey][1]>;
+};
 
-  const update = useCallback(
-    () =>
-      fetcher({})
-        .then(({ data, response }) => {
-          set_data(data);
-          Session[response.url] = data;
-        })
-        .catch((err) => {
-          if (err instanceof Response) {
-            const d = Session[err.url];
-            set_data(props.expect?.parse(d) ?? (d as any));
-          } else {
-            throw err;
-          }
-        }),
-    [fetcher]
-  );
+export default function UseRemoteState<
+  TExpect,
+  TActions extends RemoteStateFetchers
+>(url: string, props: UseFetcherConfig<TExpect>, actions: TActions) {
+  return () => {
+    const fetcher = UseFetcher(url, props);
 
-  useEffect(() => {
-    update();
-  }, []);
+    const [state, set_data] = useState<TExpect>();
 
-  return [data, update] as const;
+    const update = useCallback(
+      () =>
+        fetcher({})
+          .then(({ data, response }) => {
+            set_data(data);
+            Session[response.url] = data;
+          })
+          .catch((err) => {
+            if (err instanceof Response) {
+              const d = Session[err.url];
+              set_data(props.expect?.parse(d) ?? (d as any));
+            } else {
+              throw err;
+            }
+          }),
+      [fetcher]
+    );
+
+    const compiled_actions = useMemo(
+      () =>
+        Object.keys(actions)
+          .map((k) => [k, actions[k]] as const)
+          .reduce(
+            (c, [k, [url, config]]) => ({
+              ...c,
+              [k as keyof TActions]: UseFetcher(url, {
+                ...config,
+                on_success(response, data) {
+                  config.on_success && config.on_success(response, data);
+                  update();
+                },
+              }),
+            }),
+            {} as Actions<TActions>
+          ),
+      [actions]
+    );
+
+    useEffect(() => {
+      update();
+    }, []);
+
+    return {
+      state,
+      actions: compiled_actions,
+    };
+  };
 }

@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from "react";
+import { useState } from "react";
 import UseProfile from "../data/use-profile";
 import { View, Text, Image, StyleSheet, Modal, Pressable } from "react-native";
 import {
@@ -40,7 +40,10 @@ const styles = StyleSheet.create({
 });
 
 export default (props: { on_open: (server: string) => void }) => {
-  const { profile, join_server } = UseProfile();
+  const {
+    state: profile,
+    actions: { join_server },
+  } = UseProfile();
   const [joining, set_joining] = useState(false);
 
   return (

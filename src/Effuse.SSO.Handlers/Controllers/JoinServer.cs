@@ -1,31 +1,32 @@
 using Effuse.Core.Handlers;
 using Effuse.Core.Handlers.Contracts;
-using Effuse.SSO.Handlers.Models.Server;
 using Effuse.SSO.Services;
 
 namespace Effuse.SSO.Handlers.Controllers;
 
 [Route(Method.Post, "/api/v1/user/servers")]
-public class JoinServer : IHandler
+public class JoinServer(ServersService serversService) : IHandler
 {
-  private readonly ServersService serversService;
-  private readonly AuthService authService;
-
-  public JoinServer(ServersService serversService, AuthService authService)
+  private struct Form
   {
-    this.serversService = serversService;
-    this.authService = authService;
+    public string ServerToken { get; set; }
+
+    public string ServerUrl { get; set; }
+
+    public string Password { get; set; }
   }
+
+  private readonly ServersService serversService = serversService;
 
   public async Task<HandlerResponse> Handle(HandlerProps props)
   {
     var token = props.AuthToken;
     if (token == null) return new(403);
-    var userId = await this.authService.Verify(token, UserAccess.Admin);
+    var body = props.Body<Form>();
 
-    await this.serversService.JoinServer(userId, props.Body<JoinServerForm>().ServerUrl);
+    await this.serversService.JoinServer(token, body.ServerToken, body.ServerUrl, body.Password);
 
-    return new(200, new JoinServerResponse()
+    return new(200, new
     {
       Success = true
     });

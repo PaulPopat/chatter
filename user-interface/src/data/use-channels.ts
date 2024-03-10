@@ -1,6 +1,5 @@
 import { z } from "zod";
 import UseRemoteState from "../utils/remote-state";
-import UseFetcher from "../utils/fetch";
 
 const Channel = z.object({
   ChannelId: z.string(),
@@ -8,21 +7,20 @@ const Channel = z.object({
   Name: z.string(),
 });
 
-export default function UseChannels() {
-  const [channels, refresh] = UseRemoteState("/api/v1/channels", {
+export default UseRemoteState(
+  "/api/v1/channels",
+  {
     method: "GET",
     expect: z.array(Channel),
     area: "server",
-  });
-
-  const create_channel = UseFetcher("/api/v1/channels", {
-    method: "POST",
-    area: "server",
-    on_success: refresh,
-  });
-
-  return {
-    channels,
-    create_channel,
-  };
-}
+  },
+  {
+    create_channel: [
+      "/api/v1/channels",
+      {
+        method: "POST",
+        area: "server",
+      },
+    ],
+  }
+);

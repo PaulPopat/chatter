@@ -22,9 +22,8 @@ public class Authenticate : IHandler
   public async Task<HandlerResponse> Handle(HandlerProps props)
   {
     var ssoToken = props.QueryParameters["token"];
-    var password = props.QueryParameters["password"];
 
-    var result = await this.auth.Authenticate(ssoToken, password);
+    var result = await this.auth.Authenticate(ssoToken, string.Empty);
 
     return new(200, new Response
     {

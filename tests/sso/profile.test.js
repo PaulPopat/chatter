@@ -2,6 +2,7 @@ const auth = require("../clients/auth");
 const sso = require("../clients/sso");
 const url = require("../clients/url");
 const createUser = require("../presets/create-user");
+const addUserToServer = require("../presets/add-user-to-server");
 const { PROFILE_MIME, PROFILE_PICTURE } = require("../presets/statics");
 
 describe("profile", () => {
@@ -66,13 +67,7 @@ describe("profile", () => {
   });
 
   it("Joins a server", async () => {
-    const user = await createUser();
-
-    await sso.post(
-      url("/api/v1/user/servers"),
-      { ServerUrl: "test server" },
-      auth(user.admin_token)
-    );
+    const user = await addUserToServer();
 
     const profile = await sso.get(
       url("/api/v1/user/profile"),
@@ -85,7 +80,7 @@ describe("profile", () => {
       Biography: "",
       Servers: [
         {
-          Url: "test server",
+          Url: process.env.SERVER_BASE_URL,
           JoinedAt: expect.any(String),
         },
       ],

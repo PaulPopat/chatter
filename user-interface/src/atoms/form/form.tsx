@@ -4,13 +4,13 @@ import { Fetcher } from "../../utils/fetch";
 import { StyleProp, View, ViewStyle } from "react-native";
 import RawForm from "./raw-form";
 
-type FormProps<TExpect> = {
-  fetcher: Fetcher<TExpect>;
+type FormProps<TExpect, TBody> = {
+  fetcher: Fetcher<TExpect, TBody>;
   style?: StyleProp<ViewStyle>;
 };
 
-export default function Form<TExpect>(
-  props: PropsWithChildren<FormProps<TExpect>>
+export default function Form<TExpect, TBody>(
+  props: PropsWithChildren<FormProps<TExpect, TBody>>
 ) {
   const on_submit = useCallback(
     async (data: any) => {

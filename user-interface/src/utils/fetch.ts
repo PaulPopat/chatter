@@ -8,46 +8,63 @@ import UseServer from "../data/use-server";
 
 const BodyTypes = ["PUT", "POST"];
 
-type Mapper = (
-  body: Record<string, unknown>
-) => Record<string, unknown> | Promise<Record<string, unknown>>;
+type Mapper<TBody, TFinalBody> = (
+  body: TBody
+) => TFinalBody | Promise<TFinalBody>;
 
-export type FetchConfig<TExpect> = {
+type FetchBase<TExpect, TBody = Record<string, unknown>> = {
   expect?: z.ZodType<TExpect>;
   cachable?: boolean;
-  method: string;
   headers?: Record<string, string>;
-  mapper?: Mapper;
-} & (
-  | {
-      area: "sso";
-    }
-  | {
-      area: "server";
-      base_url: string;
-    }
-);
+  mapper?: Mapper<TBody, unknown>;
+  body_type?: z.ZodType<TBody>;
+  method: string;
+};
+
+export type FetchConfig<TExpect, TBody = Record<string, unknown>> = FetchBase<
+  TExpect,
+  TBody
+> &
+  (
+    | {
+        area: "sso";
+      }
+    | {
+        area: "server";
+        base_url: string;
+      }
+  );
 
 export type FetchResponse<TExpect> = {
   response: Response;
   data: TExpect;
 };
 
-export type Fetcher<TExpect> = (
-  body: Record<string, unknown>
+export type Fetcher<TExpect, TBody = Record<string, unknown>> = (
+  body: TBody
 ) => Promise<FetchResponse<TExpect>>;
 
-export async function Fetch<TExpect = unknown>(
+export type FetcherOf<TBase> = TBase extends FetchBase<
+  infer Output,
+  infer Input
+>
+  ? Fetcher<Output, Input>
+  : unknown;
+
+export async function Fetch<TExpect = unknown, TBody = Record<string, unknown>>(
   url: string,
-  props: FetchConfig<TExpect>,
-  body: Record<string, unknown>,
+  props: FetchConfig<TExpect, TBody>,
+  body: TBody,
   token?: string
 ): Promise<FetchResponse<TExpect>> {
-  body = props.mapper ? await Promise.resolve(props.mapper(body)) : body;
+  if (props.body_type) body = props.body_type.parse(body);
+  body = props.mapper
+    ? await Promise.resolve(props.mapper(body))
+    : (body as any);
   const base = props.area === "sso" ? SSO_BASE : props.base_url;
 
   const is_body_type = BodyTypes.includes(props?.method ?? "GET");
-  const uri = new Url(url, body, !is_body_type);
+  const uri = new Url(url, body as any, !is_body_type);
 
   const headers: Record<string, string> = {};
 
@@ -76,14 +93,12 @@ export async function Fetch<TExpect = unknown>(
   };
 }
 
-export type UseFetcherConfig<TExpect = unknown> = {
+export type UseFetcherConfig<
+  TExpect,
+  TBody = Record<string, unknown>
+> = FetchBase<TExpect, TBody> & {
   no_auth?: boolean;
-  expect?: z.ZodType<TExpect>;
-  cachable?: boolean;
-  method: string;
-  headers?: Record<string, string>;
   area: "sso" | "server";
-  mapper?: Mapper;
 
   on_success?: (response: Response, data: TExpect) => void;
   on_fail?: (response: Response) => void;
