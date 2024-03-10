@@ -30,6 +30,10 @@ export const SsoProvider = (props: PropsWithChildren) => {
       set_auth(new Sso(d));
       Session.auth = d;
     },
+    on_fail(response) {
+      set_auth(Sso.Empty);
+      Session.auth = undefined;
+    },
   });
 
   const login = UseFetcher("/api/v1/auth/token", {

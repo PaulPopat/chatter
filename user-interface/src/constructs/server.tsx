@@ -2,7 +2,10 @@ import { Text, View } from "react-native";
 import UseChannels from "../data/use-channels";
 
 export default () => {
-  const { channels, create_channel } = UseChannels();
+  const {
+    state: channels,
+    actions: { create_channel },
+  } = UseChannels();
 
   return (
     <View>

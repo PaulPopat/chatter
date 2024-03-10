@@ -1,6 +1,6 @@
 import { useState } from "react";
 import UseProfile from "../data/use-profile";
-import { View, Text, Image, StyleSheet, Modal, Pressable } from "react-native";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import {
   BorderRadius,
   BorderWidth,
@@ -9,11 +9,13 @@ import {
   Padding,
 } from "../styles/theme";
 import JoinUrl from "../utils/url-join";
-import { Form, RawForm } from "../atoms/form";
-import { z } from "zod";
+import { Form } from "../atoms/form";
 import Textbox from "../atoms/textbox";
 import Submitter from "../atoms/submitter";
 import Button from "../atoms/button";
+import UseSso from "../data/use-sso";
+import Hidden from "../atoms/hidden";
+import Modal from "../atoms/modal";
 
 const styles = StyleSheet.create({
   panel_container: {
@@ -29,14 +31,6 @@ const styles = StyleSheet.create({
   server_text: {
     flex: 1,
   },
-  modal_body: {
-    backgroundColor: Colours.Highlight.Background,
-    color: Colours.Highlight.Foreground,
-    margin: Margins,
-    padding: Padding,
-    borderWidth: BorderWidth,
-    borderRadius: BorderRadius,
-  },
 });
 
 export default (props: { on_open: (server: string) => void }) => {
@@ -44,30 +38,23 @@ export default (props: { on_open: (server: string) => void }) => {
     state: profile,
     actions: { join_server },
   } = UseProfile();
+  const sso = UseSso();
   const [joining, set_joining] = useState(false);
 
   return (
     <View style={styles.panel_container}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={joining}
-        onRequestClose={() => {
-          set_joining(false);
-        }}
-        onDismiss={() => {
-          set_joining(false);
-        }}
-      >
-        <View style={styles.modal_body}>
-          <Form fetcher={join_server}>
-            <Textbox name="ServerUrl">Server URL</Textbox>
-            <Submitter>Join Server</Submitter>
-            <Button on_click={() => set_joining(false)} colour="Danger">
-              Cancel
-            </Button>
-          </Form>
-        </View>
+      <Modal open={joining} set_open={set_joining}>
+        <Form fetcher={join_server}>
+          <Textbox name="ServerUrl">Server URL</Textbox>
+          <Hidden name="ServerToken" value={sso.ServerToken} />
+          <Textbox name="Password" password>
+            Password
+          </Textbox>
+          <Submitter>Join Server</Submitter>
+          <Button on_click={() => set_joining(false)} colour="Danger">
+            Cancel
+          </Button>
+        </Form>
       </Modal>
 
       <View style={styles.server_list_container}>

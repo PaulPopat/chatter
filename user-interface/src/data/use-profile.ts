@@ -54,7 +54,11 @@ export default UseRemoteState(
         method: "POST",
         expect: z.object({ Success: z.literal(true) }),
         area: "sso",
-        body_type: z.object({ ServerUrl: z.string() }),
+        body_type: z.object({
+          ServerUrl: z.string(),
+          Password: z.string(),
+          ServerToken: z.string(),
+        }),
       },
     ],
     update_profile: [

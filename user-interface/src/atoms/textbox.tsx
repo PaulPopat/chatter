@@ -6,7 +6,6 @@ import {
   KeyboardTypeOptions,
   View,
   Text,
-  Touchable,
   TouchableOpacity,
 } from "react-native";
 import { z } from "zod";

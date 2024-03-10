@@ -35,25 +35,21 @@ export default function UseRemoteState<
       [fetcher]
     );
 
-    const compiled_actions = useMemo(
-      () =>
-        Object.keys(actions)
-          .map((k) => [k, actions[k]] as const)
-          .reduce(
-            (c, [k, [url, config]]) => ({
-              ...c,
-              [k as keyof TActions]: UseFetcher(url, {
-                ...config,
-                on_success(response, data) {
-                  config.on_success && config.on_success(response, data);
-                  update();
-                },
-              }),
-            }),
-            {} as Actions<TActions>
-          ),
-      [actions]
-    );
+    const compiled_actions = Object.keys(actions)
+      .map((k) => [k, actions[k]] as const)
+      .reduce(
+        (c, [k, [url, config]]) => ({
+          ...c,
+          [k as keyof TActions]: UseFetcher(url, {
+            ...config,
+            on_success(response, data) {
+              config.on_success && config.on_success(response, data);
+              update();
+            },
+          }),
+        }),
+        {} as Actions<TActions>
+      );
 
     useEffect(() => {
       update();

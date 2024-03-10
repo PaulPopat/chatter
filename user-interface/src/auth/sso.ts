@@ -46,28 +46,6 @@ export class Sso {
     return this.#expires_in_seconds <= 0;
   }
 
-  async AsRefreshed() {
-    try {
-      const { data } = await Fetch(
-        "/api/v1/auth/refresh-token",
-        {
-          method: "GET",
-          expect: Auth,
-          area: "sso",
-        },
-        {
-          token: this.#refresh_token,
-        }
-      );
-
-      Session.auth = data;
-      return new Sso(data);
-    } catch {
-      Session.auth = EmptyAuth;
-      return Sso.Stored;
-    }
-  }
-
   get AdminToken() {
     return this.#admin_token;
   }
@@ -86,5 +64,9 @@ export class Sso {
 
   static get Stored() {
     return new Sso(Auth.parse(Session.auth ?? EmptyAuth));
+  }
+
+  static get Empty() {
+    return new Sso(Auth.parse(EmptyAuth));
   }
 }

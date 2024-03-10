@@ -14,7 +14,8 @@ const Main = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (auth.IsExpired) refresh({ token: auth.RefreshToken });
+      if (auth.AdminToken && auth.IsExpired)
+        refresh({ token: auth.RefreshToken });
     }, 10000);
 
     return () => {
