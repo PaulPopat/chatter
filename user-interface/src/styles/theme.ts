@@ -1,6 +1,7 @@
 export const Margins = 6;
 export const Padding = 6;
 export const BorderRadius = 4;
+export const BorderRadiusLarge = 12;
 export const BorderWidth = 2;
 
 export const FontSizes = {

@@ -1,14 +1,7 @@
 import { useState } from "react";
-import UseProfile, { UseServerMetadata } from "../data/use-profile";
-import { View, Text, Image, StyleSheet, Pressable } from "react-native";
-import {
-  BorderRadius,
-  BorderWidth,
-  Colours,
-  Margins,
-  Padding,
-} from "../styles/theme";
-import JoinUrl from "../utils/url-join";
+import UseProfile, { UseServerListMetadata } from "../data/use-profile";
+import { View, Image, StyleSheet, Pressable } from "react-native";
+import { BorderRadiusLarge } from "../styles/theme";
 import { Form } from "../atoms/form";
 import Textbox from "../atoms/textbox";
 import Submitter from "../atoms/submitter";
@@ -25,27 +18,33 @@ const styles = StyleSheet.create({
   server_list_container: {
     flex: 1,
   },
-  server_container: {
-    flexDirection: "row",
-  },
   server_text: {
     flex: 1,
+  },
+  server_icon: {
+    borderRadius: BorderRadiusLarge,
+  },
+  server_container: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
 const ServerListItem = (props: { url: string }) => {
-  const metadata = UseServerMetadata(props.url);
+  const metadata = UseServerListMetadata(props.url);
 
   return (
-    <>
+    <View style={styles.server_container}>
       <Image
+        style={styles.server_icon}
         source={{
           uri: `data:${metadata.Icon.MimeType};base64,${metadata.Icon.Base64Data}`,
           width: 60,
-          height: 60
+          height: 60,
         }}
       />
-    </>
+    </View>
   );
 };
 
@@ -75,18 +74,14 @@ export default (props: { on_open: (server: string) => void }) => {
 
       <View style={styles.server_list_container}>
         {profile?.Servers.map((s) => (
-          <Pressable
-            style={styles.server_container}
-            key={s.Url}
-            onPress={() => props.on_open(s.Url)}
-          >
+          <Pressable key={s.Url} onPress={() => props.on_open(s.Url)}>
             <ServerListItem url={s.Url} />
           </Pressable>
         ))}
       </View>
 
       <Button on_click={() => set_joining(true)} colour="Secondary">
-        Join Server
+        +
       </Button>
     </View>
   );

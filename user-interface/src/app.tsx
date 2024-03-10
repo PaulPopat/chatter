@@ -36,7 +36,7 @@ const Main = () => {
     >
       <View
         style={{
-          maxWidth: 200,
+          width: 80,
           backgroundColor: Colours.Highlight.Background,
           padding: Padding,
         }}
