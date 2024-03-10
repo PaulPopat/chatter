@@ -1,5 +1,5 @@
 import { useState } from "react";
-import UseProfile from "../data/use-profile";
+import UseProfile, { UseServerMetadata } from "../data/use-profile";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import {
   BorderRadius,
@@ -33,6 +33,22 @@ const styles = StyleSheet.create({
   },
 });
 
+const ServerListItem = (props: { url: string }) => {
+  const metadata = UseServerMetadata(props.url);
+
+  return (
+    <>
+      <Image
+        source={{
+          uri: `data:${metadata.Icon.MimeType};base64,${metadata.Icon.Base64Data}`,
+          width: 60,
+          height: 60
+        }}
+      />
+    </>
+  );
+};
+
 export default (props: { on_open: (server: string) => void }) => {
   const {
     state: profile,
@@ -64,12 +80,7 @@ export default (props: { on_open: (server: string) => void }) => {
             key={s.Url}
             onPress={() => props.on_open(s.Url)}
           >
-            <Image
-              source={{
-                uri: JoinUrl(s.Url, "/_/images/icon"),
-              }}
-            />
-            <Text style={styles.server_text}>{new URL(s.Url).host}</Text>
+            <ServerListItem url={s.Url} />
           </Pressable>
         ))}
       </View>
