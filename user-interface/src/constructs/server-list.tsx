@@ -48,11 +48,14 @@ const ServerListItem = (props: { url: string }) => {
   );
 };
 
-export default (props: { on_open: (server: string) => void }) => {
+export default (props: {
+  on_open: (server: string) => void;
+  profile: ReturnType<typeof UseProfile>;
+}) => {
   const {
     state: profile,
     actions: { join_server },
-  } = UseProfile();
+  } = props.profile;
   const sso = UseSso();
   const [joining, set_joining] = useState(false);
 

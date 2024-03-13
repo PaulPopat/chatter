@@ -24,11 +24,13 @@ const ChannelView = (props: PropsWithChildren<{ channel: Channel }>) => {
   );
 };
 
-export default () => {
+export default (props: { open: boolean }) => {
   const {
     state: channels,
     actions: { create_channel },
   } = UseChannels();
+
+  if (!props.open) return <></>;
 
   return (
     <View>

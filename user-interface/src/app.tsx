@@ -6,9 +6,11 @@ import Authenticate from "./constructs/authenticate";
 import Server from "./constructs/server";
 import UseSso, { SsoProvider, UseSsoControls } from "./data/use-sso";
 import { ServerProvider } from "./data/use-server";
+import useProfile from "./data/use-profile";
 
 const Main = () => {
   const auth = UseSso();
+  const profile = useProfile();
   const { refresh } = UseSsoControls();
   const [open, set_open] = useState("");
 
@@ -41,18 +43,18 @@ const Main = () => {
           padding: Padding,
         }}
       >
-        <ServerList on_open={set_open} />
+        <ServerList on_open={set_open} profile={profile} />
       </View>
       <View
         style={{
           flex: 1,
         }}
       >
-        {open && (
-          <ServerProvider url={open}>
-            <Server />
+        {profile.state?.Servers.map((s) => (
+          <ServerProvider key={s.Url} url={s.Url}>
+            <Server open={open === s.Url} />
           </ServerProvider>
-        )}
+        ))}
       </View>
     </View>
   );
