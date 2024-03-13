@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Colours, Padding } from "./styles/theme";
 import ServerList from "./constructs/server-list";
 import Authenticate from "./constructs/authenticate";
@@ -7,6 +7,24 @@ import Server from "./constructs/server";
 import UseSso, { SsoProvider, UseSsoControls } from "./data/use-sso";
 import { ServerProvider } from "./data/use-server";
 import useProfile from "./data/use-profile";
+
+const styles = StyleSheet.create({
+  app: {
+    flexDirection: "row",
+    minHeight: "100%",
+  },
+  server_list: {
+    width: 80,
+    backgroundColor: Colours.Highlight.Background,
+    padding: Padding,
+    borderRightColor: Colours.Highlight.Foreground,
+    borderRightWidth: 2,
+    height: "100%",
+  },
+  main_panel: {
+    flex: 1,
+  },
+});
 
 const Main = () => {
   const auth = UseSso();
@@ -30,26 +48,11 @@ const Main = () => {
   }
 
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        minHeight: "100%",
-      }}
-    >
-      <View
-        style={{
-          width: 80,
-          backgroundColor: Colours.Highlight.Background,
-          padding: Padding,
-        }}
-      >
+    <View style={styles.app}>
+      <View style={styles.server_list}>
         <ServerList on_open={set_open} profile={profile} />
       </View>
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
+      <View style={styles.main_panel}>
         {profile.state?.Servers.map((s) => (
           <ServerProvider key={s.Url} url={s.Url}>
             <Server open={open === s.Url} />

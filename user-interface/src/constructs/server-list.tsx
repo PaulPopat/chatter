@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
   },
   server_text: {
     flex: 1,
+    color: Colours.Highlight.Foreground,
   },
   server_icon: {
     borderRadius: BorderRadiusLarge,

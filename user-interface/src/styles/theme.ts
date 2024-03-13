@@ -16,7 +16,7 @@ export const Colours = {
   },
   Highlight: {
     Foreground: "#333",
-    Background: "#fafafa",
+    Background: "#efefef",
   },
   Primary: {
     Foreground: "white",
