@@ -37,6 +37,10 @@ module.exports = {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
+      {
+        test: /\.svg$/,
+        loader: "svg-inline-loader",
+      },
     ],
   },
   resolve: {

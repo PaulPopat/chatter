@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import { BorderRadius, Colours, Margins, Padding } from "../styles/theme";
-import { Button, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 
 type Props = {
   on_click: () => void;

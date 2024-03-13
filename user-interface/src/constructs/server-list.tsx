@@ -1,7 +1,7 @@
 import { useState } from "react";
 import UseProfile, { UseServerListMetadata } from "../data/use-profile";
-import { View, Image, StyleSheet, Pressable } from "react-native";
-import { BorderRadiusLarge } from "../styles/theme";
+import { View, StyleSheet, Pressable } from "react-native";
+import { BorderRadiusLarge, Colours } from "../styles/theme";
 import { Form } from "../atoms/form";
 import Textbox from "../atoms/textbox";
 import Submitter from "../atoms/submitter";
@@ -9,6 +9,8 @@ import Button from "../atoms/button";
 import UseSso from "../data/use-sso";
 import Hidden from "../atoms/hidden";
 import Modal from "../atoms/modal";
+import Image from "../atoms/image";
+import DataUrl from "../utils/data-url";
 
 const styles = StyleSheet.create({
   panel_container: {
@@ -28,6 +30,8 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: BorderRadiusLarge,
+    backgroundColor: Colours.Body.Background,
   },
 });
 
@@ -37,12 +41,8 @@ const ServerListItem = (props: { url: string }) => {
   return (
     <View style={styles.server_container}>
       <Image
-        style={styles.server_icon}
-        source={{
-          uri: `data:${metadata.Icon.MimeType};base64,${metadata.Icon.Base64Data}`,
-          width: 60,
-          height: 60,
-        }}
+        src={new DataUrl(metadata.Icon.Base64Data, metadata.Icon.MimeType)}
+        size={60}
       />
     </View>
   );

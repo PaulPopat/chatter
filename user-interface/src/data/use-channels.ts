@@ -7,6 +7,8 @@ const Channel = z.object({
   Name: z.string(),
 });
 
+export type Channel = z.infer<typeof Channel>;
+
 export default UseRemoteState(
   "/api/v1/channels",
   {

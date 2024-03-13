@@ -1,5 +1,5 @@
-import { Suspense, useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { useEffect, useState } from "react";
+import { View } from "react-native";
 import { Colours, Padding } from "./styles/theme";
 import ServerList from "./constructs/server-list";
 import Authenticate from "./constructs/authenticate";
