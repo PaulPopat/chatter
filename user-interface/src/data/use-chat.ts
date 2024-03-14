@@ -34,39 +34,54 @@ export default function UseChat(channel_id: string) {
 
   useEffect(() => {
     if (!server?.BaseUrl) return;
+    let done = false;
 
     const url = new Url(
       "/ws/chat/:channel_id",
       { channel_id, token: server.LocalToken },
       true
     );
-    const connection = new WebSocket(
-      url.href(server.BaseUrl).replace("http", "ws")
-    );
 
-    connection.onmessage = (event) => {
-      const data = event.data;
-      if (typeof data !== "string") throw new Error("Invalid message data");
+    let connection: WebSocket;
 
-      const notification = ChannelNotification.parse(Json.Parse(data));
+    const open = () => {
+      connection = new WebSocket(
+        url.href(server.BaseUrl).replace("http", "ws")
+      );
 
-      switch (notification.Type) {
-        case "Message":
-          set_messages((m) => [
-            {
-              Text: notification.Text,
-              Who: notification.Who,
-              When: notification.When,
-            },
-            ...m,
-          ]);
-          break;
-        default:
-          throw new Error("Unknown message type");
-      }
+      connection.onmessage = (event) => {
+        const data = event.data;
+        if (typeof data !== "string") throw new Error("Invalid message data");
+
+        const notification = ChannelNotification.parse(Json.Parse(data));
+
+        switch (notification.Type) {
+          case "Message":
+            set_messages((m) => [
+              {
+                Text: notification.Text,
+                Who: notification.Who,
+                When: notification.When,
+              },
+              ...m,
+            ]);
+            break;
+          default:
+            throw new Error("Unknown message type");
+        }
+      };
+
+      connection.onclose = (event) => {
+        if (done) return;
+
+        open();
+      };
     };
 
+    open();
+
     return () => {
+      done = true;
       connection.close();
     };
   }, [server, channel_id]);
