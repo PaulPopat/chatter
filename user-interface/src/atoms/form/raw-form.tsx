@@ -17,6 +17,7 @@ export default function Form<TExpect>(
   const [callbacks, set_callbacks] = useState<Array<() => void>>([]);
 
   const on_submit = useCallback(async () => {
+    for (const callback of callbacks) callback();
     props.on_submit(props.form_type.parse(data));
   }, [data, callbacks, props.on_submit]);
 

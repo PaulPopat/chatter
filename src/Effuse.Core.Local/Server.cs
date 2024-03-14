@@ -150,8 +150,15 @@ public class Server
     finally
     {
       ws?.Dispose();
-      if (handler != null)
-        await handler.OnClose(connectionString);
+      try
+      {
+        if (handler != null)
+          await handler.OnClose(connectionString);
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine(e);
+      }
 
       websockets.Remove(connectionString);
     }

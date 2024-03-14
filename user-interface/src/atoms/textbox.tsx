@@ -22,6 +22,7 @@ type Props = {
   name: string;
   keyboard?: KeyboardTypeOptions;
   password?: boolean;
+  clear_on_submit?: boolean;
 };
 
 const styles = StyleSheet.create({
@@ -47,9 +48,13 @@ const styles = StyleSheet.create({
 });
 
 export default (props: PropsWithChildren<Props>) => {
-  const { value, set_value, submit } = UseForm(props.name);
+  const { value, set_value, submit, use_submit } = UseForm(props.name);
   const [focused, set_focused] = useState(false);
   const input = useRef<TextInput>(null);
+
+  use_submit(() => {
+    if (props.clear_on_submit) set_value("");
+  }, [props.clear_on_submit]);
 
   return (
     <TouchableOpacity

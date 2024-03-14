@@ -55,7 +55,7 @@ public class WebsocketSubscriptions : ISubscriptions
 
     foreach (var connectionId in subscriptions.Value.ConnectionIds ?? new List<string>())
     {
-      if (connectionId == null) continue;
+      if (connectionId == null || !Server.WebSockets.ContainsKey(connectionId)) continue;
 
       Server.WebSockets[connectionId]?.SendJson(dto);
     }

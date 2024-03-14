@@ -94,7 +94,7 @@ public class AuthService(IUserClient userClient, IJwtClient jwtClient)
           UserId = user.UserId.ToString(),
           Access = UserAccess.Identify
         },
-        TimeSpan.FromHours(1)),
+        TimeSpan.FromHours(12)),
         await this.jwtClient.CreateJwt(
         new UserRefreshPayload
         {

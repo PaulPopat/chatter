@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { Colours, Padding } from "./styles/theme";
 import ServerList from "./constructs/server-list";
 import Authenticate from "./constructs/authenticate";
@@ -11,7 +11,7 @@ import useProfile from "./data/use-profile";
 const styles = StyleSheet.create({
   app: {
     flexDirection: "row",
-    minHeight: "100%",
+    height: "100%",
   },
   server_list: {
     width: 80,
@@ -26,26 +26,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const Main = () => {
-  const auth = UseSso();
+const MainPanel = () => {
   const profile = useProfile();
-  const { refresh } = UseSsoControls();
   const [open, set_open] = useState("");
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (auth.AdminToken && auth.IsExpired)
-        refresh({ token: auth.RefreshToken });
-    }, 10000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [auth]);
-
-  if (!auth.AdminToken) {
-    return <Authenticate />;
-  }
 
   return (
     <View style={styles.app}>
@@ -61,6 +44,27 @@ const Main = () => {
       </View>
     </View>
   );
+};
+
+const Main = () => {
+  const auth = UseSso();
+  const { refresh } = UseSsoControls();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (auth.AdminToken && auth.IsExpired)
+        refresh({ token: auth.RefreshToken });
+    }, 10000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [auth]);
+
+  if (auth.AdminToken && auth.IsExpired) return <Text>Loading</Text>;
+  if (!auth.AdminToken) return <Authenticate />;
+
+  return <MainPanel />;
 };
 
 export default () => {

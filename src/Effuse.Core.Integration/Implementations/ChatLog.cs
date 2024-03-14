@@ -77,7 +77,7 @@ public class ChatLog : IChatLog
   public async IAsyncEnumerable<Message> GetMessageLogs(Channel channel, long offset)
   {
     var count = await this.NumberOfMessages(channel);
-    if (count <= offset) throw new Exception("At end of messages");
+    if (count <= offset) yield break;
 
     var messageIndex = count - offset - 1;
 

@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRightColor: Colours.Highlight.Foreground,
     borderRightWidth: 2,
+    overflow: "scroll",
   },
   server_container: {
     flexDirection: "row",
@@ -50,7 +51,7 @@ const ChannelListItem = (
 
 export default (props: { open: boolean }) => {
   const { state: channels } = UseChannels();
-  const [open_channel, set_open_channel] = useState("");
+  const [open_channel, set_open_channel] = useState<Channel | null>(null);
 
   if (!props.open) return <></>;
 
@@ -61,13 +62,13 @@ export default (props: { open: boolean }) => {
           <ChannelListItem
             key={c.ChannelId}
             channel={c}
-            on_open={() => set_open_channel(c.ChannelId)}
+            on_open={() => set_open_channel(c)}
           />
         ))}
       </View>
 
       <View style={styles.server_view}>
-        {open_channel && <ChannelView channel_id={open_channel} />}
+        {open_channel && <ChannelView channel={open_channel} />}
       </View>
     </View>
   );
