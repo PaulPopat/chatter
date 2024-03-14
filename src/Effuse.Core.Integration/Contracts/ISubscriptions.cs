@@ -10,5 +10,5 @@ public interface ISubscriptions
 
   Task<Subscription> GetSubscription(string subscriptionId);
 
-  Task Broadcast(Subscription subscription, Message message);
+  Task Broadcast(Channel channel, Message message);
 }

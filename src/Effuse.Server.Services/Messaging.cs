@@ -22,11 +22,10 @@ public class Messaging
     this.userClient = userClient;
   }
 
-  public async Task PostMessage(string connectionId, string text)
+  public async Task PostMessage(string localToken, Guid channelId, string text)
   {
-    var subscription = await this.subscriptions.GetSubscription(connectionId);
-    var user = await this.userClient.GetUser(subscription.UserId);
-    var channel = await this.channelClient.GetChannel(subscription.ChannelId);
+    var user = await this.auth.GetUser(localToken);
+    var channel = await this.channelClient.GetChannel(channelId);
     if (!user.MayWrite(channel))
     {
       throw new AuthException("No write access");
@@ -35,7 +34,7 @@ public class Messaging
     var message = new Message(text, DateTime.Now, user.UserId);
     await this.chatLog.PostMessage(channel, message);
 
-    await this.subscriptions.Broadcast(subscription, message);
+    await this.subscriptions.Broadcast(channel, message);
   }
 
   public async Task ListenToChannel(string localToken, Guid channelId, string connectionId)
@@ -53,10 +52,16 @@ public class Messaging
       channelId: channel.ChannelId));
   }
 
-  public async Task<IEnumerable<Message>> GetBackLog(string connectionId, long offset)
+  public async Task<IEnumerable<Message>> GetBackLog(string localToken, Guid channelId, long offset)
   {
-    var subscription = await this.subscriptions.GetSubscription(connectionId);
-    return await this.chatLog.GetMessageLogs(await this.channelClient.GetChannel(subscription.ChannelId), offset).ToListAsync();
+    var user = await this.auth.GetUser(localToken);
+    var channel = await this.channelClient.GetChannel(channelId);
+    if (!user.MayRead(channel))
+    {
+      throw new AuthException("No read access");
+    }
+
+    return await this.chatLog.GetMessageLogs(channel, offset).ToListAsync();
   }
 
   public async Task Disconnect(string connectionId)

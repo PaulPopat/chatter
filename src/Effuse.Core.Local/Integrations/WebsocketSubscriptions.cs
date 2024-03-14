@@ -39,9 +39,9 @@ public class WebsocketSubscriptions : ISubscriptions
     this.database = database;
   }
 
-  public async Task Broadcast(Subscription subscription, Message message)
+  public async Task Broadcast(Channel channel, Message message)
   {
-    var subscriptions = await this.database.FindItem<ChannelSubscriptionsDto>(TableName, subscription.ChannelId.ToString());
+    var subscriptions = await this.database.FindItem<ChannelSubscriptionsDto>(TableName, channel.ChannelId.ToString());
 
     if (!subscriptions.HasValue) return;
 
@@ -55,7 +55,7 @@ public class WebsocketSubscriptions : ISubscriptions
 
     foreach (var connectionId in subscriptions.Value.ConnectionIds ?? new List<string>())
     {
-      if (connectionId == null || connectionId == subscription.SubscriptionId) continue;
+      if (connectionId == null) continue;
 
       Server.WebSockets[connectionId]?.SendJson(dto);
     }

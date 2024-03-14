@@ -1,5 +1,8 @@
 const sleep = require("../clients/sleep");
 const webSocket = require("../clients/web-socket");
+const server = require("../clients/server");
+const url = require("../clients/url");
+const auth = require("../clients/auth");
 const createTwoUsersAndChannel = require("../presets/create-two-users-and-channel");
 
 describe("chat", () => {
@@ -16,12 +19,12 @@ describe("chat", () => {
   it("may post to chat channel", async () => {
     const data = await createTwoUsersAndChannel();
 
-    adminCon = await webSocket("/ws/chat", {
+    adminCon = await webSocket("/ws/chat/:channelId", {
       token: data.adminUser.local_token,
       channelId: data.createdChannel.ChannelId,
     });
 
-    localCon = await webSocket("/ws/chat", {
+    localCon = await webSocket("/ws/chat/:channelId", {
       token: data.localUser.local_token,
       channelId: data.createdChannel.ChannelId,
     });
@@ -30,16 +33,20 @@ describe("chat", () => {
 
     await Promise.all([
       localCon.waitForMessage(),
-      adminCon.sendMessage("test message"),
+      server.post(
+        url("/api/v1/channels/:channel/messages", {
+          channel: data.createdChannel.ChannelId,
+        }),
+        {
+          Text: "test message",
+        },
+        auth(data.adminUser.local_token)
+      ),
     ]);
 
-    expect(adminCon.messages).toEqual([
-      { Type: "Info", Message: "MESSAGE_SENT" },
-    ]);
     expect(localCon.messages).toEqual([
       {
         Text: "test message",
-        Type: "Message",
         When: expect.any(String),
         Who: expect.any(String),
       },
@@ -49,35 +56,43 @@ describe("chat", () => {
   it("retrieves a backlog", async () => {
     const data = await createTwoUsersAndChannel();
 
-    adminCon = await webSocket("/ws/chat", {
-      token: data.adminUser.local_token,
-      channelId: data.createdChannel.ChannelId,
-    });
-
     await sleep(100);
-    await adminCon.sendMessage("test message 1");
-    await adminCon.sendMessage("test message 2");
+    await server.post(
+      url("/api/v1/channels/:channel/messages", {
+        channel: data.createdChannel.ChannelId,
+      }),
+      {
+        Text: "test message 1",
+      },
+      auth(data.adminUser.local_token)
+    );
+    await server.post(
+      url("/api/v1/channels/:channel/messages", {
+        channel: data.createdChannel.ChannelId,
+      }),
+      {
+        Text: "test message 2",
+      },
+      auth(data.adminUser.local_token)
+    );
 
-    localCon = await webSocket("/ws/chat", {
-      token: data.localUser.local_token,
-      channelId: data.createdChannel.ChannelId,
-    });
+    const { data: backlog } = await server.get(
+      url("/api/v1/channels/:channel/messages", {
+        channel: data.createdChannel.ChannelId,
+        offset: "0",
+      }),
+      auth(data.localUser.local_token)
+    );
 
-    await sleep(100);
-
-    await localCon.sendBacklog(0);
-
-    expect(localCon.messages).toEqual([
+    expect(backlog).toEqual([
       [
         {
           Text: "test message 2",
-          Type: "Message",
           When: expect.any(String),
           Who: expect.any(String),
         },
         {
           Text: "test message 1",
-          Type: "Message",
           When: expect.any(String),
           Who: expect.any(String),
         },
@@ -88,39 +103,48 @@ describe("chat", () => {
   it("paginates backlog", async () => {
     const data = await createTwoUsersAndChannel();
 
-    adminCon = await webSocket("/ws/chat", {
-      token: data.adminUser.local_token,
-      channelId: data.createdChannel.ChannelId,
-    });
-
-    await sleep(100);
     for (let i = 0; i < 400; i++) {
-      await adminCon.sendMessage(`test message ${i}`);
+      await server.post(
+        url("/api/v1/channels/:channel/messages", {
+          channel: data.createdChannel.ChannelId,
+        }),
+        {
+          Text: `test message ${i}`,
+        },
+        auth(data.adminUser.local_token)
+      );
     }
 
-    localCon = await webSocket("/ws/chat", {
-      token: data.localUser.local_token,
-      channelId: data.createdChannel.ChannelId,
-    });
+    const { data: backlog1 } = await server.get(
+      url("/api/v1/channels/:channel/messages", {
+        channel: data.createdChannel.ChannelId,
+        offset: "0",
+      }),
+      auth(data.localUser.local_token)
+    );
 
-    await sleep(1000);
+    const { data: backlog2 } = await server.get(
+      url("/api/v1/channels/:channel/messages", {
+        channel: data.createdChannel.ChannelId,
+        offset: "25",
+      }),
+      auth(data.localUser.local_token)
+    );
 
-    await localCon.sendBacklog(0);
-    await localCon.sendBacklog(25);
-
-    expect(localCon.messages).toEqual([
+    expect(backlog1).toEqual(
       Array.apply(null, Array(20)).map((_, i) => ({
         Text: `test message ${399 - i}`,
-        Type: "Message",
         When: expect.any(String),
         Who: expect.any(String),
-      })),
+      }))
+    );
+
+    expect(backlog2).toEqual(
       Array.apply(null, Array(20)).map((_, i) => ({
         Text: `test message ${374 - i}`,
-        Type: "Message",
         When: expect.any(String),
         Who: expect.any(String),
-      })),
-    ]);
+      }))
+    );
   });
 });

@@ -11,7 +11,6 @@ let connections = 0;
 async function connection(url) {
   const messages = [];
   const con = new WebSocket(url);
-  const id = connections++;
 
   con.addEventListener("message", (ev) => {
     const data = ev.data;
@@ -37,22 +36,6 @@ async function connection(url) {
           res();
         });
       });
-    },
-
-    sendBacklog(offset) {
-      return Promise.all([
-        promiseWithTimeout((res) => {
-          con.addEventListener("message", function listener() {
-            con.removeEventListener("message", listener);
-            res();
-          });
-        }),
-        new Promise(async (res) => {
-          await sleep(10);
-          con.send(`backlog:${JSON.stringify({ Offset: offset })}`);
-          res();
-        }),
-      ]);
     },
 
     sendMessage(text) {
