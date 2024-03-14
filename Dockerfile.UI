@@ -10,6 +10,7 @@ RUN npm install
 ADD ./user-interface/ .
 
 ENV SSO_BASE_URL https://sso.effuse.cloud
+ENV PROD true
 RUN npx webpack
 
 FROM devforth/spa-to-http:latest
