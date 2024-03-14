@@ -54,7 +54,7 @@ const ChatMessage = (props: { message: Message }) => {
 export default (props: { channel_id: string }) => {
   const {
     state: messages,
-    actions: { send },
+    actions: { send, fetch_more },
   } = UseChat(props.channel_id);
 
   return (
@@ -65,6 +65,7 @@ export default (props: { channel_id: string }) => {
           <ChatMessage message={message} key={message.When.toISOString()} />
         )}
         inverted
+        onEndReached={() => fetch_more()}
       />
 
       <Form fetcher={send}>
