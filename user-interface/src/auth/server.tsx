@@ -1,29 +1,24 @@
 import { z } from "zod";
 import { Fetch } from "../utils/fetch";
-import {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
 import { addHours } from "date-fns";
 import { Sso } from "./sso";
-import UseSso from "../data/use-sso";
 
 export const Auth = z.object({
   LocalToken: z.string(),
+  IsAdmin: z.boolean(),
 });
 
 export class Server {
   readonly #server_url: string;
   readonly #local_token: string;
   readonly #expires: Date;
+  readonly #is_admin: boolean;
 
   constructor(dto: z.infer<typeof Auth>, server_url: string) {
     this.#server_url = server_url;
     this.#local_token = dto.LocalToken;
     this.#expires = addHours(new Date(), 12);
+    this.#is_admin = dto.IsAdmin;
   }
 
   get #expires_in_seconds() {
@@ -44,6 +39,10 @@ export class Server {
 
   get LocalToken() {
     return this.#local_token;
+  }
+
+  get IsAdmin() {
+    return this.#is_admin;
   }
 
   get BaseUrl() {

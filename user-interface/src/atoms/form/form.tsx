@@ -7,6 +7,7 @@ import RawForm from "./raw-form";
 type FormProps<TExpect, TBody> = {
   fetcher: Fetcher<TExpect, TBody>;
   style?: StyleProp<ViewStyle>;
+  on_submit?: () => void;
 };
 
 export default function Form<TExpect, TBody>(
@@ -20,6 +21,8 @@ export default function Form<TExpect, TBody>(
         if (response instanceof Response) console.error(response);
         else throw response;
       }
+
+      props.on_submit && props.on_submit();
     },
     [props]
   );

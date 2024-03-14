@@ -21,8 +21,8 @@ public class JoinServer(Auth auth) : IHandler
   {
     var form = props.Body<Form>();
 
-    var result = await this.auth.Authenticate(form.ServerToken, form.Password);
-    if (result == null || result == string.Empty)
+    var (token, _) = await this.auth.Authenticate(form.ServerToken, form.Password);
+    if (token == null || token == string.Empty)
       return new(403, new { Message = "Error" });
 
     return new(200, new { Message = "Success" });

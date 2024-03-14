@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: BorderRadiusLarge,
     backgroundColor: Colours.Body.Background,
+    padding: 4,
   },
 });
 
@@ -63,7 +64,7 @@ export default (props: {
   return (
     <View style={styles.panel_container}>
       <Modal open={joining} set_open={set_joining}>
-        <Form fetcher={join_server}>
+        <Form fetcher={join_server} on_submit={() => set_joining(false)}>
           <Textbox name="ServerUrl">Server URL</Textbox>
           <Hidden name="ServerToken" value={sso.ServerToken} />
           <Textbox name="Password" password>

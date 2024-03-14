@@ -7,11 +7,6 @@ namespace Effuse.Server.Handlers.Controllers;
 [Route(Method.Get, "/api/v1/auth/token")]
 public class Authenticate : IHandler
 {
-  private struct Response
-  {
-    public string LocalToken { get; set; }
-  }
-
   private readonly Auth auth;
 
   public Authenticate(Auth auth)
@@ -23,11 +18,12 @@ public class Authenticate : IHandler
   {
     var ssoToken = props.QueryParameters["token"];
 
-    var result = await this.auth.Authenticate(ssoToken, string.Empty);
+    var (token, isAdmin) = await this.auth.Authenticate(ssoToken, string.Empty);
 
-    return new(200, new Response
+    return new(200, new
     {
-      LocalToken = result
+      LocalToken = token,
+      IsAdmin = isAdmin
     });
   }
 }

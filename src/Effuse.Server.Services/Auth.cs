@@ -26,7 +26,7 @@ public class Auth
     this.parameters = parameters;
   }
 
-  public async Task<string> Authenticate(string ssoToken, string password)
+  public async Task<(string, bool)> Authenticate(string ssoToken, string password)
   {
     var userId = await this.ssoClient.GetUserId(ssoToken);
     var existing = await this.userClient.FindUser(userId);
@@ -39,18 +39,20 @@ public class Auth
         if (adminPassword != string.Empty && adminPassword != password)
           throw new AuthException("Invalid password");
 
-        await this.userClient.RegisterUser(userId, true);
+        existing = await this.userClient.RegisterUser(userId, true);
       }
       else
       {
-        await this.userClient.RegisterUser(userId, false);
+        existing = await this.userClient.RegisterUser(userId, false);
       }
     }
 
-    return await this.jwtClient.CreateJwt(new UserGrant
-    {
-      UserId = userId.ToString()
-    }, TimeSpan.FromHours(12));
+    return (
+      await this.jwtClient.CreateJwt(new UserGrant
+      {
+        UserId = userId.ToString()
+      }, TimeSpan.FromHours(12)),
+      existing.Admin);
   }
 
   public async Task<User> GetUser(string localToken)

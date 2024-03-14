@@ -4,15 +4,22 @@ import { PropsWithChildren, useState } from "react";
 import Icon from "../atoms/icon";
 import { BorderRadius, Colours, Padding } from "../styles/theme";
 import ChannelView from "./channel-view";
+import UseServer from "../data/use-server";
+import Button from "../atoms/button";
+import Modal from "../atoms/modal";
+import { Form } from "../atoms/form";
+import Submitter from "../atoms/submitter";
+import Textbox from "../atoms/textbox";
+import Checkbox from "../atoms/checkbox";
 
 const styles = StyleSheet.create({
   channel_container: {
     flexDirection: "row",
     alignItems: "center",
     padding: Padding,
-    margin: Padding,
     backgroundColor: Colours.Body.Background,
     borderRadius: BorderRadius,
+    marginVertical: Padding,
   },
   channel_name: {
     paddingLeft: Padding,
@@ -25,6 +32,7 @@ const styles = StyleSheet.create({
     borderRightColor: Colours.Highlight.Foreground,
     borderRightWidth: 2,
     overflow: "scroll",
+    padding: Padding,
   },
   server_container: {
     flexDirection: "row",
@@ -50,13 +58,29 @@ const ChannelListItem = (
 };
 
 export default (props: { open: boolean }) => {
-  const { state: channels } = UseChannels();
+  const server = UseServer();
+  const {
+    state: channels,
+    actions: { create_channel },
+  } = UseChannels();
   const [open_channel, set_open_channel] = useState<Channel | null>(null);
+  const [creating, set_creating] = useState(false);
 
   if (!props.open) return <></>;
 
   return (
     <View style={styles.server_container}>
+      <Modal open={creating} set_open={set_creating}>
+        <Form fetcher={create_channel} on_submit={() => set_creating(false)}>
+          <Textbox name="Name">Channel Name</Textbox>
+          <Checkbox name="Public">Is Public</Checkbox>
+          <Submitter>Create Channel</Submitter>
+          <Button on_click={() => set_creating(false)} colour="Danger">
+            Cancel
+          </Button>
+        </Form>
+      </Modal>
+
       <View style={styles.channel_list}>
         {channels?.map((c) => (
           <ChannelListItem
@@ -65,6 +89,12 @@ export default (props: { open: boolean }) => {
             on_open={() => set_open_channel(c)}
           />
         ))}
+
+        {server?.IsAdmin && (
+          <Button on_click={() => set_creating(true)} colour="Secondary">
+            +
+          </Button>
+        )}
       </View>
 
       <View style={styles.server_view}>

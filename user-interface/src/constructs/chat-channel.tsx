@@ -14,7 +14,7 @@ import UsePublicProfile from "../data/use-public-profile";
 
 const styles = StyleSheet.create({
   message_container: {
-    margin: Margins,
+    marginVertical: Margins,
     backgroundColor: Colours.Highlight.Background,
     borderRadius: BorderRadius,
   },
@@ -33,6 +33,10 @@ const styles = StyleSheet.create({
   message_text: {
     padding: Padding,
     fontSize: FontSizes.Label,
+  },
+  channel_container: {
+    padding: Margins,
+    height: "100%",
   },
 });
 
@@ -58,7 +62,7 @@ export default (props: { channel_id: string }) => {
   } = UseChat(props.channel_id);
 
   return (
-    <>
+    <View style={styles.channel_container}>
       <FlatList
         data={messages}
         renderItem={({ item: message }) => (
@@ -74,6 +78,6 @@ export default (props: { channel_id: string }) => {
           Message
         </Textbox>
       </Form>
-    </>
+    </View>
   );
 };
