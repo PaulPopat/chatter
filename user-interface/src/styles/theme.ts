@@ -17,18 +17,18 @@ export const Colours = {
   },
   Highlight: {
     Foreground: "#333",
-    Background: "#efefef",
+    Background: "#e5e5e5",
   },
   Primary: {
     Foreground: "white",
-    Background: "blue",
+    Background: "#14213d",
   },
   Secondary: {
     Foreground: "white",
-    Background: "purple",
+    Background: "black",
   },
   Danger: {
-    Foreground: "white",
-    Background: "red",
+    Foreground: "black",
+    Background: "#fca311",
   },
 };

@@ -118,7 +118,12 @@ export default (props: { open: boolean; blur: () => void }) => {
       >
         <TopBar click={props.blur} title={metadata?.ServerName}>
           {server.IsAdmin && (
-            <Pressable onPress={() => set_configuring(true)}>
+            <Pressable
+              onPress={() => {
+                set_open_channel(null);
+                set_configuring(true);
+              }}
+            >
               <Icon area="System" icon="settings-2" />
             </Pressable>
           )}

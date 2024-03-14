@@ -11,6 +11,8 @@ import { Form } from "../atoms/form";
 import Textbox from "../atoms/textbox";
 import Hidden from "../atoms/hidden";
 import UsePublicProfile from "../data/use-public-profile";
+import Submitter from "../atoms/submitter";
+import Icon from "../atoms/icon";
 
 const styles = StyleSheet.create({
   message_container: {
@@ -37,6 +39,16 @@ const styles = StyleSheet.create({
   channel_container: {
     padding: Margins,
     height: "100%",
+  },
+  chat_input: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  send_button: {
+    margin: Margins,
+  },
+  text_box: {
+    flex: 1,
   },
 });
 
@@ -74,9 +86,18 @@ export default (props: { channel_id: string }) => {
 
       <Form fetcher={send}>
         <Hidden name="channel_id" value={props.channel_id} />
-        <Textbox name="Text" clear_on_submit>
-          Message
-        </Textbox>
+        <View style={styles.chat_input}>
+          <View style={styles.text_box}>
+            <Textbox name="Text" clear_on_submit>
+              Message
+            </Textbox>
+          </View>
+          <View style={styles.send_button}>
+            <Submitter colour="Highlight">
+              <Icon area="Business" icon="send-plane-2" />
+            </Submitter>
+          </View>
+        </View>
       </Form>
     </View>
   );

@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     borderColor: Colours.Secondary.Background,
     borderWidth: BorderWidth,
     borderRadius: BorderRadius,
+    backgroundColor: Colours.Body.Background,
   },
   viewFocus: {
     borderColor: Colours.Primary.Background,
@@ -39,11 +40,13 @@ const styles = StyleSheet.create({
   input: {
     padding: Padding,
     fontSize: FontSizes.Label,
-    paddingTop: 0,
   },
   label: {
     fontSize: FontSizes.Label,
     padding: Padding,
+    position: "absolute",
+    backgroundColor: Colours.Body.Background,
+    borderRadius: BorderRadius,
   },
 });
 
@@ -69,7 +72,25 @@ export default (props: PropsWithChildren<Props>) => {
           ...(focused ? styles.viewFocus : {}),
         }}
       >
-        <Text style={styles.label}>{props.children}</Text>
+        <Text
+          style={{
+            ...styles.label,
+            ...(!!value
+              ? {
+                  top: -10,
+                  left: 4,
+                  padding: 2,
+                  fontSize: FontSizes.Small,
+                }
+              : {
+                  top: 0,
+                  left: 3,
+                  fontSize: FontSizes.Label,
+                }),
+          }}
+        >
+          {props.children}
+        </Text>
         <TextInput
           ref={input}
           style={
