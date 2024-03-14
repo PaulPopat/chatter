@@ -30,11 +30,12 @@ const SendBody = z.object({ Text: z.string(), channel_id: z.string() });
 
 export default function UseChat(channel_id: string) {
   const [messages, set_messages] = useState<Array<Message>>([]);
+  const [socket, set_socket] = useState<WebSocket | null>(null);
   const server = UseServer();
 
   useEffect(() => {
     if (!server?.BaseUrl) return;
-    let done = false;
+    if (socket) return;
 
     const url = new Url(
       "/ws/chat/:channel_id",
@@ -42,49 +43,43 @@ export default function UseChat(channel_id: string) {
       true
     );
 
-    let connection: WebSocket;
+    const connection = new WebSocket(
+      url.href(server.BaseUrl).replace("http", "ws")
+    );
 
-    const open = () => {
-      connection = new WebSocket(
-        url.href(server.BaseUrl).replace("http", "ws")
-      );
+    connection.onmessage = (event) => {
+      const data = event.data;
+      if (typeof data !== "string") throw new Error("Invalid message data");
 
-      connection.onmessage = (event) => {
-        const data = event.data;
-        if (typeof data !== "string") throw new Error("Invalid message data");
+      const notification = ChannelNotification.parse(Json.Parse(data));
 
-        const notification = ChannelNotification.parse(Json.Parse(data));
-
-        switch (notification.Type) {
-          case "Message":
-            set_messages((m) => [
-              {
-                Text: notification.Text,
-                Who: notification.Who,
-                When: notification.When,
-              },
-              ...m,
-            ]);
-            break;
-          default:
-            throw new Error("Unknown message type");
-        }
-      };
-
-      connection.onclose = (event) => {
-        if (done) return;
-
-        open();
-      };
+      switch (notification.Type) {
+        case "Message":
+          set_messages((m) => [
+            {
+              Text: notification.Text,
+              Who: notification.Who,
+              When: notification.When,
+            },
+            ...m,
+          ]);
+          break;
+        default:
+          throw new Error("Unknown message type");
+      }
     };
 
-    open();
+    set_socket(connection);
+
+    connection.onclose = (event) => {
+      set_socket(null);
+    };
 
     return () => {
-      done = true;
       connection.close();
+      set_socket(null);
     };
-  }, [server, channel_id]);
+  }, [server, channel_id, socket]);
 
   const backlog_fetcher = UseFetcher("/api/v1/channels/:channel_id/messages", {
     method: "GET",
