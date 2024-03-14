@@ -19,7 +19,7 @@ ENV APP_PREFIX server
 ENV DATA_DIR /data
 
 ENV SSO_BASE_URL https://sso.effuse.cloud
-ENV UI_URL http://localhost:3001
+ENV UI_URL https://app.effuse.cloud
 
 EXPOSE 3002
 
