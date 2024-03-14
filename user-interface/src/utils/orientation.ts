@@ -4,7 +4,7 @@ import { Dimensions } from "react-native";
 type Orientation = "landscape" | "portrait";
 
 function GetOrientation(): Orientation {
-  return Dimensions.get("window").width < Dimensions.get("window").height
+  return Dimensions.get("window").width < 600
     ? "portrait"
     : "landscape";
 }
