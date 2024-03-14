@@ -7,19 +7,24 @@ import Server from "./constructs/server";
 import UseSso, { SsoProvider, UseSsoControls } from "./data/use-sso";
 import { ServerProvider } from "./data/use-server";
 import useProfile from "./data/use-profile";
+import UseOrientation from "./utils/orientation";
 
 const styles = StyleSheet.create({
   app: {
     flexDirection: "row",
     height: "100%",
+    overflow: "hidden",
   },
   server_list: {
     width: 80,
     backgroundColor: Colours.Highlight.Background,
-    padding: Padding,
     borderRightColor: Colours.Highlight.Foreground,
     borderRightWidth: 2,
     height: "100%",
+  },
+  server_list_inner: {
+    height: "100%",
+    padding: Padding,
   },
   main_panel: {
     flex: 1,
@@ -29,16 +34,30 @@ const styles = StyleSheet.create({
 const MainPanel = () => {
   const profile = useProfile();
   const [open, set_open] = useState("");
+  const orientation = UseOrientation();
 
   return (
     <View style={styles.app}>
-      <View style={styles.server_list}>
-        <ServerList on_open={set_open} profile={profile} />
+      <View
+        style={{
+          ...styles.server_list,
+          ...(orientation === "landscape"
+            ? {}
+            : {
+                width: "100%",
+                borderRightWidth: 0,
+                overflow: "hidden",
+              }),
+        }}
+      >
+        <View style={styles.server_list_inner}>
+          <ServerList on_open={set_open} profile={profile} />
+        </View>
       </View>
       <View style={styles.main_panel}>
         {profile.state?.Servers.map((s) => (
           <ServerProvider key={s.Url} url={s.Url}>
-            <Server open={open === s.Url} />
+            <Server open={open === s.Url} blur={() => set_open("")} />
           </ServerProvider>
         ))}
       </View>

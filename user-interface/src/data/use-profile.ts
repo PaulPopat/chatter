@@ -3,6 +3,7 @@ import UseRemoteState from "../utils/remote-state";
 import { Fetch } from "../utils/fetch";
 import { useEffect, useState } from "react";
 import ServerIcon from "remixicon/icons/Device/server-line.svg";
+import { ToBase64 } from "../utils/file";
 
 const Profile = z.object({
   UserId: z.string(),
@@ -25,23 +26,6 @@ const ProfileBody = z.object({
   Biography: z.string(),
   Picture: z.instanceof(File),
 });
-
-function ToBase64(file: File) {
-  return new Promise<string>((res, rej) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result !== "string")
-        throw new Error("Could not read file");
-      res(reader.result);
-    };
-
-    reader.onerror = (error) => {
-      rej(error);
-    };
-
-    reader.readAsDataURL(file);
-  });
-}
 
 const DefaultImage = btoa(ServerIcon);
 
@@ -107,12 +91,13 @@ export default UseRemoteState(
         area: "sso",
         async mapper(body: any) {
           const { UserName, Biography, Picture } = ProfileBody.parse(body);
+          const file = await ToBase64(Picture);
           return {
             UserName: UserName,
             Biography: Biography,
             Picture: {
-              MimeType: Picture.type,
-              Base64Data: await ToBase64(Picture),
+              MimeType: file.mime,
+              Base64Data: file.base64,
             },
           };
         },

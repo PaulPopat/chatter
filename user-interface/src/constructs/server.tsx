@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import { Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
 import UseChannels, { Channel } from "../data/use-channels";
 import { PropsWithChildren, useState } from "react";
 import Icon from "../atoms/icon";
@@ -11,6 +11,10 @@ import { Form } from "../atoms/form";
 import Submitter from "../atoms/submitter";
 import Textbox from "../atoms/textbox";
 import Checkbox from "../atoms/checkbox";
+import useServerMetadata from "../data/use-server-metadata";
+import UseOrientation from "../utils/orientation";
+import TopBar from "../atoms/top-bar";
+import ResponsiveModal from "../atoms/responsive-modal";
 
 const styles = StyleSheet.create({
   channel_container: {
@@ -19,7 +23,7 @@ const styles = StyleSheet.create({
     padding: Padding,
     backgroundColor: Colours.Body.Background,
     borderRadius: BorderRadius,
-    marginVertical: Padding,
+    margin: Padding,
   },
   channel_name: {
     paddingLeft: Padding,
@@ -31,8 +35,14 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRightColor: Colours.Highlight.Foreground,
     borderRightWidth: 2,
-    overflow: "scroll",
-    padding: Padding,
+    overflow: "hidden",
+    width: 220,
+  },
+  channel_list_scroller: {
+    flex: 1,
+  },
+  button_container: {
+    margin: Padding,
   },
   server_container: {
     flexDirection: "row",
@@ -57,19 +67,19 @@ const ChannelListItem = (
   );
 };
 
-export default (props: { open: boolean }) => {
+export default (props: { open: boolean; blur: () => void }) => {
   const server = UseServer();
   const {
     state: channels,
     actions: { create_channel },
   } = UseChannels();
+  const { state: metadata } = useServerMetadata();
   const [open_channel, set_open_channel] = useState<Channel | null>(null);
   const [creating, set_creating] = useState(false);
-
-  if (!props.open) return <></>;
+  const orientation = UseOrientation();
 
   return (
-    <View style={styles.server_container}>
+    <ResponsiveModal style={styles.server_container} open={props.open}>
       <Modal open={creating} set_open={set_creating}>
         <Form fetcher={create_channel} on_submit={() => set_creating(false)}>
           <Textbox name="Name">Channel Name</Textbox>
@@ -81,25 +91,51 @@ export default (props: { open: boolean }) => {
         </Form>
       </Modal>
 
-      <View style={styles.channel_list}>
-        {channels?.map((c) => (
-          <ChannelListItem
-            key={c.ChannelId}
-            channel={c}
-            on_open={() => set_open_channel(c)}
-          />
-        ))}
+      <View
+        style={{
+          ...styles.channel_list,
+          ...(orientation === "portrait"
+            ? !open_channel
+              ? {
+                  width: "100%",
+                  borderRightWidth: 0,
+                }
+              : {
+                  width: 0,
+                  overflow: "hidden",
+                  borderRightWidth: 0,
+                }
+            : {}),
+        }}
+      >
+        <TopBar click={props.blur} title={metadata?.ServerName}></TopBar>
+        <ScrollView style={styles.channel_list_scroller}>
+          {channels?.map((c) => (
+            <ChannelListItem
+              key={c.ChannelId}
+              channel={c}
+              on_open={() => set_open_channel(c)}
+            />
+          ))}
+        </ScrollView>
 
         {server?.IsAdmin && (
-          <Button on_click={() => set_creating(true)} colour="Secondary">
-            +
-          </Button>
+          <View style={styles.button_container}>
+            <Button on_click={() => set_creating(true)} colour="Secondary">
+              +
+            </Button>
+          </View>
         )}
       </View>
 
-      <View style={styles.server_view}>
-        {open_channel && <ChannelView channel={open_channel} />}
-      </View>
-    </View>
+      <ResponsiveModal style={styles.server_view} open={!!open_channel} colour="Body">
+        {open_channel && (
+          <ChannelView
+            channel={open_channel}
+            blur={() => set_open_channel(null)}
+          />
+        )}
+      </ResponsiveModal>
+    </ResponsiveModal>
   );
 };

@@ -35,7 +35,6 @@ export default function UseChat(channel_id: string) {
 
   useEffect(() => {
     if (!server?.BaseUrl) return;
-    if (socket) return;
 
     const url = new Url(
       "/ws/chat/:channel_id",
@@ -79,7 +78,7 @@ export default function UseChat(channel_id: string) {
       connection.close();
       set_socket(null);
     };
-  }, [server, channel_id, socket]);
+  }, [server?.BaseUrl]);
 
   const backlog_fetcher = UseFetcher("/api/v1/channels/:channel_id/messages", {
     method: "GET",
