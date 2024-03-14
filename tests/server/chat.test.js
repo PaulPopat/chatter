@@ -47,6 +47,7 @@ describe("chat", () => {
     expect(localCon.messages).toEqual([
       {
         Text: "test message",
+        Type: "Message",
         When: expect.any(String),
         Who: expect.any(String),
       },
@@ -85,18 +86,16 @@ describe("chat", () => {
     );
 
     expect(backlog).toEqual([
-      [
-        {
-          Text: "test message 2",
-          When: expect.any(String),
-          Who: expect.any(String),
-        },
-        {
-          Text: "test message 1",
-          When: expect.any(String),
-          Who: expect.any(String),
-        },
-      ],
+      {
+        Text: "test message 2",
+        When: expect.any(String),
+        Who: expect.any(String),
+      },
+      {
+        Text: "test message 1",
+        When: expect.any(String),
+        Who: expect.any(String),
+      },
     ]);
   });
 
