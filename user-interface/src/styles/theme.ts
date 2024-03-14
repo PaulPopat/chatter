@@ -6,7 +6,7 @@ export const BorderWidth = 2;
 
 export const FontSizes = {
   Title: 24,
-  Label: 12,
+  Label: 16,
   Small: 9,
 };
 
