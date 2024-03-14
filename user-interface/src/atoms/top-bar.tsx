@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
   },
   server_manage_text: {
     padding: Padding,
+    flex: 1,
   },
 });
 

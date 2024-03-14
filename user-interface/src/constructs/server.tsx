@@ -2,7 +2,7 @@ import { Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
 import UseChannels, { Channel } from "../data/use-channels";
 import { PropsWithChildren, useState } from "react";
 import Icon from "../atoms/icon";
-import { BorderRadius, Colours, Padding } from "../styles/theme";
+import { BorderRadius, Colours, Margins, Padding } from "../styles/theme";
 import ChannelView from "./channel-view";
 import UseServer from "../data/use-server";
 import Button from "../atoms/button";
@@ -15,6 +15,7 @@ import useServerMetadata from "../data/use-server-metadata";
 import UseOrientation from "../utils/orientation";
 import TopBar from "../atoms/top-bar";
 import ResponsiveModal from "../atoms/responsive-modal";
+import FileUpload from "../atoms/file-upload";
 
 const styles = StyleSheet.create({
   channel_container: {
@@ -52,6 +53,9 @@ const styles = StyleSheet.create({
     flex: 1,
     height: "100%",
   },
+  config_container: {
+    margin: Margins,
+  },
 });
 
 const ChannelListItem = (
@@ -73,8 +77,12 @@ export default (props: { open: boolean; blur: () => void }) => {
     state: channels,
     actions: { create_channel },
   } = UseChannels();
-  const { state: metadata } = useServerMetadata();
+  const {
+    state: metadata,
+    actions: { update },
+  } = useServerMetadata();
   const [open_channel, set_open_channel] = useState<Channel | null>(null);
+  const [configuring, set_configuring] = useState(false);
   const [creating, set_creating] = useState(false);
   const orientation = UseOrientation();
 
@@ -108,7 +116,13 @@ export default (props: { open: boolean; blur: () => void }) => {
             : {}),
         }}
       >
-        <TopBar click={props.blur} title={metadata?.ServerName}></TopBar>
+        <TopBar click={props.blur} title={metadata?.ServerName}>
+          {server.IsAdmin && (
+            <Pressable onPress={() => set_configuring(true)}>
+              <Icon area="System" icon="settings-2" />
+            </Pressable>
+          )}
+        </TopBar>
         <ScrollView style={styles.channel_list_scroller}>
           {channels?.map((c) => (
             <ChannelListItem
@@ -128,12 +142,24 @@ export default (props: { open: boolean; blur: () => void }) => {
         )}
       </View>
 
-      <ResponsiveModal style={styles.server_view} open={!!open_channel} colour="Body">
-        {open_channel && (
+      <ResponsiveModal
+        style={styles.server_view}
+        open={!!open_channel || configuring}
+        colour="Body"
+      >
+        {open_channel ? (
           <ChannelView
             channel={open_channel}
             blur={() => set_open_channel(null)}
           />
+        ) : (
+          <View style={styles.config_container}>
+            <Form fetcher={update}>
+              <Textbox name="ServerName">Server Name</Textbox>
+              <FileUpload name="Icon">Server Icon</FileUpload>
+              <Submitter>Save Changes</Submitter>
+            </Form>
+          </View>
         )}
       </ResponsiveModal>
     </ResponsiveModal>

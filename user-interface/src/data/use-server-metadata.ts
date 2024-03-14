@@ -1,5 +1,6 @@
 import { z } from "zod";
 import UseRemoteState from "../utils/remote-state";
+import { ToBase64 } from "../utils/file";
 
 const ServerMetadata = z.object({
   ServerName: z.string(),
@@ -7,6 +8,11 @@ const ServerMetadata = z.object({
     Base64Data: z.string(),
     MimeType: z.string(),
   }),
+});
+
+const ConfigUpdate = z.object({
+  ServerName: z.string(),
+  Icon: z.instanceof(File),
 });
 
 export default UseRemoteState(
@@ -22,6 +28,16 @@ export default UseRemoteState(
       {
         method: "PUT",
         area: "server",
+        mapper: async (data: unknown) => {
+          const parsed = ConfigUpdate.parse(data);
+
+          const file = await ToBase64(parsed.Icon);
+          return {
+            ServerName: parsed.ServerName,
+            IconBase64: file.base64,
+            IconMimeType: file.mime,
+          };
+        },
       },
     ],
   }
