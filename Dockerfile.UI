@@ -1,0 +1,16 @@
+FROM node:lts-alpine as builder
+
+WORKDIR /code/
+
+ADD ./user-interface/package-lock.json .
+ADD ./user-interface/package.json .
+
+RUN npm install
+
+ADD ./user-interface/ .
+
+ENV SSO_BASE_URL https://sso.effuse.cloud
+RUN npx webpack
+
+FROM devforth/spa-to-http:latest
+COPY --from=builder /code/dist/ .
