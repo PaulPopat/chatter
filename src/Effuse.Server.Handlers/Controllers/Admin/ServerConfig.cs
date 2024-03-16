@@ -5,7 +5,7 @@ using Effuse.Server.Services;
 namespace Effuse.Server.Handlers;
 
 [Route(Method.Put, "/api/v1/server/metadata")]
-public class ServerConfig(Metadata metadata) : IHandler
+public class ServerConfig(MetadataService metadata) : IHandler
 {
   private struct Form
   {

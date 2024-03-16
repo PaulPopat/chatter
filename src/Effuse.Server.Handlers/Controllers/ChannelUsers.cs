@@ -5,7 +5,7 @@ using Effuse.Server.Services;
 namespace Effuse.Server.Handlers;
 
 [Route(Method.Get, "/api/v1/channels/{channelid}/users")]
-public class ChannelUsers(Channels channels) : IHandler
+public class ChannelUsers(ChannelsService channels) : IHandler
 {
   public async Task<HandlerResponse> Handle(HandlerProps props)
   {

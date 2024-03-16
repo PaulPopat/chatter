@@ -6,10 +6,10 @@ public static class Deps
 {
   public static void Register(UnityContainer container)
   {
-    container.RegisterType<Admin>();
-    container.RegisterType<Auth>();
-    container.RegisterType<Channels>();
-    container.RegisterType<Messaging>();
-    container.RegisterType<Metadata>();
+    container.RegisterType<AdminService>();
+    container.RegisterType<AuthService>();
+    container.RegisterType<ChannelsService>();
+    container.RegisterType<MessagingService>();
+    container.RegisterType<MetadataService>();
   }
 }

@@ -5,7 +5,7 @@ using Effuse.Server.Integrations.Contracts;
 
 namespace Effuse.Server.Services;
 
-public class Auth
+public class AuthService
 {
   private struct UserGrant
   {
@@ -18,7 +18,7 @@ public class Auth
   private readonly IJwtClient jwtClient;
   private readonly IParameters parameters;
 
-  public Auth(ISsoClient ssoClient, IUserClient userClient, IJwtClient jwtClient, IParameters parameters)
+  public AuthService(ISsoClient ssoClient, IUserClient userClient, IJwtClient jwtClient, IParameters parameters)
   {
     this.ssoClient = ssoClient;
     this.userClient = userClient;

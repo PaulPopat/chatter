@@ -5,7 +5,7 @@ using Effuse.Server.Services;
 namespace Effuse.Server.Handlers;
 
 [Route(Method.Post, "/api/v1/users")]
-public class JoinServer(Auth auth) : IHandler
+public class JoinServer(AuthService auth) : IHandler
 {
   private struct Form
   {
@@ -14,7 +14,7 @@ public class JoinServer(Auth auth) : IHandler
     public string Password { get; set; }
   }
 
-  private readonly Auth auth = auth;
+  private readonly AuthService auth = auth;
 
 
   public async Task<HandlerResponse> Handle(HandlerProps props)

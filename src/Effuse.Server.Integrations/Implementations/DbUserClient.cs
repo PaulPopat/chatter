@@ -78,8 +78,7 @@ public class DbUserClient : IUserClient
       dto.Banned,
       dto.Policies.Select(p => new UserPolicy(
         channelId: Guid.Parse(p.ChannelId),
-        read: p.Read,
-        write: p.Write)),
+        access: p.Write ? UserPolicyAccess.Write : UserPolicyAccess.Read)),
       dto.Admin);
   }
 
@@ -104,8 +103,7 @@ public class DbUserClient : IUserClient
         .Where(c => c.Public)
         .Select(c => new UserPolicy(
           channelId: c.ChannelId,
-          read: true,
-          write: true)).ToListAsync(),
+          access: UserPolicyAccess.Write)).ToListAsync(),
       admin: admin);
 
     await this.database.AddItem(TableName, userId.ToString(), ToDto(input));

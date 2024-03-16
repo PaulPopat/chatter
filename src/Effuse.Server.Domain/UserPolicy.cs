@@ -1,17 +1,12 @@
 ﻿namespace Effuse.Server.Domain;
 
-public class UserPolicy
+public class UserPolicy(Guid channelId, UserPolicyAccess access)
 {
-  public UserPolicy(Guid channelId, bool read, bool write)
-  {
-    ChannelId = channelId;
-    Read = read;
-    Write = write;
-  }
+  public Guid ChannelId => channelId;
 
-  public Guid ChannelId { get; }
+  public bool Read => true;
 
-  public bool Read { get; }
+  public bool Write => access == UserPolicyAccess.Write;
 
-  public bool Write { get; }
+  public UserPolicyAccess Access => access;
 }

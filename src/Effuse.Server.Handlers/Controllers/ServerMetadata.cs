@@ -5,7 +5,7 @@ using Effuse.Server.Services;
 namespace Effuse.Server.Handlers;
 
 [Route(Method.Get, "/api/v1/server/metadata")]
-public class ServerMetadata(Metadata metadata) : IHandler
+public class ServerMetadata(MetadataService metadata) : IHandler
 {
   public async Task<HandlerResponse> Handle(HandlerProps props)
   {

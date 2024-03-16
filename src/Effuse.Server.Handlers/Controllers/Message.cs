@@ -6,7 +6,7 @@ using Effuse.Core.Utilities;
 namespace Effuse.Server.Handlers;
 
 [Route(Method.Post, "/api/v1/channels/{channelid}/messages")]
-public class Message(Messaging messaging) : IHandler
+public class Message(MessagingService messaging) : IHandler
 {
   private struct Form
   {

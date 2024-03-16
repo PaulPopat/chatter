@@ -5,15 +5,15 @@ using Effuse.Server.Integrations.Contracts;
 
 namespace Effuse.Server.Services;
 
-public class Messaging
+public class MessagingService
 {
   private readonly IChannelClient channelClient;
-  private readonly Auth auth;
+  private readonly AuthService auth;
   private readonly ISubscriptions subscriptions;
   private readonly IChatLog chatLog;
   private readonly IUserClient userClient;
 
-  public Messaging(IChannelClient channelClient, Auth auth, ISubscriptions subscriptions, IChatLog chatLog, IUserClient userClient)
+  public MessagingService(IChannelClient channelClient, AuthService auth, ISubscriptions subscriptions, IChatLog chatLog, IUserClient userClient)
   {
     this.channelClient = channelClient;
     this.auth = auth;

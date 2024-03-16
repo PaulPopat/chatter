@@ -2,7 +2,7 @@
 
 namespace Effuse.Server.Services;
 
-public class Metadata(IServerMetadataClient serverMetadataClient, Auth auth)
+public class MetadataService(IServerMetadataClient serverMetadataClient, AuthService auth)
 {
   public async Task UpdateMetadata(string localToken, string name, string iconBase64, string iconMimeType)
   {

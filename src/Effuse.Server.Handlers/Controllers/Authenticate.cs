@@ -7,9 +7,9 @@ namespace Effuse.Server.Handlers.Controllers;
 [Route(Method.Get, "/api/v1/auth/token")]
 public class Authenticate : IHandler
 {
-  private readonly Auth auth;
+  private readonly AuthService auth;
 
-  public Authenticate(Auth auth)
+  public Authenticate(AuthService auth)
   {
     this.auth = auth;
   }

@@ -1,6 +1,6 @@
 ﻿using Effuse.Core.Handlers;
 using Effuse.Core.Handlers.Contracts;
-using Service = Effuse.Server.Services.Admin;
+using Service = Effuse.Server.Services.AdminService;
 
 namespace Effuse.Server.Handlers.Controllers.Admin;
 

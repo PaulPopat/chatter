@@ -5,7 +5,7 @@ using Effuse.Server.Services;
 namespace Effuse.Server.Handlers.Controllers;
 
 [WebSocketRoute("/ws/chat/{channelid}")]
-public class Chat(Messaging messaging) : IWebSocketHandler
+public class Chat(MessagingService messaging) : IWebSocketHandler
 {
   public async Task OnClose(string connectionId)
   {

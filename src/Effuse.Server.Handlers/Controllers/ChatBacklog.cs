@@ -6,7 +6,7 @@ using Effuse.Core.Utilities;
 namespace Effuse.Server.Handlers;
 
 [Route(Method.Get, "/api/v1/channels/{channelid}/messages")]
-public class ChatBacklog(Messaging messaging) : IHandler
+public class ChatBacklog(MessagingService messaging) : IHandler
 {
   public async Task<HandlerResponse> Handle(HandlerProps props)
   {

@@ -1,6 +1,6 @@
 ﻿using Effuse.Core.Handlers;
 using Effuse.Core.Handlers.Contracts;
-using Base = Effuse.Server.Services.Channels;
+using Base = Effuse.Server.Services.ChannelsService;
 
 namespace Effuse.Server.Handlers.Controllers;
 

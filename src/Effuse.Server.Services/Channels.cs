@@ -15,7 +15,7 @@ public class ChannelUser(Guid userId, bool mayRead, bool mayWrite)
   public bool MayWrite => mayWrite;
 }
 
-public class Channels(IChannelClient channelClient, Auth auth, IUserClient userClient)
+public class ChannelsService(IChannelClient channelClient, AuthService auth, IUserClient userClient)
 {
   public async Task<IEnumerable<Channel>> GetChannels(string localToken)
   {
