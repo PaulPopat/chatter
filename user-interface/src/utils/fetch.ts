@@ -104,15 +104,18 @@ export type UseFetcherConfig<
   on_fail?: (response: Response) => void;
 };
 
-export default function UseFetcher<TExpect = unknown>(
+export default function UseFetcher<
+  TExpect = unknown,
+  TBody = Record<string, unknown>
+>(
   url: string,
-  props: UseFetcherConfig<TExpect>
-): Fetcher<TExpect> {
+  props: UseFetcherConfig<TExpect, TBody>
+): Fetcher<TExpect, TBody> {
   const server = UseServer();
   const token = props.area === "sso" ? UseSso().AdminToken : server.LocalToken;
 
   return useCallback(
-    (body: Record<string, unknown>) =>
+    (body: TBody) =>
       Fetch(
         url,
         props.area === "sso"

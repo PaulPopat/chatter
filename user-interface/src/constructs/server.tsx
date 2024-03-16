@@ -16,6 +16,7 @@ import UseOrientation from "../utils/orientation";
 import TopBar from "../atoms/top-bar";
 import ResponsiveModal from "../atoms/responsive-modal";
 import FileUpload from "../atoms/file-upload";
+import ServerAdmin from "./server-admin";
 
 const styles = StyleSheet.create({
   channel_container: {
@@ -52,9 +53,6 @@ const styles = StyleSheet.create({
   server_view: {
     flex: 1,
     height: "100%",
-  },
-  config_container: {
-    margin: Margins,
   },
 });
 
@@ -158,13 +156,7 @@ export default (props: { open: boolean; blur: () => void }) => {
             blur={() => set_open_channel(null)}
           />
         ) : (
-          <View style={styles.config_container}>
-            <Form fetcher={update}>
-              <Textbox name="ServerName">Server Name</Textbox>
-              <FileUpload name="Icon">Server Icon</FileUpload>
-              <Submitter>Save Changes</Submitter>
-            </Form>
-          </View>
+          <ServerAdmin />
         )}
       </ResponsiveModal>
     </ResponsiveModal>

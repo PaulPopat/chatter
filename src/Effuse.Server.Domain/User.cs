@@ -48,7 +48,7 @@ public class User
     return this.Policies.FirstOrDefault(p => p.ChannelId == channel.ChannelId)?.Write ?? false;
   }
 
-  public User WithChannelAccess(Channel channel, bool read, bool write)
+  public User WithChannelAccess(Channel channel, UserPolicyAccess access)
   {
     return new User(
       userId: this.UserId,
@@ -58,8 +58,7 @@ public class User
       admin: Admin,
       policies: this.Policies.Append(new UserPolicy(
         channelId: channel.ChannelId,
-        read: read,
-        write: write)));
+        access: access)));
   }
 
   public User RevokeChannelAccess(Channel channel)

@@ -25,7 +25,9 @@ public class AdminService(AuthService authService, IChannelClient channelClient,
     await authService.RequireAdmin(localToken);
     var user = await userClient.GetUser(userId);
     var channel = await channelClient.GetChannel(channelId);
-    await userClient.UpdateUser(user.WithChannelAccess(channel, true, allowWrite));
+    await userClient.UpdateUser(user.WithChannelAccess(
+      channel,
+      allowWrite ? UserPolicyAccess.Write : UserPolicyAccess.Read));
   }
 
   public async Task KickUserFromChannel(string localToken, Guid channelId, Guid userId)

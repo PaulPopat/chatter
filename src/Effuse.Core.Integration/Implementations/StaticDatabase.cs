@@ -1,24 +1,13 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Effuse.Core.Integration.Contracts;
 
 namespace Effuse.Core.Integration.Implementations;
 
-public class StaticDatabase : IDatabase
+public class StaticDatabase(IStatic @static, IEncryption encryption) : IDatabase
 {
-  private readonly IStatic @static;
-  private readonly IEncryption encryption;
-
-  public StaticDatabase(IStatic @static, IEncryption encryption)
-  {
-    this.@static = @static;
-    this.encryption = encryption;
-  }
-
   private async Task<string> ItemPath(string tableName, string primaryKey)
   {
-    return $"database/{tableName}/{await this.encryption.Encrypt(primaryKey)}.json";
+    return $"database/{tableName}/{await encryption.Encrypt(primaryKey)}.json";
   }
 
   public async Task AddItem<T>(string tableName, string primaryKey, T item)
@@ -28,8 +17,8 @@ public class StaticDatabase : IDatabase
     if (existing != null) throw new ConflictException();
 
     var json = JsonSerializer.Serialize(item);
-    var encrypted = await this.encryption.Encrypt(json);
-    await this.@static.UploadText(new StaticTextFile
+    var encrypted = await encryption.Encrypt(json);
+    await @static.UploadText(new StaticTextFile
     {
       Mime = "application/json",
       Data = encrypted,
@@ -39,7 +28,7 @@ public class StaticDatabase : IDatabase
 
   public async Task DeleteItem(string tableName, string primaryKey)
   {
-    await this.@static.Delete(await this.ItemPath(tableName, primaryKey));
+    await @static.Delete(await this.ItemPath(tableName, primaryKey));
   }
 
   public async Task<TExpect?> FindItem<TExpect>(string tableName, string primaryKey)
@@ -47,9 +36,9 @@ public class StaticDatabase : IDatabase
   {
     try
     {
-      var response = await this.@static.DownloadText(await this.ItemPath(tableName, primaryKey));
+      var response = await @static.DownloadText(await this.ItemPath(tableName, primaryKey));
       if (response.Data == null || response.Data == string.Empty) return null;
-      var decrypted = await this.encryption.Decrypt(response.Data);
+      var decrypted = await encryption.Decrypt(response.Data);
       return JsonSerializer.Deserialize<TExpect>(decrypted);
     }
     catch
@@ -67,15 +56,19 @@ public class StaticDatabase : IDatabase
   public async Task UpdateItem<T>(string tableName, string primaryKey, T item)
     where T : struct
   {
-    var existing = await this.FindItem<T>(tableName, primaryKey);
-    if (existing == null) throw new NotFoundException();
+    if (!await this.Exists(tableName, primaryKey)) throw new NotFoundException();
 
     var json = JsonSerializer.Serialize(item);
-    await this.@static.UploadText(new StaticTextFile
+    await @static.UploadText(new StaticTextFile
     {
       Mime = "application/json",
-      Data = await this.encryption.Encrypt(json),
+      Data = await encryption.Encrypt(json),
       Name = await this.ItemPath(tableName, primaryKey)
     });
+  }
+
+  public async Task<bool> Exists(string tableName, string primaryKey)
+  {
+    return await @static.Exists(await this.ItemPath(tableName, primaryKey));
   }
 }

@@ -22,6 +22,45 @@ describe("users", () => {
     ).rejects.toThrow();
   });
 
+  it("gets a list of users", async () => {
+    const admin = await addUserToServer(true);
+    const user = await addUserToServer(false);
+    const bannedUser = await addUserToServer(false);
+
+    await server.post(
+      url("/api/v1/banned-users"),
+      {
+        UserId: bannedUser.user_id,
+      },
+      auth(admin.local_token)
+    );
+
+    const { data } = await server.get(
+      url("/api/v1/users"),
+      auth(admin.local_token)
+    );
+
+    expect(data).toEqual(
+      expect.arrayContaining([
+        {
+          UserId: admin.user_id,
+          Admin: true,
+          Banned: false,
+        },
+        {
+          UserId: user.user_id,
+          Admin: false,
+          Banned: false,
+        },
+        {
+          UserId: bannedUser.user_id,
+          Admin: false,
+          Banned: true,
+        },
+      ])
+    );
+  });
+
   it("makes a user admin", async () => {
     const admin = await addUserToServer(true);
     const user = await addUserToServer(false);
@@ -52,6 +91,64 @@ describe("users", () => {
           Name: channelName,
           Type: "Messages",
         }),
+      ])
+    );
+  });
+
+  it("gets a users permissions", async () => {
+    const admin = await addUserToServer(true);
+    const channelName = v4();
+
+    const { data: Channel1Data } = await server.post(
+      url("/api/v1/channels"),
+      { Name: channelName, Public: false },
+      auth(admin.local_token)
+    );
+
+    const { data: Channel2Data } = await server.post(
+      url("/api/v1/channels"),
+      { Name: channelName, Public: false },
+      auth(admin.local_token)
+    );
+
+    const user = await addUserToServer(false);
+
+    await server.post(
+      url("/api/v1/channels/:channel/users", {
+        channel: Channel1Data.ChannelId,
+      }),
+      {
+        UserId: user.user_id,
+        AllowWrite: false,
+      },
+      auth(admin.local_token)
+    );
+    await server.post(
+      url("/api/v1/channels/:channel/users", {
+        channel: Channel2Data.ChannelId,
+      }),
+      {
+        UserId: user.user_id,
+        AllowWrite: true,
+      },
+      auth(admin.local_token)
+    );
+
+    const { data } = await server.get(
+      url("/api/v1/users/:user_id/permissions", { user_id: user.user_id }),
+      auth(admin.local_token)
+    );
+
+    expect(data).toEqual(
+      expect.arrayContaining([
+        {
+          ChannelId: Channel1Data.ChannelId,
+          Write: false,
+        },
+        {
+          ChannelId: Channel2Data.ChannelId,
+          Write: true,
+        },
       ])
     );
   });

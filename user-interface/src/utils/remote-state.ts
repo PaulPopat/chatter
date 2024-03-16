@@ -10,16 +10,17 @@ type Actions<TActions extends RemoteStateFetchers> = {
 
 export default function UseRemoteState<
   TExpect,
+  TBody,
   TActions extends RemoteStateFetchers
->(url: string, props: UseFetcherConfig<TExpect>, actions: TActions) {
-  return () => {
+>(url: string, props: UseFetcherConfig<TExpect, TBody>, actions: TActions) {
+  return (body: TBody = {} as any) => {
     const fetcher = UseFetcher(url, props);
 
     const [state, set_data] = useState<TExpect>();
 
     const update = useCallback(
       () =>
-        fetcher({})
+        fetcher(body)
           .then(({ data, response }) => {
             set_data(data);
             Session[response.url] = data;
@@ -32,7 +33,7 @@ export default function UseRemoteState<
               throw err;
             }
           }),
-      [fetcher]
+      [fetcher, body]
     );
 
     const compiled_actions = Object.keys(actions)
