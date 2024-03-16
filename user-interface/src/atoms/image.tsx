@@ -1,13 +1,7 @@
-import { View, Image, StyleSheet, Pressable } from "react-native";
+import { Image } from "react-native";
 import { BorderRadiusLarge } from "../styles/theme";
 import DataUrl from "../utils/data-url";
 import { PropsWithChildren } from "react";
-
-const styles = StyleSheet.create({
-  image: {
-    borderRadius: BorderRadiusLarge,
-  },
-});
 
 type Props = {
   src: DataUrl;
@@ -16,7 +10,9 @@ type Props = {
 
 export default (props: PropsWithChildren<Props>) => (
   <Image
-    style={styles.image}
+    style={{
+      borderRadius: BorderRadiusLarge,
+    }}
     source={{
       uri: props.src.Uri,
       width: props.size,

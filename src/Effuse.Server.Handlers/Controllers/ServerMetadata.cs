@@ -9,15 +9,30 @@ public class ServerMetadata(MetadataService metadata) : IHandler
 {
   public async Task<HandlerResponse> Handle(HandlerProps props)
   {
-    var response = await metadata.GetServerMetadata();
-    return new(200, new
+    try
     {
-      ServerName = response.Name,
-      Icon = new
+      var response = await metadata.GetServerMetadata();
+      return new(200, new
       {
-        Base64Data = response.IconBase64,
-        MimeType = response.IconMimeType
-      }
-    });
+        ServerName = response.Name,
+        Icon = new
+        {
+          Base64Data = response.IconBase64,
+          MimeType = response.IconMimeType
+        }
+      });
+    }
+    catch
+    {
+      return new(200, new
+      {
+        ServerName = "Unnamed Server",
+        Icon = new
+        {
+          Base64Data = "",
+          MimeType = "image/png"
+        }
+      });
+    }
   }
 }

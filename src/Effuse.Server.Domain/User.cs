@@ -87,4 +87,12 @@ public class User
       banned: Banned,
       admin: true,
       policies: Policies);
+
+  public User WithoutAdmin => new(
+      userId: this.UserId,
+      joinedServer: JoinedServer,
+      lastLoggedIn: LastLoggedIn,
+      banned: Banned,
+      admin: false,
+      policies: Policies);
 }

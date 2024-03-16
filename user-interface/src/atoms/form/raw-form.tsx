@@ -1,13 +1,14 @@
-import { PropsWithChildren, useCallback, useState } from "react";
+import { PropsWithChildren, useCallback, useRef, useState } from "react";
 import { z } from "zod";
-import { StyleProp, View, ViewStyle } from "react-native";
+import { View } from "react-native";
 import { FormContext } from "./common";
+import { Class, Classes } from "../../styles/theme";
 
 type FormProps<TFormType> = {
   on_submit: (data: TFormType) => void;
   form_type: z.ZodType<TFormType>;
 
-  style?: StyleProp<ViewStyle>;
+  classes?: Array<Class>;
 };
 
 export default function Form<TExpect>(
@@ -15,11 +16,15 @@ export default function Form<TExpect>(
 ) {
   const [data, set_data] = useState<Record<string, unknown>>({});
   const [callbacks, set_callbacks] = useState<Array<() => void>>([]);
+  const dataRef = useRef<Record<string, unknown>>();
+
+  dataRef.current = data;
 
   const on_submit = useCallback(async () => {
     for (const callback of callbacks) callback();
+    const data = dataRef.current;
     props.on_submit(props.form_type.parse(data));
-  }, [data, callbacks, props.on_submit]);
+  }, [dataRef, callbacks, props.on_submit]);
 
   return (
     <FormContext.Provider
@@ -40,7 +45,7 @@ export default function Form<TExpect>(
         submit: on_submit,
       }}
     >
-      <View style={props.style}>{props.children}</View>
+      <View style={Classes(...(props.classes ?? []))}>{props.children}</View>
     </FormContext.Provider>
   );
 }

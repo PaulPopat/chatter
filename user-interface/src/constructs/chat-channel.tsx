@@ -1,12 +1,6 @@
-import { FlatList, Text, StyleSheet, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import UseChat, { Message } from "../data/use-chat";
-import {
-  BorderRadius,
-  Colours,
-  FontSizes,
-  Margins,
-  Padding,
-} from "../styles/theme";
+import { Classes } from "../styles/theme";
 import { Form } from "../atoms/form";
 import Textbox from "../atoms/textbox";
 import Hidden from "../atoms/hidden";
@@ -14,55 +8,21 @@ import UsePublicProfile from "../data/use-public-profile";
 import Submitter from "../atoms/submitter";
 import Icon from "../atoms/icon";
 
-const styles = StyleSheet.create({
-  message_container: {
-    marginVertical: Margins,
-    backgroundColor: Colours.Highlight.Background,
-    borderRadius: BorderRadius,
-  },
-  metadata_container: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  name_text: {
-    fontWeight: "bold",
-    padding: Padding,
-    fontSize: FontSizes.Label,
-  },
-  time_text: {
-    fontSize: FontSizes.Small,
-  },
-  message_text: {
-    padding: Padding,
-    fontSize: FontSizes.Label,
-  },
-  channel_container: {
-    padding: Margins,
-    height: "100%",
-  },
-  chat_input: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  send_button: {
-    margin: Margins,
-  },
-  text_box: {
-    flex: 1,
-  },
-});
-
 const ChatMessage = (props: { message: Message }) => {
   const profile = UsePublicProfile(props.message.Who);
   return (
-    <View style={styles.message_container}>
-      <View style={styles.metadata_container}>
-        <Text style={styles.name_text}>{profile?.UserName}</Text>
-        <Text style={styles.time_text}>
+    <View style={Classes("highlight", "spacer")}>
+      <View style={Classes("row")}>
+        <Text style={Classes("important_text", "container")}>
+          {profile?.UserName}
+        </Text>
+        <Text style={Classes("small_text")}>
           {props.message.When.toLocaleString()}
         </Text>
       </View>
-      <Text style={styles.message_text}>{props.message.Text}</Text>
+      <Text style={Classes("container", "body_text")}>
+        {props.message.Text}
+      </Text>
     </View>
   );
 };
@@ -74,7 +34,7 @@ export default (props: { channel_id: string }) => {
   } = UseChat(props.channel_id);
 
   return (
-    <View style={styles.channel_container}>
+    <View style={Classes("fill")}>
       <FlatList
         data={messages}
         renderItem={({ item: message }) => (
@@ -86,13 +46,13 @@ export default (props: { channel_id: string }) => {
 
       <Form fetcher={send}>
         <Hidden name="channel_id" value={props.channel_id} />
-        <View style={styles.chat_input}>
-          <View style={styles.text_box}>
-            <Textbox name="Text" clear_on_submit>
+        <View style={Classes("row")}>
+          <View style={Classes("flex_fill", "spacer")}>
+            <Textbox name="Text" clear_on_submit multiline>
               Message
             </Textbox>
           </View>
-          <View style={styles.send_button}>
+          <View style={Classes("spacer")}>
             <Submitter colour="Highlight">
               <Icon area="Business" icon="send-plane-2" />
             </Submitter>

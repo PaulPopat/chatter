@@ -1,14 +1,8 @@
 import { PropsWithChildren } from "react";
 import { UseForm } from "./form";
-import {
-  StyleSheet,
-  KeyboardTypeOptions,
-  View,
-  Text,
-  Pressable,
-} from "react-native";
+import { KeyboardTypeOptions, Text, Pressable } from "react-native";
 import Icon from "./icon";
-import { Colours, Padding } from "../styles/theme";
+import { Classes } from "../styles/theme";
 import FilePicker from "../utils/file-picker";
 
 type Props = {
@@ -17,17 +11,6 @@ type Props = {
   password?: boolean;
   clear_on_submit?: boolean;
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: Padding,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  label: {
-    margin: Padding,
-  },
-});
 
 export default (props: PropsWithChildren<Props>) => {
   const { value, set_value, use_submit } = UseForm(props.name);
@@ -38,14 +21,14 @@ export default (props: PropsWithChildren<Props>) => {
 
   return (
     <Pressable
-      style={styles.container}
+      style={Classes("container", "row")}
       onPress={() => FilePicker().then(set_value)}
     >
       <Icon area="System" icon="upload-cloud-2" />
       {value && value instanceof File ? (
-        <Text style={styles.label}>{value.name}</Text>
+        <Text style={Classes("body_text", "spacer")}>{value.name}</Text>
       ) : (
-        <Text style={styles.label}>{props.children}</Text>
+        <Text style={Classes("body_text", "spacer")}>{props.children}</Text>
       )}
     </Pressable>
   );

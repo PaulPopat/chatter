@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { Colours, Padding } from "./styles/theme";
+import { Classes, Colours, Padding } from "./styles/theme";
 import ServerList from "./constructs/server-list";
 import Authenticate from "./constructs/authenticate";
 import Server from "./constructs/server";
@@ -9,40 +9,20 @@ import { ServerProvider } from "./data/use-server";
 import useProfile from "./data/use-profile";
 import UseOrientation from "./utils/orientation";
 
-const styles = StyleSheet.create({
-  app: {
-    flexDirection: "row",
-    height: "100%",
-    overflow: "hidden",
-  },
-  server_list: {
-    width: 80,
-    backgroundColor: Colours.Highlight.Background,
-    borderRightColor: Colours.Highlight.Foreground,
-    borderRightWidth: 2,
-    height: "100%",
-  },
-  server_list_inner: {
-    height: "100%",
-    padding: Padding,
-  },
-  main_panel: {
-    flex: 1,
-  },
-});
-
 const MainPanel = () => {
   const profile = useProfile();
   const [open, set_open] = useState("");
   const orientation = UseOrientation();
 
   return (
-    <View style={styles.app}>
+    <View style={Classes("row", "fill", "no_overflow")}>
       <View
         style={{
-          ...styles.server_list,
+          ...Classes("highlight", "border_right", "fill"),
           ...(orientation === "landscape"
-            ? {}
+            ? {
+                width: 80,
+              }
             : {
                 width: "100%",
                 borderRightWidth: 0,
@@ -50,11 +30,11 @@ const MainPanel = () => {
               }),
         }}
       >
-        <View style={styles.server_list_inner}>
+        <View style={Classes("fill", "edge_container")}>
           <ServerList on_open={set_open} profile={profile} />
         </View>
       </View>
-      <View style={styles.main_panel}>
+      <View style={Classes("flex_fill")}>
         {profile.state?.Servers.map((s) => (
           <ServerProvider key={s.Url} url={s.Url}>
             <Server open={open === s.Url} blur={() => set_open("")} />

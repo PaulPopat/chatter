@@ -1,62 +1,43 @@
-import { PropsWithChildren, useRef, useState } from "react";
+import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { UseForm } from "./form";
 import {
   TextInput,
-  StyleSheet,
   KeyboardTypeOptions,
   View,
   Text,
   TouchableOpacity,
 } from "react-native";
 import { z } from "zod";
-import {
-  BorderRadius,
-  BorderWidth,
-  Colours,
-  FontSizes,
-  Margins,
-  Padding,
-} from "../styles/theme";
+import { Class, Classes, FontSizes } from "../styles/theme";
 
 type Props = {
   name: string;
   keyboard?: KeyboardTypeOptions;
   password?: boolean;
   clear_on_submit?: boolean;
+
+  default_value?: string;
+  multiline?: boolean;
+  classes?: Array<Class>;
 };
 
-const styles = StyleSheet.create({
-  view: {
-    marginTop: Margins,
-    marginBottom: Margins,
-    borderColor: Colours.Secondary.Background,
-    borderWidth: BorderWidth,
-    borderRadius: BorderRadius,
-    backgroundColor: Colours.Body.Background,
-  },
-  viewFocus: {
-    borderColor: Colours.Primary.Background,
-  },
-  input: {
-    padding: Padding,
-    fontSize: FontSizes.Label,
-  },
-  label: {
-    fontSize: FontSizes.Label,
-    padding: Padding,
-    position: "absolute",
-    backgroundColor: Colours.Body.Background,
-    borderRadius: BorderRadius,
-  },
-});
+const DefaultHeight = 35;
 
 export default (props: PropsWithChildren<Props>) => {
   const { value, set_value, submit, use_submit } = UseForm(props.name);
   const [focused, set_focused] = useState(false);
   const input = useRef<TextInput>(null);
+  const [height, set_height] = useState(DefaultHeight);
+
+  useEffect(() => {
+    set_value(props.default_value ?? "");
+  }, [props.default_value]);
 
   use_submit(() => {
-    if (props.clear_on_submit) set_value("");
+    if (props.clear_on_submit) {
+      set_height(DefaultHeight);
+      set_value("");
+    }
   }, [props.clear_on_submit]);
 
   return (
@@ -66,23 +47,20 @@ export default (props: PropsWithChildren<Props>) => {
         input.current?.focus();
       }}
     >
-      <View
-        style={{
-          ...styles.view,
-          ...(focused ? styles.viewFocus : {}),
-        }}
-      >
+      <View style={Classes("card", "colour_body", ...(props.classes ?? []))}>
         <Text
           style={{
-            ...styles.label,
-            ...(!!value
+            ...Classes("body_text", "container", "colour_body"),
+            ...(!!(value || focused)
               ? {
+                  position: "absolute",
                   top: -10,
                   left: 4,
                   padding: 2,
                   fontSize: FontSizes.Small,
                 }
               : {
+                  position: "absolute",
                   top: 0,
                   left: 3,
                   fontSize: FontSizes.Label,
@@ -95,8 +73,9 @@ export default (props: PropsWithChildren<Props>) => {
           ref={input}
           style={
             {
-              ...styles.input,
+              ...Classes("body_text", "edge_container"),
               outlineStyle: "none",
+              height: height,
             } as any
           }
           value={value ? z.string().parse(value) : ""}
@@ -104,11 +83,18 @@ export default (props: PropsWithChildren<Props>) => {
           keyboardType={props.keyboard}
           secureTextEntry={props.password}
           onKeyPress={(e: any) => {
-            if (e.key !== "Enter") return;
-            submit();
+            if (props.multiline && e.key === "Enter" && e.shiftKey) {
+              submit();
+            } else if (e.key === "Enter") {
+              submit();
+            }
           }}
           onFocus={() => set_focused(true)}
           onBlur={() => set_focused(false)}
+          multiline={props.multiline}
+          onContentSizeChange={(e) =>
+            set_height(e.nativeEvent.contentSize.height)
+          }
         />
       </View>
     </TouchableOpacity>

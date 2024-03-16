@@ -13,4 +13,6 @@ public interface IUserClient
   Task<User> RegisterUser(Guid userId, bool admin);
 
   IAsyncEnumerable<User> ListUsers();
+
+  IAsyncEnumerable<User> ListBannedUsers();
 }

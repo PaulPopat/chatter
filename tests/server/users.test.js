@@ -45,17 +45,36 @@ describe("users", () => {
         {
           UserId: admin.user_id,
           Admin: true,
-          Banned: false,
         },
         {
           UserId: user.user_id,
           Admin: false,
-          Banned: false,
         },
+      ])
+    );
+  });
+
+  it("gets a list of banned users", async () => {
+    const admin = await addUserToServer(true);
+    const bannedUser = await addUserToServer(false);
+
+    await server.post(
+      url("/api/v1/banned-users"),
+      {
+        UserId: bannedUser.user_id,
+      },
+      auth(admin.local_token)
+    );
+
+    const { data } = await server.get(
+      url("/api/v1/banned-users"),
+      auth(admin.local_token)
+    );
+
+    expect(data).toEqual(
+      expect.arrayContaining([
         {
           UserId: bannedUser.user_id,
-          Admin: false,
-          Banned: true,
         },
       ])
     );

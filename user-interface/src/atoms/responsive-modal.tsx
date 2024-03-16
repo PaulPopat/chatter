@@ -1,12 +1,12 @@
 import { PropsWithChildren } from "react";
 import { View, Modal, StyleProp, ViewStyle } from "react-native";
-import { Colours, Padding } from "../styles/theme";
+import { Class, Classes, Colours, Padding } from "../styles/theme";
 import UseOrientation from "../utils/orientation";
 
 type Props = PropsWithChildren<{
   open: boolean;
   colour?: keyof typeof Colours;
-  style: ViewStyle;
+  classes?: Array<Class>;
 }>;
 
 export default (props: Props) => {
@@ -16,7 +16,7 @@ export default (props: Props) => {
     return (
       <View
         style={{
-          ...props.style,
+          ...Classes(...(props.classes ?? [])),
           opacity: props.open ? 1 : 0,
           backgroundColor: Colours[props.colour ?? "Highlight"].Background,
         }}
@@ -29,9 +29,8 @@ export default (props: Props) => {
     <Modal animationType="slide" transparent={true} visible={props.open}>
       <View
         style={{
+          ...Classes("edge_container", "fill"),
           backgroundColor: Colours[props.colour ?? "Highlight"].Background,
-          padding: Padding,
-          height: "100%",
         }}
       >
         {props.children}

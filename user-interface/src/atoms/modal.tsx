@@ -1,28 +1,11 @@
 import { PropsWithChildren } from "react";
-import { View, StyleSheet, Modal } from "react-native";
-import {
-  BorderRadius,
-  BorderWidth,
-  Colours,
-  Margins,
-  Padding,
-} from "../styles/theme";
+import { View, Modal } from "react-native";
+import { Classes } from "../styles/theme";
 
 type Props = PropsWithChildren<{
   open: boolean;
   set_open: (open: boolean) => void;
 }>;
-
-const styles = StyleSheet.create({
-  modal_body: {
-    backgroundColor: Colours.Highlight.Background,
-    color: Colours.Highlight.Foreground,
-    margin: Margins,
-    padding: Padding,
-    borderWidth: BorderWidth,
-    borderRadius: BorderRadius,
-  },
-});
 
 export default (props: Props) => {
   return (
@@ -36,8 +19,11 @@ export default (props: Props) => {
       onDismiss={() => {
         props.set_open(false);
       }}
+      style={{ maxHeight: "100%" }}
     >
-      <View style={styles.modal_body}>{props.children}</View>
+      <View style={Classes("card", "highlight", "max_fill", "spacer")}>
+        {props.children}
+      </View>
     </Modal>
   );
 };

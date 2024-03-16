@@ -1,12 +1,12 @@
 import { PropsWithChildren, useCallback } from "react";
 import { z } from "zod";
 import { Fetcher } from "../../utils/fetch";
-import { StyleProp, View, ViewStyle } from "react-native";
 import RawForm from "./raw-form";
+import { Class } from "../../styles/theme";
 
 type FormProps<TExpect, TBody> = {
   fetcher: Fetcher<TExpect, TBody>;
-  style?: StyleProp<ViewStyle>;
+  classes?: Array<Class>;
   on_submit?: () => void;
 };
 
@@ -28,8 +28,8 @@ export default function Form<TExpect, TBody>(
   );
 
   return (
-    <RawForm on_submit={on_submit} form_type={z.any()} style={props.style}>
-      <View style={props.style}>{props.children}</View>
+    <RawForm on_submit={on_submit} form_type={z.any()} classes={props.classes}>
+      {props.children}
     </RawForm>
   );
 }

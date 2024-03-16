@@ -1,7 +1,7 @@
 import { useState } from "react";
 import UseProfile, { UseServerListMetadata } from "../data/use-profile";
-import { View, StyleSheet, Pressable } from "react-native";
-import { BorderRadiusLarge, Colours } from "../styles/theme";
+import { View, Pressable, Text } from "react-native";
+import { Classes } from "../styles/theme";
 import { Form } from "../atoms/form";
 import Textbox from "../atoms/textbox";
 import Submitter from "../atoms/submitter";
@@ -11,41 +11,21 @@ import Hidden from "../atoms/hidden";
 import Modal from "../atoms/modal";
 import Image from "../atoms/image";
 import DataUrl from "../utils/data-url";
-
-const styles = StyleSheet.create({
-  panel_container: {
-    flexDirection: "column",
-    height: "100%",
-  },
-  server_list_container: {
-    flex: 1,
-  },
-  server_text: {
-    flex: 1,
-    color: Colours.Highlight.Foreground,
-  },
-  server_icon: {
-    borderRadius: BorderRadiusLarge,
-  },
-  server_container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: BorderRadiusLarge,
-    backgroundColor: Colours.Body.Background,
-    padding: 4,
-  },
-});
+import UseOrientation from "../utils/orientation";
 
 const ServerListItem = (props: { url: string }) => {
   const metadata = UseServerListMetadata(props.url);
+  const orientation = UseOrientation();
 
   return (
-    <View style={styles.server_container}>
+    <View style={Classes("row", "colour_body", "card", "container")}>
       <Image
         src={new DataUrl(metadata.Icon.Base64Data, metadata.Icon.MimeType)}
         size={60}
       />
+      {orientation === "portrait" && (
+        <Text style={Classes("spacer")}>{metadata.ServerName}</Text>
+      )}
     </View>
   );
 };
@@ -62,24 +42,33 @@ export default (props: {
   const [joining, set_joining] = useState(false);
 
   return (
-    <View style={styles.panel_container}>
+    <View style={Classes("fill")}>
       <Modal open={joining} set_open={set_joining}>
-        <Form fetcher={join_server} on_submit={() => set_joining(false)}>
+        <Form
+          fetcher={join_server}
+          on_submit={() => set_joining(false)}
+          classes={["column"]}
+        >
           <Textbox name="ServerUrl">Server URL</Textbox>
           <Hidden name="ServerToken" value={sso.ServerToken} />
           <Textbox name="Password" password>
             Password
           </Textbox>
-          <Submitter>Join Server</Submitter>
-          <Button on_click={() => set_joining(false)} colour="Danger">
-            Cancel
-          </Button>
+          <View style={Classes("row")}>
+            <Submitter>Join Server</Submitter>
+            <Button on_click={() => set_joining(false)} colour="Danger">
+              Cancel
+            </Button>
+          </View>
         </Form>
       </Modal>
 
-      <View style={styles.server_list_container}>
+      <View style={Classes("flex_fill", "column")}>
         {profile?.Servers.map((s) => (
-          <Pressable key={s.Url} onPress={() => props.on_open(s.Url)}>
+          <Pressable
+            key={s.Url}
+            onPress={() => props.on_open(s.Url)}
+          >
             <ServerListItem url={s.Url} />
           </Pressable>
         ))}

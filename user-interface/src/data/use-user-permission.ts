@@ -7,6 +7,12 @@ export default UseRemoteState(
     area: "server",
     method: "GET",
     body_type: z.object({ user_id: z.string() }),
+    expect: z.array(
+      z.object({
+        ChannelId: z.string(),
+        Write: z.boolean(),
+      })
+    ),
   },
   {
     add_user_to_channel: [

@@ -1,54 +1,50 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { UseForm } from "./form";
-import {
-  StyleSheet,
-  KeyboardTypeOptions,
-  View,
-  Text,
-  Pressable,
-} from "react-native";
+import { KeyboardTypeOptions, View, Text, Pressable } from "react-native";
 import Icon from "./icon";
-import { Colours, Padding } from "../styles/theme";
+import { Class, Classes } from "../styles/theme";
 
 type Props = {
   name: string;
   keyboard?: KeyboardTypeOptions;
   password?: boolean;
   clear_on_submit?: boolean;
+
+  default_value?: boolean;
+
+  submit_on_change?: boolean;
+  classes?: Array<Class>;
 };
 
-const styles = StyleSheet.create({
-  container: {
-    padding: Padding,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  checkbox: {
-    width: 24,
-    height: 24,
-    borderWidth: 2,
-    borderColor: Colours.Body.Foreground,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: Padding,
-  },
-  label: {},
-});
-
 export default (props: PropsWithChildren<Props>) => {
-  const { value, set_value, use_submit } = UseForm(props.name);
+  const { value, set_value, use_submit, submit } = UseForm(props.name);
 
   use_submit(() => {
     if (props.clear_on_submit) set_value(false);
   }, [props.clear_on_submit]);
 
+  useEffect(() => {
+    set_value(props.default_value ?? false);
+  }, [props.default_value]);
+
   return (
-    <Pressable style={styles.container} onPress={() => set_value(!value)}>
-      <View style={styles.checkbox}>
+    <Pressable
+      style={Classes("row", ...(props.classes ?? []))}
+      onPress={() => {
+        set_value(!value);
+        if (props.submit_on_change) setTimeout(() => submit(), 5);
+      }}
+    >
+      <View
+        style={{
+          ...Classes("centre", "bordered"),
+          width: 24,
+          height: 24,
+        }}
+      >
         {value ? <Icon area="System" icon="check" /> : undefined}
       </View>
-      <Text style={styles.label}>{props.children}</Text>
+      <Text style={Classes("body_text", "spacer")}>{props.children}</Text>
     </Pressable>
   );
 };

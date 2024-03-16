@@ -1,17 +1,8 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View } from "react-native";
 import { Channel } from "../data/use-channels";
 import ChatChannel from "./chat-channel";
 import TopBar from "../atoms/top-bar";
-
-const styles = StyleSheet.create({
-  container: {
-    height: "100%",
-    flexDirection: "column",
-  },
-  content: {
-    flex: 1,
-  },
-});
+import { Classes } from "../styles/theme";
 
 const SubChannel = (props: { channel: Channel }) => {
   switch (props.channel.Type) {
@@ -24,9 +15,9 @@ const SubChannel = (props: { channel: Channel }) => {
 
 export default (props: { channel: Channel; blur: () => void }) => {
   return (
-    <View style={styles.container}>
+    <View style={Classes("fill")}>
       <TopBar click={props.blur} title={props.channel.Name}></TopBar>
-      <View style={styles.content}>
+      <View style={Classes("flex_fill")}>
         <SubChannel {...props} />
       </View>
     </View>

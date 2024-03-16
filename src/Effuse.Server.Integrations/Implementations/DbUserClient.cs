@@ -135,7 +135,23 @@ public class DbUserClient : IUserClient
 
     foreach (var userId in listing.Value.Users)
     {
-      yield return await this.GetUser(Guid.Parse(userId));
+      var user = await this.GetUser(Guid.Parse(userId));
+      if (user.Banned) continue;
+      yield return user;
+    }
+  }
+
+  public async IAsyncEnumerable<User> ListBannedUsers()
+  {
+    var listing = await this.database.FindItem<ListUsersDto>(ListTableName, ListItemName);
+
+    if (listing == null) yield break;
+
+    foreach (var userId in listing.Value.Users)
+    {
+      var user = await this.GetUser(Guid.Parse(userId));
+      if (!user.Banned) continue;
+      yield return user;
     }
   }
 

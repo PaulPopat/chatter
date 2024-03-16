@@ -52,11 +52,25 @@ public class AdminService(AuthService authService, IChannelClient channelClient,
     await userClient.UpdateUser(user.AsAdmin);
   }
 
+  public async Task RevokeUserAdmin(string localToken, Guid userId)
+  {
+    await authService.RequireAdmin(localToken);
+    var user = await userClient.GetUser(userId);
+    await userClient.UpdateUser(user.WithoutAdmin);
+  }
+
   public async Task<IEnumerable<User>> GetAllUsers(string localToken)
   {
     await authService.RequireAdmin(localToken);
     return await userClient.ListUsers().ToListAsync();
   }
+
+  public async Task<IEnumerable<User>> GetAllBannedUsers(string localToken)
+  {
+    await authService.RequireAdmin(localToken);
+    return await userClient.ListBannedUsers().ToListAsync();
+  }
+
 
   public async Task<IEnumerable<UserPolicy>> GetUserPolicies(string localToken, Guid userId)
   {
