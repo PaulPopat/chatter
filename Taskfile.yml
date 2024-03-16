@@ -85,7 +85,7 @@ tasks:
       DATA_DIR: ./resources/server-data
 
   all:local:run:
-    deps: [sso:local:run, server:local:run]
+    deps: [sso:local:run, server:local:run, ui:watch]
 
   ui:watch:
     dir: "{{.TASKFILE_DIR}}/user-interface"
