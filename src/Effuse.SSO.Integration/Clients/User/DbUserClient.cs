@@ -5,7 +5,7 @@ using AppDomain = Effuse.SSO.Domain;
 
 namespace Effuse.SSO.Integration.Clients.User;
 
-public class DbUserClient : IUserClient
+public class DbUserClient(IDatabase database, IStatic statics) : IUserClient
 {
   private struct UserServerDto
   {
@@ -36,18 +36,18 @@ public class DbUserClient : IUserClient
     public string UserId { get; set; }
   }
 
-  private readonly IDatabase database;
-  private readonly IStatic statics;
+  private struct UserListDto
+  {
+    public List<string> Users { get; set; }
+  }
 
   private static string TableName => "Users";
 
   private static string EmailsName => "UserEmails";
 
-  public DbUserClient(IDatabase database, IStatic statics)
-  {
-    this.database = database;
-    this.statics = statics;
-  }
+  private static string UserListTable => "UserList";
+
+  private static string UserListItem => "Users";
 
   private static AppDomain.User FromDto(string userId, UserDto result)
   {
@@ -88,53 +88,82 @@ public class DbUserClient : IUserClient
 
   public async Task CreateUser(AppDomain.User user)
   {
-    await this.database.AddItem(TableName, user.UserId.ToString(), ToDto(user));
-    await this.database.AddItem(EmailsName, user.Email, new UserEmailDto
+    await database.AddItem(TableName, user.UserId.ToString(), ToDto(user));
+    await database.AddItem(EmailsName, user.Email, new UserEmailDto
     {
       UserId = user.UserId.ToString()
     });
+
+    if (await database.Exists(UserListTable, UserListItem))
+    {
+      var existing = await database.GetItem<UserListDto>(UserListTable, UserListItem);
+
+      await database.UpdateItem(UserListTable, UserListItem, new UserListDto
+      {
+        Users = [.. existing.Users, user.UserId.ToString()]
+      });
+    }
+    else
+    {
+      await database.AddItem(UserListTable, UserListItem, new UserListDto
+      {
+        Users = [user.UserId.ToString()]
+      });
+    }
   }
 
   public async Task DeleteUser(AppDomain.User user)
   {
-    await this.database.DeleteItem(TableName, user.UserId.ToString());
-    await this.database.DeleteItem(EmailsName, user.Email);
+    await database.DeleteItem(TableName, user.UserId.ToString());
+    await database.DeleteItem(EmailsName, user.Email);
   }
 
   public async Task<AppDomain.User> GetUser(Guid userId)
   {
-    var result = await this.database.GetItem<UserDto>(TableName, userId.ToString());
+    var result = await database.GetItem<UserDto>(TableName, userId.ToString());
 
     return FromDto(userId.ToString(), result);
   }
 
   public async Task<AppDomain.User> GetUserByEmail(string email)
   {
-    var userEmail = await this.database.GetItem<UserEmailDto>(EmailsName, email);
-    var result = await this.database.GetItem<UserDto>(TableName, userEmail.UserId);
+    var userEmail = await database.GetItem<UserEmailDto>(EmailsName, email);
+    var result = await database.GetItem<UserDto>(TableName, userEmail.UserId);
 
     return FromDto(userEmail.UserId, result);
   }
 
   public Task UpdateUser(AppDomain.User user)
   {
-    return this.database.UpdateItem(TableName, user.UserId.ToString(), ToDto(user));
+    return database.UpdateItem(TableName, user.UserId.ToString(), ToDto(user));
   }
 
   public async Task<MemoryStream> GetProfilePicture(AppDomain.User user)
   {
-    var file = await this.statics.Download(PictureName(user));
+    var file = await statics.Download(PictureName(user));
 
     return file.Data;
   }
 
   public Task UploadProfilePicture(AppDomain.User user, MemoryStream imageData, string mime)
   {
-    return this.statics.Upload(new StaticFile
+    return statics.Upload(new StaticFile
     {
       Name = PictureName(user),
       Data = imageData,
       Mime = mime
     });
+  }
+
+  public async IAsyncEnumerable<AppDomain.User> AllUsers()
+  {
+    if (!await database.Exists(UserListTable, UserListItem)) yield break;
+
+    var users = await database.GetItem<UserListDto>(UserListTable, UserListItem);
+
+    foreach (var userId in users.Users)
+    {
+      yield return await this.GetUser(Guid.Parse(userId));
+    }
   }
 }

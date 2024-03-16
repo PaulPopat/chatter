@@ -5,20 +5,13 @@ using Effuse.Core.Utilities;
 
 namespace Effuse.Core.AWS.Integration;
 
-public class S3Statics : IStatic
+public class S3Statics(IAmazonS3 s3) : IStatic
 {
-  private readonly IAmazonS3 s3;
-
-  public S3Statics(IAmazonS3 s3)
-  {
-    this.s3 = s3;
-  }
-
   private static string BucketName => Env.GetEnv("BUCKET_NAME");
 
   public async Task<StaticFile> Download(string name)
   {
-    using var response = await this.s3.GetObjectAsync(new GetObjectRequest
+    using var response = await s3.GetObjectAsync(new GetObjectRequest
     {
       BucketName = BucketName,
       Key = name
@@ -36,7 +29,7 @@ public class S3Statics : IStatic
 
   public Task Upload(StaticFile file)
   {
-    return this.s3.PutObjectAsync(new PutObjectRequest
+    return s3.PutObjectAsync(new PutObjectRequest
     {
       BucketName = BucketName,
       Key = file.Name,
@@ -47,7 +40,7 @@ public class S3Statics : IStatic
 
   public async Task<StaticTextFile> DownloadText(string name)
   {
-    using var response = await this.s3.GetObjectAsync(new GetObjectRequest
+    using var response = await s3.GetObjectAsync(new GetObjectRequest
     {
       BucketName = BucketName,
       Key = name
@@ -69,7 +62,7 @@ public class S3Statics : IStatic
     writer.Flush();
     stream.Position = 0;
 
-    return this.s3.PutObjectAsync(new PutObjectRequest
+    return s3.PutObjectAsync(new PutObjectRequest
     {
       BucketName = BucketName,
       Key = file.Name,
@@ -80,10 +73,28 @@ public class S3Statics : IStatic
 
   public Task Delete(string name)
   {
-    return this.s3.DeleteObjectAsync(new DeleteObjectRequest
+    return s3.DeleteObjectAsync(new DeleteObjectRequest
     {
       BucketName = BucketName,
       Key = name
     });
+  }
+
+  public async Task<bool> Exists(string name)
+  {
+    try
+    {
+      using var response = await s3.GetObjectAsync(new GetObjectRequest
+      {
+        BucketName = BucketName,
+        Key = name
+      });
+
+      return response.ContentLength > 0;
+    }
+    catch
+    {
+      return false;
+    }
   }
 }

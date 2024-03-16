@@ -15,4 +15,6 @@ public interface IDatabase
     where T : struct;
 
   Task DeleteItem(string tableName, string primaryKey);
+
+  Task<bool> Exists(string tableName, string primaryKey);
 }

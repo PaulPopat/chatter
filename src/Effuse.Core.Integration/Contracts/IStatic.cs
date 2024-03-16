@@ -29,4 +29,6 @@ public interface IStatic
   Task<StaticTextFile> DownloadText(string name);
 
   Task Delete(string name);
+
+  Task<bool> Exists(string name);
 }

@@ -3,7 +3,7 @@ using Effuse.Core.Integration.Contracts;
 
 namespace Effuse.Core.Integration.Implementations;
 
-public class DbChannelClient : IChannelClient
+public class DbChannelClient(IDatabase database) : IChannelClient
 {
   private struct ChannelDto
   {
@@ -23,13 +23,6 @@ public class DbChannelClient : IChannelClient
   private static string ListTableName => "ChannelList";
   private static string ListItemName => "AllChannels";
 
-  private readonly IDatabase database;
-
-  public DbChannelClient(IDatabase database)
-  {
-    this.database = database;
-  }
-
   private static ChannelDto ToDto(Channel channel)
   {
     return new ChannelDto
@@ -48,19 +41,19 @@ public class DbChannelClient : IChannelClient
   public async Task<Channel> CreateChannel(string name, ChannelType type, bool @public)
   {
     var result = new Channel(Guid.NewGuid(), type, name, @public);
-    await this.database.AddItem(TableName, result.ChannelId.ToString(), ToDto(result));
+    await database.AddItem(TableName, result.ChannelId.ToString(), ToDto(result));
 
-    var channels = await this.database.FindItem<ChannelListDto>(ListTableName, ListItemName);
+    var channels = await database.FindItem<ChannelListDto>(ListTableName, ListItemName);
     if (channels == null)
     {
-      await this.database.AddItem(ListTableName, ListItemName, new ChannelListDto
+      await database.AddItem(ListTableName, ListItemName, new ChannelListDto
       {
-        Channels = new List<string>() { result.ChannelId.ToString() }
+        Channels = [result.ChannelId.ToString()]
       });
     }
     else
     {
-      await this.database.UpdateItem(ListTableName, ListItemName, new ChannelListDto
+      await database.UpdateItem(ListTableName, ListItemName, new ChannelListDto
       {
         Channels = channels.Value.Channels.Append(result.ChannelId.ToString()).ToList()
       });
@@ -71,15 +64,15 @@ public class DbChannelClient : IChannelClient
 
   public async Task<Channel> GetChannel(Guid channelId)
   {
-    var dto = await this.database.GetItem<ChannelDto>(TableName, channelId.ToString());
+    var dto = await database.GetItem<ChannelDto>(TableName, channelId.ToString());
 
     return FromDto(channelId, dto);
   }
 
   public async IAsyncEnumerable<Channel> ListChannels()
   {
-    var channels = await this.database.FindItem<ChannelListDto>(ListTableName, ListItemName);
-    var list = channels.HasValue ? channels.Value.Channels : new List<string>();
+    var channels = await database.FindItem<ChannelListDto>(ListTableName, ListItemName);
+    var list = channels.HasValue ? channels.Value.Channels : [];
 
     foreach (var item in list)
     {
@@ -90,7 +83,7 @@ public class DbChannelClient : IChannelClient
 
   public async Task<Channel> UpdateChannel(Channel channel)
   {
-    await this.database.UpdateItem(TableName, channel.ChannelId.ToString(), ToDto(channel));
+    await database.UpdateItem(TableName, channel.ChannelId.ToString(), ToDto(channel));
     return channel;
   }
 }

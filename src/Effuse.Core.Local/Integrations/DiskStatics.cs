@@ -21,7 +21,7 @@ public class DiskStatics : IStatic
   {
     File.Delete(Location(name));
     File.Delete(MimeLocation(name));
-    return new Task(() => {});
+    return new Task(() => { });
   }
 
   public async Task<StaticFile> Download(string name)
@@ -42,6 +42,11 @@ public class DiskStatics : IStatic
       Data = await File.ReadAllTextAsync(Location(name)),
       Mime = await File.ReadAllTextAsync(MimeLocation(name))
     };
+  }
+
+  public Task<bool> Exists(string name)
+  {
+    return Task.FromResult(File.Exists(Location(name)));
   }
 
   public async Task Upload(StaticFile file)

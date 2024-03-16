@@ -17,4 +17,6 @@ public interface IUserClient
   Task<MemoryStream> GetProfilePicture(AppDomain.User user);
 
   Task UploadProfilePicture(AppDomain.User user, MemoryStream imageData, string mime);
+
+  IAsyncEnumerable<AppDomain.User> AllUsers();
 }
