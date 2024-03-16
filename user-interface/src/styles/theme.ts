@@ -2,7 +2,7 @@ import { StyleSheet, ViewStyle } from "react-native";
 
 export const Margins = 6;
 export const Padding = 6;
-export const BorderRadius = 4;
+export const BorderRadius = 8;
 export const BorderRadiusLarge = 12;
 export const BorderWidth = 2;
 
@@ -19,19 +19,23 @@ export const Colours = {
   },
   Highlight: {
     Foreground: "#333",
-    Background: "#e5e5e5",
+    Background: "#f6f6f6",
   },
   Primary: {
     Foreground: "white",
-    Background: "#14213d",
+    Background: "#7209b7",
   },
   Secondary: {
-    Foreground: "white",
-    Background: "black",
+    Foreground: "black",
+    Background: "#4cc9f0",
+  },
+  Info: {
+    Foreground: "black",
+    Background: "#4361ee",
   },
   Danger: {
-    Foreground: "black",
-    Background: "#fca311",
+    Foreground: "white",
+    Background: "#3a0ca3",
   },
 };
 
@@ -58,12 +62,12 @@ const ThemeStyles = StyleSheet.create({
   border_bottom: {
     borderBottomWidth: 2,
     borderBottomColor: Colours.Body.Foreground,
-    marginBottom: Margins,
+    borderRadius: 0,
   },
   border_right: {
     borderRightWidth: 2,
     borderRightColor: Colours.Body.Foreground,
-    marginRight: Margins,
+    borderRadius: 0,
   },
   container: {
     padding: Padding,
@@ -112,13 +116,19 @@ const ThemeStyles = StyleSheet.create({
   },
   fill: {
     height: "100%",
-    width: "100%"
   },
   flex_fill: {
     flex: 1,
   },
   no_overflow: {
     overflow: "hidden",
+  },
+  no_gap: {
+    gap: 0,
+  },
+  modal: {
+    maxWidth: 450,
+    margin: "auto",
   },
 });
 

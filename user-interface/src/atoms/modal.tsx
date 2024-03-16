@@ -21,7 +21,7 @@ export default (props: Props) => {
       }}
       style={{ maxHeight: "100%" }}
     >
-      <View style={Classes("card", "highlight", "max_fill", "spacer")}>
+      <View style={Classes("card", "highlight", "max_fill", "spacer", "modal")}>
         {props.children}
       </View>
     </Modal>

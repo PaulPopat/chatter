@@ -36,17 +36,14 @@ export default (props: { open: boolean; blur: () => void }) => {
     state: channels,
     actions: { create_channel },
   } = UseChannels();
-  const {
-    state: metadata,
-    actions: { update },
-  } = useServerMetadata();
+  const { state: metadata } = useServerMetadata();
   const [open_channel, set_open_channel] = useState<Channel | null>(null);
   const [configuring, set_configuring] = useState(false);
   const [creating, set_creating] = useState(false);
   const orientation = UseOrientation();
 
   return (
-    <ResponsiveModal classes={["row", "fill"]} open={props.open}>
+    <ResponsiveModal classes={["row", "fill", "no_gap"]} open={props.open}>
       <Modal open={creating} set_open={set_creating}>
         <Form
           fetcher={create_channel}
@@ -96,7 +93,7 @@ export default (props: { open: boolean; blur: () => void }) => {
           )}
         </TopBar>
         <ScrollView style={Classes("flex_fill")}>
-          <View style={Classes("column")}>
+          <View style={Classes("column", "edge_container")}>
             {channels?.map((c) => (
               <ChannelListItem
                 key={c.ChannelId}

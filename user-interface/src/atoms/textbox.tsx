@@ -85,7 +85,7 @@ export default (props: PropsWithChildren<Props>) => {
           onKeyPress={(e: any) => {
             if (props.multiline && e.key === "Enter" && e.shiftKey) {
               submit();
-            } else if (e.key === "Enter") {
+            } else if (e.key === "Enter" && !props.multiline) {
               submit();
             }
           }}

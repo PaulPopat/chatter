@@ -15,13 +15,13 @@ const MainPanel = () => {
   const orientation = UseOrientation();
 
   return (
-    <View style={Classes("row", "fill", "no_overflow")}>
+    <View style={Classes("row", "fill", "no_overflow", "no_gap")}>
       <View
         style={{
           ...Classes("highlight", "border_right", "fill"),
           ...(orientation === "landscape"
             ? {
-                width: 80,
+                width: 90,
               }
             : {
                 width: "100%",
@@ -30,11 +30,11 @@ const MainPanel = () => {
               }),
         }}
       >
-        <View style={Classes("fill", "edge_container")}>
+        <View style={Classes("fill")}>
           <ServerList on_open={set_open} profile={profile} />
         </View>
       </View>
-      <View style={Classes("flex_fill")}>
+      <View style={Classes("flex_fill", "fill")}>
         {profile.state?.Servers.map((s) => (
           <ServerProvider key={s.Url} url={s.Url}>
             <Server open={open === s.Url} blur={() => set_open("")} />
