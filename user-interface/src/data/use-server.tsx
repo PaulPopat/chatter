@@ -8,6 +8,7 @@ import {
 import { Server } from "../auth/server";
 import UseSso from "./use-sso";
 import { Text } from "react-native";
+import Loading from "../atoms/loading";
 
 const ServerContext = createContext<Server>(null as any);
 
@@ -31,7 +32,7 @@ export const ServerProvider = (props: PropsWithChildren<{ url: string }>) => {
   }, [server, sso]);
 
   if (!server) {
-    return <Text>Loading</Text>
+    return <Loading />;
   }
 
   return (

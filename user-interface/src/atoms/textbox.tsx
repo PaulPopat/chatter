@@ -47,7 +47,12 @@ export default (props: PropsWithChildren<Props>) => {
         input.current?.focus();
       }}
     >
-      <View style={Classes("card", "colour_body", ...(props.classes ?? []))}>
+      <View
+        style={{
+          ...Classes("card", "colour_body", ...(props.classes ?? [])),
+          minWidth: 300,
+        }}
+      >
         <Text
           style={{
             ...Classes("body_text", "container", "colour_body"),

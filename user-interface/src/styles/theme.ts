@@ -117,6 +117,10 @@ const ThemeStyles = StyleSheet.create({
   fill: {
     height: "100%",
   },
+  fill_all: {
+    height: "100%",
+    width: "100%",
+  },
   flex_fill: {
     flex: 1,
   },

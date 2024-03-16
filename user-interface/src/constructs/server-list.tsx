@@ -42,7 +42,7 @@ export default (props: {
   const [joining, set_joining] = useState(false);
 
   return (
-    <View style={Classes("fill")}>
+    <View style={Classes("flex_fill")}>
       <Modal open={joining} set_open={set_joining}>
         <Form
           fetcher={join_server}

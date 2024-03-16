@@ -8,10 +8,19 @@ import UseSso, { SsoProvider, UseSsoControls } from "./data/use-sso";
 import { ServerProvider } from "./data/use-server";
 import useProfile from "./data/use-profile";
 import UseOrientation from "./utils/orientation";
+import Loading from "./atoms/loading";
+import Button from "./atoms/button";
+import Icon from "./atoms/icon";
+import Modal from "./atoms/modal";
+import { Form } from "./atoms/form";
+import FileUpload from "./atoms/file-upload";
+import Submitter from "./atoms/submitter";
+import Textbox from "./atoms/textbox";
 
 const MainPanel = () => {
   const profile = useProfile();
   const [open, set_open] = useState("");
+  const [updating_profile, set_updating_profile] = useState(false);
   const orientation = UseOrientation();
 
   return (
@@ -30,8 +39,11 @@ const MainPanel = () => {
               }),
         }}
       >
-        <View style={Classes("fill")}>
+        <View style={Classes("fill", "column")}>
           <ServerList on_open={set_open} profile={profile} />
+          <Button on_click={() => set_updating_profile(true)}>
+            <Icon area="User & Faces" icon="user" />
+          </Button>
         </View>
       </View>
       <View style={Classes("flex_fill", "fill")}>
@@ -41,6 +53,26 @@ const MainPanel = () => {
           </ServerProvider>
         ))}
       </View>
+
+      <Modal open={updating_profile} set_open={set_updating_profile}>
+        <Form fetcher={profile.actions.update_profile} classes={["column"]}>
+          <Textbox name="UserName" default_value={profile.state?.UserName}>
+            User Name
+          </Textbox>
+          <Textbox
+            name="Biography"
+            multiline
+            default_value={profile.state?.Biography}
+          >
+            Biography
+          </Textbox>
+          <FileUpload name="Picture">Profile Picture</FileUpload>
+          <Submitter>Update Profile</Submitter>
+          <Button on_click={() => set_updating_profile(false)} colour="Danger">
+            Close
+          </Button>
+        </Form>
+      </Modal>
     </View>
   );
 };
@@ -60,7 +92,7 @@ const Main = () => {
     };
   }, [auth]);
 
-  if (auth.AdminToken && auth.IsExpired) return <Text>Loading</Text>;
+  if (auth.AdminToken && auth.IsExpired) return <Loading />;
   if (!auth.AdminToken) return <Authenticate />;
 
   return <MainPanel />;

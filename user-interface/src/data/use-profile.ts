@@ -24,7 +24,7 @@ export type Profile = z.infer<typeof Profile>;
 const ProfileBody = z.object({
   UserName: z.string(),
   Biography: z.string(),
-  Picture: z.instanceof(File),
+  Picture: z.optional(z.instanceof(File)),
 });
 
 const DefaultImage = btoa(ServerIcon);
@@ -91,13 +91,23 @@ export default UseRemoteState(
         area: "sso",
         async mapper(body: any) {
           const { UserName, Biography, Picture } = ProfileBody.parse(body);
-          const file = await ToBase64(Picture);
+          if (Picture) {
+            const file = await ToBase64(Picture);
+            return {
+              UserName: UserName,
+              Biography: Biography,
+              Picture: {
+                MimeType: file.mime,
+                Base64Data: file.base64,
+              },
+            };
+          }
           return {
             UserName: UserName,
             Biography: Biography,
             Picture: {
-              MimeType: file.mime,
-              Base64Data: file.base64,
+              MimeType: "",
+              Base64Data: "",
             },
           };
         },
