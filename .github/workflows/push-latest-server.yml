@@ -2,8 +2,8 @@ name: Publish Latest Server
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "*"
 
 jobs:
   push_to_registry:
@@ -25,4 +25,4 @@ jobs:
           context: .
           file: ./Dockerfile.Server
           push: true
-          tags: iph3i0n/effuse-server:latest
+          tags: iph3i0n/effuse-server:${{ github.ref_name }}

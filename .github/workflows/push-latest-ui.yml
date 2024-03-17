@@ -2,8 +2,8 @@ name: Publish Latest User Interface
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "*"
 
 jobs:
   push_to_registry:
@@ -25,4 +25,4 @@ jobs:
           context: .
           file: ./Dockerfile.UI
           push: true
-          tags: iph3i0n/effuse-ui:latest
+          tags: iph3i0n/effuse-ui:${{ github.ref_name }}
