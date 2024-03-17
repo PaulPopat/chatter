@@ -13,9 +13,10 @@ import Button from "./atoms/button";
 import Icon from "./atoms/icon";
 import Modal from "./atoms/modal";
 import { Form } from "./atoms/form";
-import FileUpload from "./atoms/file-upload";
+import ImageUpload from "./atoms/image-upload";
 import Submitter from "./atoms/submitter";
 import Textbox from "./atoms/textbox";
+import SsoAsset from "./utils/sso-asset";
 
 const MainPanel = () => {
   const profile = useProfile();
@@ -29,9 +30,7 @@ const MainPanel = () => {
         style={{
           ...Classes("highlight", "border_right", "fill"),
           ...(orientation === "landscape"
-            ? {
-                width: 90,
-              }
+            ? {}
             : {
                 width: "100%",
                 borderRightWidth: 0,
@@ -66,7 +65,16 @@ const MainPanel = () => {
           >
             Biography
           </Textbox>
-          <FileUpload name="Picture">Profile Picture</FileUpload>
+          <ImageUpload
+            name="Picture"
+            default={
+              new SsoAsset("/profile/pictures/:user_id", {
+                user_id: profile.state?.UserId,
+              })
+            }
+          >
+            Profile Picture
+          </ImageUpload>
           <Submitter>Update Profile</Submitter>
           <Button on_click={() => set_updating_profile(false)} colour="Danger">
             Close

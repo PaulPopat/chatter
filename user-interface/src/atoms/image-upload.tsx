@@ -1,13 +1,16 @@
 import { PropsWithChildren } from "react";
 import { UseForm } from "./form";
-import { KeyboardTypeOptions, Text, Pressable } from "react-native";
+import { KeyboardTypeOptions, Text, Pressable, View } from "react-native";
 import Icon from "./icon";
 import { Classes } from "../styles/theme";
 import FilePicker from "../utils/file-picker";
+import IResource from "../utils/i-resource";
+import Image from "./image";
 
 type Props = {
   name: string;
   keyboard?: KeyboardTypeOptions;
+  default: IResource;
   password?: boolean;
   clear_on_submit?: boolean;
 };
@@ -21,15 +24,15 @@ export default (props: PropsWithChildren<Props>) => {
 
   return (
     <Pressable
-      style={Classes("container", "row")}
+      style={Classes("container", "column", "card", "centre")}
       onPress={() => FilePicker().then(set_value)}
     >
-      <Icon area="System" icon="upload-cloud-2" />
-      {value && value instanceof File ? (
-        <Text style={Classes("body_text", "spacer")}>{value.name}</Text>
-      ) : (
-        <Text style={Classes("body_text", "spacer")}>{props.children}</Text>
-      )}
+      <View style={Classes("row")}>
+        <Icon area="System" icon="upload-cloud-2" />
+        <Text style={Classes("body_text")}>{props.children}</Text>
+      </View>
+
+      <Image src={props.default} size={64} />
     </Pressable>
   );
 };

@@ -7,22 +7,36 @@ import Hidden from "../atoms/hidden";
 import UsePublicProfile from "../data/use-public-profile";
 import Submitter from "../atoms/submitter";
 import Icon from "../atoms/icon";
+import Image from "../atoms/image";
+import SsoAsset from "../utils/sso-asset";
 
 const ChatMessage = (props: { message: Message }) => {
   const profile = UsePublicProfile(props.message.Who);
+
   return (
-    <View style={Classes("highlight", "spacer")}>
-      <View style={Classes("row")}>
-        <Text style={Classes("important_text", "container")}>
-          {profile?.UserName}
-        </Text>
-        <Text style={Classes("small_text")}>
-          {props.message.When.toLocaleString()}
+    <View style={Classes("highlight", "spacer", "row", "align_top")}>
+      <Image
+        src={
+          new SsoAsset("/profile/pictures/:user_id", {
+            user_id: props.message.Who,
+          })
+        }
+        size={64}
+        classes={["card"]}
+      />
+      <View style={Classes("flex_fill")}>
+        <View style={Classes("row")}>
+          <Text style={Classes("important_text", "container")}>
+            {profile?.UserName}
+          </Text>
+          <Text style={Classes("small_text")}>
+            {props.message.When.toLocaleString()}
+          </Text>
+        </View>
+        <Text style={Classes("container", "body_text")}>
+          {props.message.Text}
         </Text>
       </View>
-      <Text style={Classes("container", "body_text")}>
-        {props.message.Text}
-      </Text>
     </View>
   );
 };

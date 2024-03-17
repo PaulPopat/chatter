@@ -138,11 +138,11 @@ public class DbUserClient(IDatabase database, IStatic statics) : IUserClient
     return database.UpdateItem(TableName, user.UserId.ToString(), ToDto(user));
   }
 
-  public async Task<MemoryStream> GetProfilePicture(AppDomain.User user)
+  public async Task<ProfilePicture> GetProfilePicture(AppDomain.User user)
   {
     var file = await statics.Download(PictureName(user));
 
-    return file.Data;
+    return new ProfilePicture(file.Data, file.Mime);
   }
 
   public Task UploadProfilePicture(AppDomain.User user, MemoryStream imageData, string mime)

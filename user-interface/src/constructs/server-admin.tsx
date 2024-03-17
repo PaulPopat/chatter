@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
-import FileUpload from "../atoms/file-upload";
+import ImageUpload from "../atoms/image-upload";
 import { Form, RawForm } from "../atoms/form";
 import Submitter from "../atoms/submitter";
 import Textbox from "../atoms/textbox";
@@ -16,6 +16,7 @@ import { useState } from "react";
 import Modal from "../atoms/modal";
 import UseChannels from "../data/use-channels";
 import TopBar from "../atoms/top-bar";
+import DataUrl from "../utils/data-url";
 
 const PermissionForm = z.object({
   read: z.boolean(),
@@ -171,7 +172,17 @@ export default (props: { blur: () => void }) => {
           <Textbox name="ServerName" default_value={metadata?.ServerName}>
             Server Name
           </Textbox>
-          <FileUpload name="Icon">Server Icon</FileUpload>
+          <ImageUpload
+            name="Icon"
+            default={
+              new DataUrl(
+                metadata?.Icon.MimeType ?? "",
+                metadata?.Icon.Base64Data ?? ""
+              )
+            }
+          >
+            Server Icon
+          </ImageUpload>
           <Submitter>Save Changes</Submitter>
         </Form>
 

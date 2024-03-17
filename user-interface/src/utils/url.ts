@@ -7,8 +7,8 @@ export default class Url {
 
   constructor(
     url: string | Array<string>,
-    parameters: Record<string, unknown>,
-    include_query: boolean
+    parameters: Record<string, unknown> = {},
+    include_query: boolean = false
   ) {
     this.#url = Array.isArray(url) ? JoinUrl(...url) : url;
     this.#parameters = parameters;

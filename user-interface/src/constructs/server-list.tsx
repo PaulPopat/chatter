@@ -18,10 +18,11 @@ const ServerListItem = (props: { url: string }) => {
   const orientation = UseOrientation();
 
   return (
-    <View style={Classes("row", "colour_body", "card", "container")}>
+    <View style={Classes("row")}>
       <Image
         src={new DataUrl(metadata.Icon.Base64Data, metadata.Icon.MimeType)}
         size={60}
+        classes={["card", "colour_body"]}
       />
       {orientation === "portrait" && (
         <Text style={Classes("spacer")}>{metadata.ServerName}</Text>
@@ -65,10 +66,7 @@ export default (props: {
 
       <View style={Classes("flex_fill", "column")}>
         {profile?.Servers.map((s) => (
-          <Pressable
-            key={s.Url}
-            onPress={() => props.on_open(s.Url)}
-          >
+          <Pressable key={s.Url} onPress={() => props.on_open(s.Url)}>
             <ServerListItem url={s.Url} />
           </Pressable>
         ))}

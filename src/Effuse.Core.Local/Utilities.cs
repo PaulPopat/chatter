@@ -67,11 +67,24 @@ public static class Utilities
   public static async Task ApplyResponse(this HttpListenerResponse? res, HandlerResponse response)
   {
     if (res == null) return;
-    var data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response.Body ?? new { }));
-    res.ContentType = "application/json";
-    res.ContentEncoding = Encoding.UTF8;
-    res.ContentLength64 = data.LongLength;
 
+    byte[] data;
+    if (response.Body is MemoryStream ms)
+    {
+      if (!response.Headers.TryGetValue("Content-Type", out string? contentType))
+        throw new Exception("A Content-Type header is required for memory repsonses");
+
+      data = ms.ToArray();
+      res.ContentType = contentType;
+    }
+    else
+    {
+      data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response.Body ?? new { }));
+      res.ContentType = "application/json";
+      res.ContentEncoding = Encoding.UTF8;
+    }
+
+    res.ContentLength64 = data.LongLength;
     foreach (var (key, value) in response.Headers)
     {
       res.AddHeader(key, value);

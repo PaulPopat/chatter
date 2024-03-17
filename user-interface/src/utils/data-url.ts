@@ -1,3 +1,4 @@
+import { ImageSourcePropType } from "react-native";
 import IResource from "./i-resource";
 import DefaultAsset from "remixicon/icons/Communication/chat-3-line.svg";
 
@@ -13,9 +14,12 @@ export default class DataUrl implements IResource {
     this.#mime = mime;
     this.#data = data;
   }
-
   get Uri() {
     if (!this.#data) return `data:image/svg+xml;utf8,${DefaultAsset}`;
     return `data:${this.#mime};${this.#encoding},${this.#data}`;
+  }
+
+  static get Default() {
+    return new DataUrl("", "");
   }
 }

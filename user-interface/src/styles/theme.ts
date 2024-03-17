@@ -1,4 +1,4 @@
-import { StyleSheet, ViewStyle } from "react-native";
+import { StyleSheet } from "react-native";
 
 export const Margins = 6;
 export const Padding = 6;
@@ -106,6 +106,9 @@ const ThemeStyles = StyleSheet.create({
     flexDirection: "column",
     gap: Margins,
   },
+  align_top: {
+    alignItems: "flex-start",
+  },
   centre: {
     display: "flex",
     alignItems: "center",
@@ -140,8 +143,8 @@ const ThemeStyles = StyleSheet.create({
     left: 0,
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.4)"
-  }
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+  },
 });
 
 export type Class = keyof typeof ThemeStyles;
@@ -158,6 +161,6 @@ export function Classes(...classes: Array<Class | [Class, boolean]>) {
             ...c,
             ...(n[1] ? { ...ThemeStyles[n[0]] } : {}),
           },
-    {} as ViewStyle
+    {} as any
   );
 }

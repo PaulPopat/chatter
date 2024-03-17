@@ -51,4 +51,11 @@ public class ProfileService
       Biography = user.Biography
     };
   }
+
+  public async Task<ProfilePicture> GetProfilePicture(Guid userId)
+  {
+    var user = await userClient.GetUser(userId);
+
+    return await userClient.GetProfilePicture(user);
+  }
 }
