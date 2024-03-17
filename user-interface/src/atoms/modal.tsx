@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { View, Modal } from "react-native";
+import { View, Modal, Pressable } from "react-native";
 import { Classes } from "../styles/theme";
 
 type Props = PropsWithChildren<{
@@ -10,7 +10,7 @@ type Props = PropsWithChildren<{
 export default (props: Props) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={props.open}
       onRequestClose={() => {
@@ -21,6 +21,10 @@ export default (props: Props) => {
       }}
       style={{ maxHeight: "100%" }}
     >
+      <Pressable
+        style={Classes("modal_background")}
+        onPress={() => props.set_open(false)}
+      />
       <View style={Classes("card", "highlight", "max_fill", "spacer", "modal")}>
         {props.children}
       </View>

@@ -1,10 +1,10 @@
 import { Image } from "react-native";
 import { BorderRadiusLarge } from "../styles/theme";
-import DataUrl from "../utils/data-url";
 import { PropsWithChildren } from "react";
+import IResource from "../utils/i-resource";
 
 type Props = {
-  src: DataUrl;
+  src: IResource;
   size: number;
 };
 

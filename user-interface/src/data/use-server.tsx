@@ -7,7 +7,6 @@ import {
 } from "react";
 import { Server } from "../auth/server";
 import UseSso from "./use-sso";
-import { Text } from "react-native";
 import Loading from "../atoms/loading";
 
 const ServerContext = createContext<Server>(null as any);

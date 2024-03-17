@@ -33,8 +33,8 @@ export function UseServerListMetadata(url: string) {
   const [metadata, set_metadata] = useState({
     ServerName: url,
     Icon: {
-      Base64Data: DefaultImage,
-      MimeType: "image/svg+xml",
+      Base64Data: "",
+      MimeType: "",
     },
   });
 
