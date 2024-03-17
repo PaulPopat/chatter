@@ -16,7 +16,7 @@ import { useState } from "react";
 import Modal from "../atoms/modal";
 import UseChannels from "../data/use-channels";
 import TopBar from "../atoms/top-bar";
-import DataUrl from "../utils/data-url";
+import DataAsset from "../utils/data-asset";
 
 const PermissionForm = z.object({
   read: z.boolean(),
@@ -175,7 +175,7 @@ export default (props: { blur: () => void }) => {
           <ImageUpload
             name="Icon"
             default={
-              new DataUrl(
+              new DataAsset(
                 metadata?.Icon.MimeType ?? "",
                 metadata?.Icon.Base64Data ?? ""
               )

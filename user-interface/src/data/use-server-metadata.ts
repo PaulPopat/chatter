@@ -1,6 +1,7 @@
 import { z } from "zod";
 import UseRemoteState from "../utils/remote-state";
 import { ToBase64 } from "../utils/file";
+import Asset from "../utils/asset";
 
 const ServerMetadata = z.object({
   ServerName: z.string(),
@@ -12,7 +13,7 @@ const ServerMetadata = z.object({
 
 const ConfigUpdate = z.object({
   ServerName: z.string(),
-  Icon: z.instanceof(File),
+  Icon: z.instanceof(Asset),
 });
 
 export default UseRemoteState(
@@ -30,12 +31,14 @@ export default UseRemoteState(
         area: "server",
         mapper: async (data: unknown) => {
           const parsed = ConfigUpdate.parse(data);
+          const file_dto = await parsed.Icon.DataTransferObject();
+          if (file_dto.Encoding !== "base64")
+            throw new Error("Currently, only base64 assets are supported");
 
-          const file = await ToBase64(parsed.Icon);
           return {
             ServerName: parsed.ServerName,
-            IconBase64: file.base64,
-            IconMimeType: file.mime,
+            IconBase64: file_dto.Data,
+            IconMimeType: file_dto.Mime,
           };
         },
       },

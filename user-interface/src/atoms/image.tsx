@@ -1,11 +1,11 @@
 import { Image } from "react-native";
 import { BorderRadiusLarge, Class, Classes } from "../styles/theme";
 import { PropsWithChildren, useEffect, useState } from "react";
-import IResource from "../utils/i-resource";
-import DataUrl from "../utils/data-url";
+import IAsset from "../utils/asset";
+import DataAsset from "../utils/data-asset";
 
 type Props = {
-  src: IResource;
+  src: IAsset;
   size: number;
   classes?: Array<Class>;
 };
@@ -24,7 +24,7 @@ export default (props: PropsWithChildren<Props>) => {
         borderRadius: BorderRadiusLarge,
       }}
       source={{
-        uri: fallback ? DataUrl.Default.Uri : props.src.Uri,
+        uri: fallback ? DataAsset.Default.Uri : props.src.Uri,
         width: props.size,
         height: props.size,
       }}

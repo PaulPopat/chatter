@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import { Image } from "react-native";
-import DataUrl from "../utils/data-url";
+import DataAsset from "../utils/data-asset";
 
 type Props = {
   icon: string;
@@ -12,7 +12,7 @@ type Props = {
 export default (props: PropsWithChildren<Props>) => (
   <Image
     source={{
-      uri: new DataUrl(
+      uri: new DataAsset(
         require(`remixicon/icons/${props.area}/${props.icon}-${
           props.type ?? "line"
         }.svg`),

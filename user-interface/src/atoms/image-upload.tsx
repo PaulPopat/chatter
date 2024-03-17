@@ -4,13 +4,13 @@ import { KeyboardTypeOptions, Text, Pressable, View } from "react-native";
 import Icon from "./icon";
 import { Classes } from "../styles/theme";
 import FilePicker from "../utils/file-picker";
-import IResource from "../utils/i-resource";
+import IAsset from "../utils/asset";
 import Image from "./image";
 
 type Props = {
   name: string;
   keyboard?: KeyboardTypeOptions;
-  default: IResource;
+  default: IAsset;
   password?: boolean;
   clear_on_submit?: boolean;
 };
@@ -25,14 +25,14 @@ export default (props: PropsWithChildren<Props>) => {
   return (
     <Pressable
       style={Classes("container", "column", "card", "centre")}
-      onPress={() => FilePicker().then(set_value)}
+      onPress={() => FilePicker("image/*").then(set_value)}
     >
       <View style={Classes("row")}>
         <Icon area="System" icon="upload-cloud-2" />
         <Text style={Classes("body_text")}>{props.children}</Text>
       </View>
 
-      <Image src={props.default} size={64} />
+      <Image src={(value as IAsset) ?? props.default} size={64} />
     </Pressable>
   );
 };

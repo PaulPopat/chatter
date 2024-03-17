@@ -2,8 +2,8 @@ import { z } from "zod";
 import UseRemoteState from "../utils/remote-state";
 import { Fetch } from "../utils/fetch";
 import { useEffect, useState } from "react";
-import ServerIcon from "remixicon/icons/Device/server-line.svg";
 import { ToBase64 } from "../utils/file";
+import Asset from "../utils/asset";
 
 const Profile = z.object({
   UserId: z.string(),
@@ -24,10 +24,8 @@ export type Profile = z.infer<typeof Profile>;
 const ProfileBody = z.object({
   UserName: z.string(),
   Biography: z.string(),
-  Picture: z.optional(z.instanceof(File)),
+  Picture: z.optional(z.instanceof(Asset)),
 });
-
-const DefaultImage = btoa(ServerIcon);
 
 export function UseServerListMetadata(url: string) {
   const [metadata, set_metadata] = useState({
@@ -92,16 +90,20 @@ export default UseRemoteState(
         async mapper(body: any) {
           const { UserName, Biography, Picture } = ProfileBody.parse(body);
           if (Picture) {
-            const file = await ToBase64(Picture);
+            const file_dto = await Picture.DataTransferObject();
+            if (file_dto.Encoding !== "base64")
+              throw new Error("Currently, only base64 assets are supported");
+
             return {
               UserName: UserName,
               Biography: Biography,
               Picture: {
-                MimeType: file.mime,
-                Base64Data: file.base64,
+                MimeType: file_dto.Mime,
+                Base64Data: file_dto.Data,
               },
             };
           }
+
           return {
             UserName: UserName,
             Biography: Biography,

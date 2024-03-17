@@ -10,7 +10,7 @@ import UseSso from "../data/use-sso";
 import Hidden from "../atoms/hidden";
 import Modal from "../atoms/modal";
 import Image from "../atoms/image";
-import DataUrl from "../utils/data-url";
+import DataAsset from "../utils/data-asset";
 import UseOrientation from "../utils/orientation";
 
 const ServerListItem = (props: { url: string }) => {
@@ -20,7 +20,7 @@ const ServerListItem = (props: { url: string }) => {
   return (
     <View style={Classes("row")}>
       <Image
-        src={new DataUrl(metadata.Icon.Base64Data, metadata.Icon.MimeType)}
+        src={new DataAsset(metadata.Icon.Base64Data, metadata.Icon.MimeType)}
         size={60}
         classes={["card", "colour_body"]}
       />

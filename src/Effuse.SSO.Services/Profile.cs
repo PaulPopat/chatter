@@ -31,7 +31,8 @@ public class ProfileService
     var user = await userClient.GetUser(userId);
     var updatedUser = user.WithUserName(username).WithBiography(biography);
     await this.userClient.UpdateUser(updatedUser);
-    await this.userClient.UploadProfilePicture(updatedUser, image, mime);
+    if (mime != null && mime != string.Empty)
+      await this.userClient.UploadProfilePicture(updatedUser, image, mime);
     return updatedUser;
   }
 

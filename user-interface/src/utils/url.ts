@@ -15,6 +15,18 @@ export default class Url {
     this.#include_query = include_query;
   }
 
+  get url() {
+    return this.#url;
+  }
+
+  get parameters() {
+    return this.#parameters;
+  }
+
+  get include_query() {
+    return this.#include_query;
+  }
+
   href(base: string) {
     const ps = { ...this.#parameters };
 
