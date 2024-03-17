@@ -84,6 +84,7 @@ export default (props: PropsWithChildren<Props>) => {
           secureTextEntry={props.password}
           onKeyPress={(e: any) => {
             if (props.multiline && e.key === "Enter" && e.shiftKey) {
+              e.preventDefault();
               submit();
             } else if (e.key === "Enter" && !props.multiline) {
               submit();
