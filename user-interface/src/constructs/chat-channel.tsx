@@ -14,29 +14,25 @@ const ChatMessage = (props: { message: Message }) => {
   const profile = UsePublicProfile(props.message.Who);
 
   return (
-    <View style={Classes("highlight", "spacer", "row", "align_top")}>
-      <Image
-        src={
-          new SsoAsset("/profile/pictures/:user_id", {
-            user_id: props.message.Who,
-          })
-        }
-        size={64}
-        classes={["card"]}
-      />
-      <View style={Classes("flex_fill")}>
-        <View style={Classes("row")}>
-          <Text style={Classes("important_text", "container")}>
-            {profile?.UserName}
-          </Text>
-          <Text style={Classes("small_text")}>
-            {props.message.When.toLocaleString()}
-          </Text>
-        </View>
-        <Text style={Classes("container", "body_text")}>
-          {props.message.Text}
+    <View style={Classes("highlight", "spacer", "column", "align_top")}>
+      <View style={Classes("row", "container")}>
+        <Image
+          src={
+            new SsoAsset("/profile/pictures/:user_id", {
+              user_id: props.message.Who,
+            })
+          }
+          size={24}
+          classes={["card"]}
+        />
+        <Text style={Classes("important_text")}>{profile?.UserName}</Text>
+        <Text style={Classes("small_text")}>
+          {props.message.When.toLocaleString()}
         </Text>
       </View>
+      <Text style={Classes("body_text", "container")}>
+        {props.message.Text}
+      </Text>
     </View>
   );
 };

@@ -135,6 +135,7 @@ const ThemeStyles = StyleSheet.create({
   },
   modal: {
     maxWidth: 450,
+    width: "100%",
     margin: "auto",
   },
   modal_background: {

@@ -5,18 +5,14 @@ import { UseSsoControls } from "../data/use-sso";
 import { useState } from "react";
 import Button from "../atoms/button";
 import { View } from "react-native";
+import { Classes } from "../styles/theme";
 
 export default () => {
   const { login, register } = UseSsoControls();
   const [mode, set_mode] = useState("login" as "login" | "register");
 
   return (
-    <View
-      style={{
-        margin: "auto",
-        maxWidth: 300,
-      }}
-    >
+    <View style={Classes("modal")}>
       {mode === "login" ? (
         <Form classes={["column"]} fetcher={login}>
           <Textbox name="email" keyboard="email-address">
