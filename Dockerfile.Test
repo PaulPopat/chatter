@@ -1,12 +1,19 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 
+RUN apt update
+RUN apt install netcat-traditional -y
+
+RUN curl --silent --location https://deb.nodesource.com/setup_20.x | bash -
+RUN apt-get install -y nodejs
+
 RUN sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
 
 WORKDIR /App
 
 COPY . ./
 
-RUN apt update
-RUN apt install nodejs -y
+RUN (cd tests && npm install)
+
+RUN mkdir resources
 
 ENTRYPOINT ["task", "pipeline:run"]

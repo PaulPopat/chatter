@@ -73,7 +73,6 @@ tasks:
       APP_PREFIX: single-signon
 
   sso:local:run:
-    deps: [solution:build]
     cmds:
       - task: solution:key:generate
         vars: { DATA_DIR: "data" }
@@ -83,7 +82,6 @@ tasks:
       DATA_DIR: ./resources/data
 
   server:local:run:
-    deps: [solution:build]
     cmds:
       - task: solution:key:generate
         vars: { DATA_DIR: "server-data" }
@@ -98,6 +96,7 @@ tasks:
   pipeline:run:
     cmds:
       - task: integration:prepare
+      - task: solution:build
       - task all:local:run > resources/app.log &
       - while ! nc -z localhost 3000; do sleep 1; done
       - while ! nc -z localhost 3002; do sleep 1; done
