@@ -13,7 +13,7 @@ const ServerMetadata = z.object({
 
 const ConfigUpdate = z.object({
   ServerName: z.string(),
-  Icon: z.instanceof(Asset),
+  Icon: z.optional(z.instanceof(Asset)),
 });
 
 export default UseRemoteState(
@@ -31,14 +31,14 @@ export default UseRemoteState(
         area: "server",
         mapper: async (data: unknown) => {
           const parsed = ConfigUpdate.parse(data);
-          const file_dto = await parsed.Icon.DataTransferObject();
-          if (file_dto.Encoding !== "base64")
+          const file_dto = await parsed.Icon?.DataTransferObject();
+          if (file_dto && file_dto.Encoding !== "base64")
             throw new Error("Currently, only base64 assets are supported");
 
           return {
             ServerName: parsed.ServerName,
-            IconBase64: file_dto.Data,
-            IconMimeType: file_dto.Mime,
+            IconBase64: file_dto?.Data,
+            IconMimeType: file_dto?.Mime,
           };
         },
       },

@@ -15,18 +15,23 @@ public class ServerMetadataClient(IDatabase database) : IServerMetadataClient
 
   public async Task UpdateMetadata(string name, string iconBase64, string iconMimeType)
   {
-    try
+    if (await database.Exists(TableName, TableItem))
     {
-      await database.AddItem(TableName, TableItem, new ServerMetadata
+      var existing = await database.GetItem<ServerMetadata>(TableName, TableItem);
+      await database.UpdateItem(TableName, TableItem, new ServerMetadata
       {
         Name = name,
-        IconBase64 = iconBase64,
-        IconMimeType = iconMimeType
+        IconBase64 = iconBase64 == null || iconBase64 == string.Empty
+          ? existing.IconBase64
+          : iconBase64,
+        IconMimeType = iconBase64 == null || iconBase64 == string.Empty
+          ? existing.IconMimeType
+          : iconMimeType
       });
     }
-    catch
+    else
     {
-      await database.UpdateItem(TableName, TableItem, new ServerMetadata
+      await database.AddItem(TableName, TableItem, new ServerMetadata
       {
         Name = name,
         IconBase64 = iconBase64,

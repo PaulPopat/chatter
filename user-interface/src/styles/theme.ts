@@ -39,15 +39,17 @@ export const Colours = {
   },
 };
 
-const ThemeStyles = StyleSheet.create({
-  colour_body: {
-    backgroundColor: Colours.Body.Background,
-    color: Colours.Body.Foreground,
-  },
-  colour_highlight: {
-    backgroundColor: Colours.Highlight.Background,
-    color: Colours.Highlight.Foreground,
-  },
+const ThemeStyles: Record<string, any> = StyleSheet.create({
+  ...Object.keys(Colours).reduce(
+    (c, n) => ({
+      ...c,
+      [`colour_${n.toLowerCase()}`]: {
+        backgroundColor: Colours[n as keyof typeof Colours].Background,
+        color: Colours[n as keyof typeof Colours].Foreground,
+      },
+    }),
+    {}
+  ),
   card: {
     shadowRadius: 12,
     shadowColor: "#222",

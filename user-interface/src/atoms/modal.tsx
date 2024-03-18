@@ -25,8 +25,10 @@ export default (props: Props) => {
         style={Classes("modal_background")}
         onPress={() => props.set_open(false)}
       />
-      <View style={Classes("card", "highlight", "max_fill", "spacer", "modal")}>
-        {props.children}
+      <View style={Classes("max_fill", "modal")}>
+        <View style={Classes("spacer", "card", "highlight")}>
+          {props.children}
+        </View>
       </View>
     </Modal>
   );

@@ -176,8 +176,8 @@ export default (props: { blur: () => void }) => {
             name="Icon"
             default={
               new DataAsset(
-                metadata?.Icon.MimeType ?? "",
-                metadata?.Icon.Base64Data ?? ""
+                metadata?.Icon.Base64Data ?? "",
+                metadata?.Icon.MimeType ?? ""
               )
             }
           >
