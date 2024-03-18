@@ -2,6 +2,14 @@ version: "3"
 
 dotenv: [".env"]
 
+env:
+  SSO_BASE_URL: http://localhost:3000/
+  SERVER_BASE_URL: http://localhost:3002/
+  UI_URL: http://localhost:3001
+  SERVER_PASSWORD: i-love-my-wife
+  SERVER_ADMIN_PASSWORD: i-really-love-my-wife
+  ENCRYPTION_PASSPHRASE: test123
+
 tasks:
   integration:prepare:
     cmds:
@@ -85,7 +93,15 @@ tasks:
       DATA_DIR: ./resources/server-data
 
   all:local:run:
-    deps: [sso:local:run, server:local:run, ui:watch]
+    deps: [sso:local:run, server:local:run]
+
+  pipeline:run:
+    cmds:
+      - task: integration:prepare
+      - task all:local:run > resources/app.log &
+      - while ! nc -z localhost 3000; do sleep 1; done
+      - while ! nc -z localhost 3002; do sleep 1; done
+      - task: integration:test
 
   ui:watch:
     dir: "{{.TASKFILE_DIR}}/user-interface"
