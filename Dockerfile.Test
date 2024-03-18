@@ -16,4 +16,4 @@ RUN (cd tests && npm install)
 
 RUN mkdir resources
 
-ENTRYPOINT ["task", "pipeline:run"]
+RUN task pipeline:run
