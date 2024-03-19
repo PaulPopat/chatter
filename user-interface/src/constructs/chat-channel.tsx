@@ -54,7 +54,7 @@ export default (props: { channel_id: string }) => {
         onEndReached={() => fetch_more()}
       />
 
-      <Form fetcher={send}>
+      <Form fetcher={send} hide_notification>
         <Hidden name="channel_id" value={props.channel_id} />
         <View style={Classes("row")}>
           <View style={Classes("flex_fill", "spacer")}>

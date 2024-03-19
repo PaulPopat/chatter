@@ -9,6 +9,7 @@ type FormProps<TExpect, TBody> = {
   fetcher: Fetcher<TExpect, TBody>;
   classes?: Array<Class>;
   on_submit?: () => void;
+  hide_notification?: boolean;
 };
 
 export default function Form<TExpect, TBody>(
@@ -38,9 +39,9 @@ export default function Form<TExpect, TBody>(
 
   return (
     <RawForm on_submit={on_submit} form_type={z.any()} classes={props.classes}>
-      {res === "success" ? (
+      {res === "success" && !props.hide_notification ? (
         <Text style={Classes("colour_secondary", "container")}>Success</Text>
-      ) : res === "error" ? (
+      ) : res === "error" && !props.hide_notification ? (
         <Text style={Classes("colour_danger", "container")}>Error</Text>
       ) : (
         <></>
