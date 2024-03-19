@@ -52,9 +52,12 @@ export default function UseRemoteState<
         {} as Actions<TActions>
       );
 
-    useEffect(() => {
-      update();
-    }, []);
+    useEffect(
+      () => {
+        update();
+      },
+      Object.keys(body as any).map((k) => (body as any)[k])
+    );
 
     return {
       state,

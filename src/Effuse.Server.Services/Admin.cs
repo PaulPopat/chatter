@@ -1,16 +1,37 @@
 ﻿using Effuse.Core.Domain;
 using Effuse.Core.Integration.Contracts;
+using Effuse.Core.Utilities;
 using Effuse.Server.Domain;
 using Effuse.Server.Integrations.Contracts;
 
 namespace Effuse.Server.Services;
 
-public class AdminService(AuthService authService, IChannelClient channelClient, IUserClient userClient)
+public class AdminService(AuthService authService, IChannelClient channelClient, IUserClient userClient, IParameters parameters)
 {
   public async Task<Channel> CreateChatChannel(string localToken, string name, bool @public)
   {
     await authService.RequireAdmin(localToken);
     return await channelClient.CreateChannel(name, ChannelType.Messages, @public);
+  }
+
+  public async Task<Url> InviteLink(string localToken, string publicUrl, bool embedPassword, bool admin)
+  {
+    await authService.RequireAdmin(localToken);
+    var query = new Dictionary<string, string>()
+    {
+      ["action"] = "join",
+      ["server_url"] = publicUrl
+    };
+
+    var baseUrl = await parameters.GetParameter(ParameterName.UI_URL);
+    if (embedPassword)
+    {
+      query["password"] = admin
+      ? await parameters.GetParameter(ParameterName.SERVER_ADMIN_PASSWORD)
+      : await parameters.GetParameter(ParameterName.SERVER_PASSWORD);
+    }
+
+    return new Url(baseUrl, "", query);
   }
 
   public async Task<Channel> UpdateChannel(string localToken, Guid channelId, string name, bool @public)

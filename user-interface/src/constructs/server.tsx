@@ -126,7 +126,10 @@ export default (props: { open: boolean; blur: () => void }) => {
             blur={() => set_open_channel(null)}
           />
         ) : (
-          <ServerAdmin blur={() => set_configuring(false)} />
+          <ServerAdmin
+            blur={() => set_configuring(false)}
+            url={server.BaseUrl}
+          />
         )}
       </ResponsiveModal>
     </ResponsiveModal>

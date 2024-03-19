@@ -17,11 +17,51 @@ import Modal from "../atoms/modal";
 import UseChannels from "../data/use-channels";
 import TopBar from "../atoms/top-bar";
 import DataAsset from "../utils/data-asset";
+import UseInviteLink from "../data/use-invite-link";
+import Card from "../atoms/card";
 
 const PermissionForm = z.object({
   read: z.boolean(),
   write: z.boolean(),
 });
+
+const InviteForm = z.object({
+  embed: z.boolean(),
+  admin: z.boolean(),
+});
+
+const InviteLinker = (props: { url: string }) => {
+  const [embed_password, set_embed_password] = useState(false);
+  const [admin, set_admin] = useState(false);
+  const invite_link = UseInviteLink({
+    publicUrl: props.url,
+    embedpassword: embed_password ? "true" : "false",
+    admin: admin ? "true" : "false",
+  });
+
+  return (
+    <>
+      <RawForm
+        on_submit={(data) => {
+          set_embed_password(data.embed);
+          set_admin(data.admin);
+        }}
+        form_type={InviteForm}
+        classes={["column"]}
+      >
+        <Checkbox name="embed" default_value={embed_password} submit_on_change>
+          Embed the Password?
+        </Checkbox>
+        <Checkbox name="admin" default_value={admin} submit_on_change>
+          Is Admin Link?
+        </Checkbox>
+      </RawForm>
+      <Card colour="Body" classes={["container"]}>
+        <Text>{invite_link.state?.Url}</Text>
+      </Card>
+    </>
+  );
+};
 
 const UserPermissions = (props: { user: ServerUser }) => {
   const {
@@ -153,7 +193,9 @@ const ServerUserDiplay = (props: {
   );
 };
 
-export default (props: { blur: () => void }) => {
+export default (props: { url: string; blur: () => void }) => {
+  const [inviting, set_inviting] = useState(false);
+
   const {
     state: metadata,
     actions: { update },
@@ -186,6 +228,10 @@ export default (props: { blur: () => void }) => {
           <Submitter>Save Changes</Submitter>
         </Form>
 
+        <Button on_click={() => set_inviting(true)} classes={["spacer"]}>
+          Get An Invite Link
+        </Button>
+
         <View style={Classes("column", "spacer")}>
           {users?.map((u) => (
             <ServerUserDiplay
@@ -201,6 +247,15 @@ export default (props: { blur: () => void }) => {
           ))}
         </View>
       </ScrollView>
+
+      <Modal open={inviting} set_open={set_inviting}>
+        <View style={Classes("column")}>
+          <InviteLinker url={props.url} />
+          <Button on_click={() => set_inviting(false)} colour="Info">
+            Close
+          </Button>
+        </View>
+      </Modal>
     </View>
   );
 };

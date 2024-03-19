@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Effuse.Core.Integration;
 
 namespace Effuse.Core.Handlers.Contracts;
 
@@ -45,28 +46,28 @@ public class HandlerProps
     return JsonSerializer.Deserialize<TBody>(this.body);
   }
 
-  public string? AuthToken
+  public string AuthToken
   {
     get
     {
       if (!this.Headers.ContainsKey("authorization"))
       {
         Console.WriteLine($"No authorisation header found. Found {string.Join(", ", this.Headers.Keys)}");
-        return null;
+        throw new AuthException("No auth header");
       }
 
       var authHeader = this.Headers["authorization"];
       if (!authHeader.StartsWith("Bearer "))
       {
         Console.WriteLine($"Authorisation header in the wrong format. Found {authHeader}");
-        return null;
+        throw new AuthException("No auth header");
       }
 
       var token = authHeader.Replace("Bearer ", string.Empty);
       if (token == string.Empty)
       {
         Console.WriteLine("Authorisation header has an empty token");
-        return null;
+        throw new AuthException("No auth header");
       }
 
       return token;
