@@ -14,6 +14,5 @@ ENV PROD true
 RUN npx webpack
 
 FROM devforth/spa-to-http:latest
-COPY --from=builder /code/dist/ ./_
 
-COPY --from=builder /code/index.html .
+COPY --from=builder /code/dist/ .
