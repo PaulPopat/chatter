@@ -28,7 +28,9 @@ jobs:
           context: .
           file: ./Dockerfile.Server
           push: true
-          tags: iph3i0n/effuse-server:${{ github.ref_name }}
+          tags: |
+            iph3i0n/effuse-server:latest
+            iph3i0n/effuse-server:${{ github.ref_name }}
 
       - name: Build and push SSO
         uses: docker/build-push-action@v5
@@ -36,7 +38,9 @@ jobs:
           context: .
           file: ./Dockerfile.SSO
           push: true
-          tags: iph3i0n/effuse-sso:${{ github.ref_name }}
+          tags: |
+            iph3i0n/effuse-sso:latest
+            iph3i0n/effuse-sso:${{ github.ref_name }}
 
       - name: Build and push User Interface
         uses: docker/build-push-action@v5
@@ -44,5 +48,6 @@ jobs:
           context: .
           file: ./Dockerfile.UI
           push: true
-          tags: iph3i0n/effuse-ui:${{ github.ref_name }}
-
+          tags: |
+            iph3i0n/effuse-ui:latest
+            iph3i0n/effuse-ui:${{ github.ref_name }}
