@@ -7,7 +7,7 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "**/node_modules": true,
-    "user-interface/dist": true,
+    // "user-interface/dist": true,
     "cdk.out": true,
     ".vscode": true
   },

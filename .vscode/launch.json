@@ -27,15 +27,21 @@
       "env": {
         "DATA_DIR": "./resources/server-data"
       }
+    },
+    {
+      "name": "Compile UI",
+      "type": "node",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["webpack"],
+      "cwd": "${workspaceFolder}/user-interface",
+      "envFile": "${workspaceFolder}/.env",
+      "console": "integratedTerminal"
     }
   ],
   "compounds": [
     {
       "name": "Launch All",
-      "configurations": [
-        "Launch Server",
-        "Launch SSO"
-      ]
+      "configurations": ["Launch Server", "Launch SSO"]
     }
   ]
 }
