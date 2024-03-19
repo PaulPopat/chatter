@@ -12,6 +12,7 @@ import Modal from "../atoms/modal";
 import Image from "../atoms/image";
 import DataAsset from "../utils/data-asset";
 import UseOrientation from "../utils/orientation";
+import UseArgs from "../data/use-args";
 
 const ServerListItem = (props: { url: string }) => {
   const metadata = UseServerListMetadata(props.url);
@@ -40,19 +41,30 @@ export default (props: {
     actions: { join_server },
   } = props.profile;
   const sso = UseSso();
-  const [joining, set_joining] = useState(false);
+
+  const {
+    state: args,
+    actions: { clear_args },
+  } = UseArgs();
+
+  const [joining, set_joining] = useState(args.action === "join");
 
   return (
     <View style={Classes("flex_fill")}>
       <Modal open={joining} set_open={set_joining}>
         <Form
           fetcher={join_server}
-          on_submit={() => set_joining(false)}
+          on_submit={() => {
+            set_joining(false);
+            clear_args();
+          }}
           classes={["column"]}
         >
-          <Textbox name="ServerUrl">Server URL</Textbox>
+          <Textbox name="ServerUrl" default_value={args.server_url}>
+            Server URL
+          </Textbox>
           <Hidden name="ServerToken" value={sso.ServerToken} />
-          <Textbox name="Password" password>
+          <Textbox name="Password" default_value={args.password} password>
             Password
           </Textbox>
           <View style={Classes("row")}>
