@@ -15,7 +15,7 @@ const config = {
 /** @type {() => Promise<import('webpack').Configuration>} */
 module.exports = async () => {
   const response = await favicons(
-    path.resolve(__dirname, "../asset-src/app-icon.png")
+    path.resolve(__dirname, "asset-src/app-icon.png")
   );
 
   return {
