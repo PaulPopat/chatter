@@ -11,5 +11,6 @@ public static class Deps
     container.RegisterType<ISsoClient, HttpSsoClient>();
     container.RegisterType<IUserClient, DbUserClient>();
     container.RegisterType<IServerMetadataClient, ServerMetadataClient>();
+    container.RegisterType<IPushSubscriptionClient, PushSubscriptionClient>();
   }
 }

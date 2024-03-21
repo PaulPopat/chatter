@@ -1,4 +1,5 @@
-﻿using Effuse.SSO.Integration.Clients.User;
+﻿using Effuse.SSO.Integration.Clients.PushSubscription;
+using Effuse.SSO.Integration.Clients.User;
 using Effuse.SSO.Integration.Server;
 using Unity;
 
@@ -10,5 +11,6 @@ public static class Deps
   {
     container.RegisterType<IUserClient, DbUserClient>();
     container.RegisterType<IServerClient, HttpServerClient>();
+    container.RegisterType<IPushSubscriptionClient, PushSubscriptionClient>();
   }
 }
