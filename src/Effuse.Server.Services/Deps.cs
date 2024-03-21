@@ -11,5 +11,6 @@ public static class Deps
     container.RegisterType<ChannelsService>();
     container.RegisterType<MessagingService>();
     container.RegisterType<MetadataService>();
+    container.RegisterType<PushSubscriptionService>();
   }
 }

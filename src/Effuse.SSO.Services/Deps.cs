@@ -9,5 +9,6 @@ public static class Deps
     container.RegisterType<AuthService>();
     container.RegisterType<ProfileService>();
     container.RegisterType<ServersService>();
+    container.RegisterType<PushSubscriptionService>();
   }
 }

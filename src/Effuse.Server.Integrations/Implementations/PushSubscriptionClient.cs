@@ -31,9 +31,12 @@ public class PushSubscriptionClient(IDatabase database) : IPushSubscriptionClien
     {
       var existing = await database.GetItem<Dto>(TableName, userId);
 
+      var now = DateTime.Now;
       await database.UpdateItem(TableName, userId, new Dto
       {
-        Items = [.. existing.Items, ToDto(subscription)]
+        Items = [
+          .. existing.Items.Select(FromDto).Where(s => s.Expires < now).Select(ToDto),
+          ToDto(subscription)]
       });
     }
     else
@@ -53,7 +56,8 @@ public class PushSubscriptionClient(IDatabase database) : IPushSubscriptionClien
       return [];
     }
 
+    var now = DateTime.Now;
     var data = await database.GetItem<Dto>(TableName, userId);
-    return data.Items.Select(FromDto);
+    return data.Items.Select(FromDto).Where(s => s.Expires < now);
   }
 }
