@@ -136,7 +136,7 @@ const ServerUserDiplay = (props: {
   return (
     <View class="row card container">
       <View class="flex_fill body_text">
-        <Text>{profile?.UserName}</Text>
+        <Text class="body-text">{profile?.UserName}</Text>
       </View>
 
       <Button colour="Danger" on_click={() => set_is_banning(true)}>
@@ -158,12 +158,12 @@ const ServerUserDiplay = (props: {
 
       {!props.user.Admin && (
         <Pressable onPress={() => set_is_permissioning(true)}>
-          <Icon area="System" icon="lock-2" />
+          <Icon area="System" icon="lock-2" class="body-text" />
         </Pressable>
       )}
 
       <Modal open={is_banning} set_open={set_is_banning} title="Are you sure?">
-        <Text>
+        <Text class="body-text">
           This will block the user from performing any server actions.
         </Text>
 

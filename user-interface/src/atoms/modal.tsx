@@ -32,7 +32,7 @@ export default (props: Props) => {
         <View class={["card highlight flush column max_fill", props.class]}>
           <TopBar title={props.title}>
             <Pressable onPress={() => props.set_open(false)}>
-              <Icon area="System" icon="close" />
+              <Icon area="System" icon="close" class="body-text" />
             </Pressable>
           </TopBar>
           <ScrollView class="container flex_fill">{props.children}</ScrollView>

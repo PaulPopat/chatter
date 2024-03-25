@@ -1,5 +1,6 @@
 import * as O from "react-native";
 import { Class, Render } from "../styles/theme";
+import { forwardRef } from "react";
 
 type Props<T> = T & {
   class?: Class;
@@ -66,12 +67,15 @@ export const Modal = (props: Props<O.ModalProps>) => (
   />
 );
 
-export const TextInput = (props: Props<O.TextInputProps>) => (
-  <O.TextInput
-    {...props}
-    style={{
-      ...Render(props.class),
-      ...(typeof props.style === "object" ? props.style : {}),
-    }}
-  />
+export const TextInput = forwardRef<O.TextInput, Props<O.TextInputProps>>(
+  (props, ref) => (
+    <O.TextInput
+      {...props}
+      ref={ref}
+      style={{
+        ...Render(props.class),
+        ...(typeof props.style === "object" ? props.style : {}),
+      }}
+    />
+  )
 );

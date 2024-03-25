@@ -32,7 +32,7 @@ export default (props: {
       <TopBar click={props.blur} title={props.channel.Name}>
         {server.IsAdmin && (
           <TriggeredModal
-            button={<Icon area="System" icon="settings-2" />}
+            button={<Icon area="System" icon="settings-2" class="body-text" />}
             title="Edit Channel"
           >
             <Form fetcher={props.update}>

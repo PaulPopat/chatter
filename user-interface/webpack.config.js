@@ -5,6 +5,7 @@ const VirtualModulesPlugin = require("webpack-virtual-modules");
 const path = require("path");
 const { favicons } = require("favicons");
 const { Compilation, sources } = require("webpack");
+const CopyPlugin = require("copy-webpack-plugin");
 
 const isProd = process.env.PROD === "true";
 
@@ -50,6 +51,14 @@ module.exports = async () => {
       extensions: [".tsx", ".ts", ".js"],
     },
     plugins: [
+      new CopyPlugin({
+        patterns: [
+          {
+            from: "node_modules/remixicon/fonts/remixicon.ttf",
+            to: "icons.ttf",
+          },
+        ],
+      }),
       new MiniCssExtractPlugin(),
       new HtmlWebpackPlugin({
         title: "Effuse",
@@ -74,6 +83,11 @@ module.exports = async () => {
               #root {
                 display: flex;
                 height: 100%;
+              }
+
+              @font-face {
+                src: url(/icons.ttf);
+                font-family: 'RemixIcon';
               }
             </style>
           </head>

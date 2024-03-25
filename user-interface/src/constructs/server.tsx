@@ -22,7 +22,7 @@ const ChannelListItem = (
   return (
     <Pressable onPress={props.on_open}>
       <View class="card row colour_body container">
-        <Icon area="Communication" icon="chat-3" />
+        <Icon area="Communication" icon="chat-3" class="body-text" />
         <Text class="body_text">{props.channel.Name}</Text>
       </View>
     </Pressable>
@@ -87,7 +87,7 @@ export default (props: { open: boolean; blur: () => void }) => {
                 set_configuring(true);
               }}
             >
-              <Icon area="System" icon="settings-2" />
+              <Icon area="System" icon="settings-2" class="body-text" />
             </Pressable>
           )}
         </TopBar>

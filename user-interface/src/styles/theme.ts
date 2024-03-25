@@ -13,7 +13,7 @@ export const FontSizes = {
   Small: 9,
 };
 
-export const Colours = !Settings.prefer_dark
+export const Colours = Settings.prefer_dark
   ? {
       Body: {
         Foreground: "white",
