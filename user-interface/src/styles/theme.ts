@@ -25,19 +25,19 @@ export const Colours = Settings.prefer_dark
       },
       Primary: {
         Foreground: "black",
-        Background: "#36EEE0",
+        Background: "#FBE7C6",
       },
       Secondary: {
-        Foreground: "white",
-        Background: "#4C5270",
+        Foreground: "black",
+        Background: "#B4F8C8",
       },
       Info: {
         Foreground: "black",
-        Background: "#BCECE0",
+        Background: "#A0E7E5",
       },
       Danger: {
         Foreground: "black",
-        Background: "#F652A0",
+        Background: "#FFAEBC",
       },
     }
   : {
@@ -51,19 +51,19 @@ export const Colours = Settings.prefer_dark
       },
       Primary: {
         Foreground: "black",
-        Background: "#36EEE0",
+        Background: "#FBE7C6",
       },
       Secondary: {
-        Foreground: "white",
-        Background: "#4C5270",
+        Foreground: "black",
+        Background: "#B4F8C8",
       },
       Info: {
         Foreground: "black",
-        Background: "#BCECE0",
+        Background: "#A0E7E5",
       },
       Danger: {
         Foreground: "black",
-        Background: "#F652A0",
+        Background: "#FFAEBC",
       },
     };
 
@@ -79,7 +79,7 @@ const ThemeStyles: Record<string, any> = StyleSheet.create({
     {}
   ),
   card: {
-    shadowRadius: 12,
+    shadowRadius: 2,
     shadowColor: Colours.Body.Foreground,
     shadowOpacity: 0.3,
     borderWidth: BorderWidth,

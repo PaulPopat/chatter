@@ -29,8 +29,8 @@ export default (props: Props) => {
         onPress={() => props.set_open(false)}
       />
       <View class="max_fill modal container">
-        <View class={["card highlight flush column max_fill", props.class]}>
-          <TopBar title={props.title}>
+        <View class={["card colour_body flush column max_fill", props.class]}>
+          <TopBar title={props.title} class="colour_highlight">
             <Pressable onPress={() => props.set_open(false)}>
               <Icon area="System" icon="close" class="body-text" />
             </Pressable>

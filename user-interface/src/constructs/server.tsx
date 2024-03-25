@@ -21,7 +21,7 @@ const ChannelListItem = (
 ) => {
   return (
     <Pressable onPress={props.on_open}>
-      <View class="card row colour_body container">
+      <View class="card row container">
         <Icon area="Communication" icon="chat-3" class="body-text" />
         <Text class="body_text">{props.channel.Name}</Text>
       </View>
@@ -61,7 +61,7 @@ export default (props: { open: boolean; blur: () => void }) => {
       </Modal>
 
       <View
-        class="colour-highlight fill border-right"
+        class="colour-body fill border-right"
         style={{
           ...(orientation === "portrait"
             ? !open_channel
