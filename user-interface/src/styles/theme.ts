@@ -20,24 +20,24 @@ export const Colours = Settings.prefer_dark
         Background: "#222",
       },
       Highlight: {
-        Foreground: "#f6f6f6",
+        Foreground: "#f8f9f9",
         Background: "#333",
       },
       Primary: {
-        Foreground: "white",
-        Background: "#7209b7",
+        Foreground: "black",
+        Background: "#36EEE0",
       },
       Secondary: {
-        Foreground: "black",
-        Background: "#4cc9f0",
+        Foreground: "white",
+        Background: "#4C5270",
       },
       Info: {
         Foreground: "black",
-        Background: "#4361ee",
+        Background: "#BCECE0",
       },
       Danger: {
-        Foreground: "white",
-        Background: "#3a0ca3",
+        Foreground: "black",
+        Background: "#F652A0",
       },
     }
   : {
@@ -47,23 +47,23 @@ export const Colours = Settings.prefer_dark
       },
       Highlight: {
         Foreground: "#333",
-        Background: "#f6f6f6",
+        Background: "#f8f9f9",
       },
       Primary: {
-        Foreground: "white",
-        Background: "#7209b7",
+        Foreground: "black",
+        Background: "#36EEE0",
       },
       Secondary: {
-        Foreground: "black",
-        Background: "#4cc9f0",
+        Foreground: "white",
+        Background: "#4C5270",
       },
       Info: {
         Foreground: "black",
-        Background: "#4361ee",
+        Background: "#BCECE0",
       },
       Danger: {
-        Foreground: "white",
-        Background: "#3a0ca3",
+        Foreground: "black",
+        Background: "#F652A0",
       },
     };
 
@@ -80,7 +80,7 @@ const ThemeStyles: Record<string, any> = StyleSheet.create({
   ),
   card: {
     shadowRadius: 12,
-    shadowColor: "#222",
+    shadowColor: Colours.Body.Foreground,
     shadowOpacity: 0.3,
     borderWidth: BorderWidth,
     borderRadius: BorderRadius,
