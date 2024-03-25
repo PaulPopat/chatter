@@ -1,7 +1,5 @@
 import { useState } from "react";
 import UseProfile, { UseServerListMetadata } from "../data/use-profile";
-import { View, Pressable, Text } from "react-native";
-import { Classes } from "../styles/theme";
 import { Form } from "../atoms/form";
 import Textbox from "../atoms/textbox";
 import Submitter from "../atoms/submitter";
@@ -13,20 +11,21 @@ import Image from "../atoms/image";
 import DataAsset from "../utils/data-asset";
 import UseOrientation from "../utils/orientation";
 import UseArgs from "../data/use-args";
+import { View, Text, Pressable } from "../atoms/native";
 
 const ServerListItem = (props: { url: string }) => {
   const metadata = UseServerListMetadata(props.url);
   const orientation = UseOrientation();
 
   return (
-    <View style={Classes("row")}>
+    <View class="row">
       <Image
         src={new DataAsset(metadata.Icon.Base64Data, metadata.Icon.MimeType)}
         size={60}
-        classes={["card", "colour_body"]}
+        class="card olour_body"
       />
       {orientation === "portrait" && (
-        <Text style={Classes("spacer")}>{metadata.ServerName}</Text>
+        <Text class="spacer">{metadata.ServerName}</Text>
       )}
     </View>
   );
@@ -50,7 +49,7 @@ export default (props: {
   const [joining, set_joining] = useState(args.action === "join");
 
   return (
-    <View style={Classes("flex_fill")}>
+    <View class="flex_fill">
       <Modal open={joining} set_open={set_joining} title="Join a Server">
         <Form
           fetcher={join_server}
@@ -58,7 +57,7 @@ export default (props: {
             set_joining(false);
             clear_args();
           }}
-          classes={["column"]}
+          class="column"
         >
           <Textbox name="ServerUrl" default_value={args.server_url}>
             Server URL
@@ -67,7 +66,7 @@ export default (props: {
           <Textbox name="Password" default_value={args.password} password>
             Password
           </Textbox>
-          <View style={Classes("row")}>
+          <View class="row">
             <Submitter>Join Server</Submitter>
             <Button on_click={() => set_joining(false)} colour="Danger">
               Cancel
@@ -76,7 +75,7 @@ export default (props: {
         </Form>
       </Modal>
 
-      <View style={Classes("flex_fill", "column")}>
+      <View class="flex_fill column">
         {profile?.Servers.map((s) => (
           <Pressable key={s.Url} onPress={() => props.on_open(s.Url)}>
             <ServerListItem url={s.Url} />

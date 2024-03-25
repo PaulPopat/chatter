@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { Classes, Colours, Padding } from "./styles/theme";
 import ServerList from "./constructs/server-list";
 import Authenticate from "./constructs/authenticate";
 import Server from "./constructs/server";
@@ -17,6 +15,7 @@ import ImageUpload from "./atoms/image-upload";
 import Submitter from "./atoms/submitter";
 import Textbox from "./atoms/textbox";
 import SsoAsset from "./utils/sso-asset";
+import { View } from "./atoms/native";
 
 const MainPanel = () => {
   const profile = useProfile();
@@ -25,10 +24,10 @@ const MainPanel = () => {
   const orientation = UseOrientation();
 
   return (
-    <View style={Classes("row", "fill", "no_overflow", "no_gap")}>
+    <View class="row fill no_overflow no_gap">
       <View
+        class="highlight border_right fill"
         style={{
-          ...Classes("highlight", "border_right", "fill"),
           ...(orientation === "landscape"
             ? {}
             : {
@@ -38,14 +37,14 @@ const MainPanel = () => {
               }),
         }}
       >
-        <View style={Classes("fill", "column")}>
+        <View class="fill column">
           <ServerList on_open={set_open} profile={profile} />
           <Button on_click={() => set_updating_profile(true)}>
             <Icon area="User & Faces" icon="user" />
           </Button>
         </View>
       </View>
-      <View style={Classes("flex_fill", "fill")}>
+      <View class="flex_fill fill">
         {profile.state?.Servers.map((s) => (
           <ServerProvider key={s.Url} url={s.Url}>
             <Server open={open === s.Url} blur={() => set_open("")} />
@@ -58,7 +57,7 @@ const MainPanel = () => {
         set_open={set_updating_profile}
         title="My Profile"
       >
-        <Form fetcher={profile.actions.update_profile} classes={["column"]}>
+        <Form fetcher={profile.actions.update_profile} class="column">
           <Textbox name="UserName" default_value={profile.state?.UserName}>
             User Name
           </Textbox>

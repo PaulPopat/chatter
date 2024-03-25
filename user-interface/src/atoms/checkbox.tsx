@@ -1,8 +1,9 @@
 import { PropsWithChildren, useEffect } from "react";
 import { UseForm } from "./form";
-import { KeyboardTypeOptions, View, Text, Pressable } from "react-native";
+import { KeyboardTypeOptions } from "react-native";
 import Icon from "./icon";
-import { Class, Classes } from "../styles/theme";
+import { Class } from "../styles/theme";
+import { Pressable, View, Text } from "./native";
 
 type Props = {
   name: string;
@@ -13,7 +14,7 @@ type Props = {
   default_value?: boolean;
 
   submit_on_change?: boolean;
-  classes?: Array<Class>;
+  class?: Class;
 };
 
 export default (props: PropsWithChildren<Props>) => {
@@ -29,22 +30,16 @@ export default (props: PropsWithChildren<Props>) => {
 
   return (
     <Pressable
-      style={Classes("row", ...(props.classes ?? []))}
+      class={["row", props.class]}
       onPress={() => {
         set_value(!value);
         if (props.submit_on_change) setTimeout(() => submit(), 5);
       }}
     >
-      <View
-        style={{
-          ...Classes("centre", "bordered"),
-          width: 24,
-          height: 24,
-        }}
-      >
+      <View class="centre bordered" style={{ width: 24, height: 24 }}>
         {value ? <Icon area="System" icon="check" /> : undefined}
       </View>
-      <Text style={Classes("body_text", "spacer")}>{props.children}</Text>
+      <Text class="body_text spacer">{props.children}</Text>
     </Pressable>
   );
 };

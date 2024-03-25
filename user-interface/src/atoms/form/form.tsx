@@ -2,12 +2,12 @@ import { PropsWithChildren, useCallback, useState } from "react";
 import { z } from "zod";
 import { Fetcher } from "../../utils/fetch";
 import RawForm from "./raw-form";
-import { Class, Classes } from "../../styles/theme";
-import { Text } from "react-native";
+import { Class } from "../../styles/theme";
+import { Text } from "../native";
 
 type FormProps<TExpect, TBody> = {
   fetcher: Fetcher<TExpect, TBody>;
-  classes?: Array<Class>;
+  class?: Class;
   on_submit?: () => void;
   hide_notification?: boolean;
 };
@@ -38,11 +38,11 @@ export default function Form<TExpect, TBody>(
   );
 
   return (
-    <RawForm on_submit={on_submit} form_type={z.any()} classes={props.classes}>
+    <RawForm on_submit={on_submit} form_type={z.any()} class={props.class}>
       {res === "success" && !props.hide_notification ? (
-        <Text style={Classes("colour_secondary", "container")}>Success</Text>
+        <Text class="colour_secondary container">Success</Text>
       ) : res === "error" && !props.hide_notification ? (
-        <Text style={Classes("colour_danger", "container")}>Error</Text>
+        <Text class="colour_danger container">Error</Text>
       ) : (
         <></>
       )}

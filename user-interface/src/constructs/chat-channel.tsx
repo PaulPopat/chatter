@@ -1,6 +1,4 @@
-import { FlatList, Text, View } from "react-native";
 import UseChat, { Message } from "../data/use-chat";
-import { Classes } from "../styles/theme";
 import { Form } from "../atoms/form";
 import Textbox from "../atoms/textbox";
 import Hidden from "../atoms/hidden";
@@ -9,13 +7,15 @@ import Submitter from "../atoms/submitter";
 import Icon from "../atoms/icon";
 import Image from "../atoms/image";
 import SsoAsset from "../utils/sso-asset";
+import { View, Text } from "../atoms/native";
+import { FlatList } from "react-native";
 
 const ChatMessage = (props: { message: Message }) => {
   const profile = UsePublicProfile(props.message.Who);
 
   return (
-    <View style={Classes("highlight", "spacer", "column", "align_top")}>
-      <View style={Classes("row", "container")}>
+    <View class="highlight spacer column align_top">
+      <View class={"row container"}>
         <Image
           src={
             new SsoAsset("/profile/pictures/:user_id", {
@@ -23,16 +23,12 @@ const ChatMessage = (props: { message: Message }) => {
             })
           }
           size={24}
-          classes={["card"]}
+          class="card"
         />
-        <Text style={Classes("important_text")}>{profile?.UserName}</Text>
-        <Text style={Classes("small_text")}>
-          {props.message.When.toLocaleString()}
-        </Text>
+        <Text class="important_text">{profile?.UserName}</Text>
+        <Text class="small_text">{props.message.When.toLocaleString()}</Text>
       </View>
-      <Text style={Classes("body_text", "container")}>
-        {props.message.Text}
-      </Text>
+      <Text class="body_text container">{props.message.Text}</Text>
     </View>
   );
 };
@@ -44,7 +40,7 @@ export default (props: { channel_id: string }) => {
   } = UseChat(props.channel_id);
 
   return (
-    <View style={Classes("fill")}>
+    <View class="fill">
       <FlatList
         data={messages}
         renderItem={({ item: message }) => (
@@ -56,13 +52,13 @@ export default (props: { channel_id: string }) => {
 
       <Form fetcher={send} hide_notification>
         <Hidden name="channel_id" value={props.channel_id} />
-        <View style={Classes("row")}>
-          <View style={Classes("flex_fill", "spacer")}>
+        <View class="row">
+          <View class="flex_fill spacer">
             <Textbox name="Text" clear_on_submit multiline>
               Message
             </Textbox>
           </View>
-          <View style={Classes("spacer")}>
+          <View class="spacer">
             <Submitter colour="Highlight">
               <Icon area="Business" icon="send-plane-2" />
             </Submitter>

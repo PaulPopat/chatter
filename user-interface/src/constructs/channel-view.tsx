@@ -1,8 +1,6 @@
-import { Text, View } from "react-native";
 import { Channel } from "../data/use-channels";
 import ChatChannel from "./chat-channel";
 import TopBar from "../atoms/top-bar";
-import { Classes } from "../styles/theme";
 import UseServer from "../data/use-server";
 import Icon from "../atoms/icon";
 import TriggeredModal from "../molecules/triggered-modal";
@@ -12,6 +10,7 @@ import Hidden from "../atoms/hidden";
 import Textbox from "../atoms/textbox";
 import Checkbox from "../atoms/checkbox";
 import Submitter from "../atoms/submitter";
+import { View, Text } from "../atoms/native";
 
 const SubChannel = (props: { channel: Channel }) => {
   switch (props.channel.Type) {
@@ -29,7 +28,7 @@ export default (props: {
 }) => {
   const server = UseServer();
   return (
-    <View style={Classes("fill")}>
+    <View class="fill">
       <TopBar click={props.blur} title={props.channel.Name}>
         {server.IsAdmin && (
           <TriggeredModal
@@ -44,14 +43,14 @@ export default (props: {
               <Checkbox name="Public" default_value={props.channel.Public}>
                 Is Public
               </Checkbox>
-              <View style={Classes("row")}>
+              <View class="row">
                 <Submitter>Update Channel</Submitter>
               </View>
             </Form>
           </TriggeredModal>
         )}
       </TopBar>
-      <View style={Classes("flex_fill")}>
+      <View class="flex-fill">
         <SubChannel {...props} />
       </View>
     </View>

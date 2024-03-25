@@ -1,17 +1,15 @@
 import { PropsWithChildren } from "react";
-import { Class, Classes, Colours } from "../styles/theme";
-import { Pressable, Text, View } from "react-native";
+import { Class, Colours } from "../styles/theme";
+import { View } from "./native";
 
 type Props = {
   colour?: keyof typeof Colours;
-  classes?: Array<Class>;
+  class?: Class;
 };
 
 export default (props: PropsWithChildren<Props>) => {
-  const colour = props.colour ?? "Primary";
+  const colour = props.colour ?? "primary";
   return (
-    <View style={Classes("card", `colour_${colour}`, ...(props.classes ?? []))}>
-      {props.children}
-    </View>
+    <View class={[`card colour_${colour}`, props.class]}>{props.children}</View>
   );
 };

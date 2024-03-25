@@ -1,14 +1,14 @@
 import { PropsWithChildren, useCallback, useRef, useState } from "react";
 import { z } from "zod";
-import { View } from "react-native";
 import { FormContext } from "./common";
-import { Class, Classes } from "../../styles/theme";
+import { Class } from "../../styles/theme";
+import { View } from "../native";
 
 type FormProps<TFormType> = {
   on_submit: (data: TFormType) => void;
   form_type: z.ZodType<TFormType>;
 
-  classes?: Array<Class>;
+  class?: Class;
 };
 
 export default function Form<TExpect>(
@@ -45,9 +45,7 @@ export default function Form<TExpect>(
         submit: on_submit,
       }}
     >
-      <View style={Classes("column", ...(props.classes ?? []))}>
-        {props.children}
-      </View>
+      <View class={["column", props.class]}>{props.children}</View>
     </FormContext.Provider>
   );
 }

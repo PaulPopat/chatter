@@ -1,8 +1,6 @@
-import { Text, View, Pressable, ScrollView } from "react-native";
 import UseChannels, { Channel } from "../data/use-channels";
 import { PropsWithChildren, useState } from "react";
 import Icon from "../atoms/icon";
-import { Classes } from "../styles/theme";
 import ChannelView from "./channel-view";
 import UseServer from "../data/use-server";
 import Button from "../atoms/button";
@@ -16,15 +14,16 @@ import UseOrientation from "../utils/orientation";
 import TopBar from "../atoms/top-bar";
 import ResponsiveModal from "../molecules/responsive-modal";
 import ServerAdmin from "./server-admin";
+import { Pressable, View, Text, ScrollView } from "../atoms/native";
 
 const ChannelListItem = (
   props: PropsWithChildren<{ channel: Channel; on_open: () => void }>
 ) => {
   return (
     <Pressable onPress={props.on_open}>
-      <View style={Classes("card row colour_body container")}>
+      <View class="card row colour_body container">
         <Icon area="Communication" icon="chat-3" />
-        <Text>{props.channel.Name}</Text>
+        <Text class="body_text">{props.channel.Name}</Text>
       </View>
     </Pressable>
   );
@@ -43,16 +42,16 @@ export default (props: { open: boolean; blur: () => void }) => {
   const orientation = UseOrientation();
 
   return (
-    <ResponsiveModal classes={["row", "fill", "no_gap"]} open={props.open}>
+    <ResponsiveModal class="row fill no_gap" open={props.open}>
       <Modal open={creating} set_open={set_creating} title="Create a Channel">
         <Form
           fetcher={create_channel}
           on_submit={() => set_creating(false)}
-          classes={["column"]}
+          class="column"
         >
           <Textbox name="Name">Channel Name</Textbox>
           <Checkbox name="Public">Is Public</Checkbox>
-          <View style={Classes("row")}>
+          <View class="row">
             <Submitter>Create Channel</Submitter>
             <Button on_click={() => set_creating(false)} colour="Danger">
               Cancel
@@ -62,8 +61,8 @@ export default (props: { open: boolean; blur: () => void }) => {
       </Modal>
 
       <View
+        class="colour-highlight fill border-right"
         style={{
-          ...Classes("colour_highlight", "fill", "border_right"),
           ...(orientation === "portrait"
             ? !open_channel
               ? {
@@ -92,8 +91,8 @@ export default (props: { open: boolean; blur: () => void }) => {
             </Pressable>
           )}
         </TopBar>
-        <ScrollView style={Classes("flex_fill")}>
-          <View style={Classes("column", "edge_container")}>
+        <ScrollView class="flex-fill">
+          <View class="column edge-container">
             {channels?.map((c) => (
               <ChannelListItem
                 key={c.ChannelId}
@@ -108,7 +107,7 @@ export default (props: { open: boolean; blur: () => void }) => {
           <Button
             on_click={() => set_creating(true)}
             colour="Secondary"
-            classes={["spacer"]}
+            class="spacer"
           >
             +
           </Button>
@@ -116,7 +115,7 @@ export default (props: { open: boolean; blur: () => void }) => {
       </View>
 
       <ResponsiveModal
-        classes={["flex_fill", "fill"]}
+        class="flex-fill fill"
         open={!!open_channel || configuring}
         colour="Body"
       >

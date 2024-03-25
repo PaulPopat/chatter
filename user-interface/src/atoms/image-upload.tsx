@@ -1,11 +1,11 @@
 import { PropsWithChildren } from "react";
 import { UseForm } from "./form";
-import { KeyboardTypeOptions, Text, Pressable, View } from "react-native";
+import { KeyboardTypeOptions } from "react-native";
 import Icon from "./icon";
-import { Classes } from "../styles/theme";
 import FilePicker from "../utils/system/file-picker";
 import IAsset from "../utils/asset";
 import Image from "./image";
+import { Pressable, View, Text } from "./native";
 
 type Props = {
   name: string;
@@ -24,12 +24,12 @@ export default (props: PropsWithChildren<Props>) => {
 
   return (
     <Pressable
-      style={Classes("container", "column", "card", "centre")}
+      class="container column card centre"
       onPress={() => FilePicker("image/*").then(set_value)}
     >
-      <View style={Classes("row")}>
+      <View class="row">
         <Icon area="System" icon="upload-cloud-2" />
-        <Text style={Classes("body_text")}>{props.children}</Text>
+        <Text class="body_text">{props.children}</Text>
       </View>
 
       <Image src={(value as IAsset) ?? props.default} size={64} />

@@ -1,24 +1,25 @@
 import { PropsWithChildren } from "react";
-import { View, Modal, StyleProp, ViewStyle } from "react-native";
-import { Class, Classes, Colours, Padding } from "../styles/theme";
+import { Class, Colours } from "../styles/theme";
 import UseOrientation from "../utils/orientation";
+import { Modal, View } from "../atoms/native";
 
 type Props = PropsWithChildren<{
   open: boolean;
   colour?: keyof typeof Colours;
-  classes?: Array<Class>;
+  class?: Class;
 }>;
 
 export default (props: Props) => {
   const orientation = UseOrientation();
+  const colour = Colours[props.colour ?? "Highlight"];
 
   if (orientation === "landscape")
     return (
       <View
+        class={props.class}
         style={{
-          ...Classes(...(props.classes ?? [])),
           opacity: props.open ? 1 : 0,
-          backgroundColor: Colours[props.colour ?? "Highlight"].Background,
+          backgroundColor: colour.Background,
         }}
       >
         {props.children}
@@ -28,9 +29,9 @@ export default (props: Props) => {
   return (
     <Modal animationType="slide" transparent={true} visible={props.open}>
       <View
+        class="edge_container fill"
         style={{
-          ...Classes("edge_container", "fill"),
-          backgroundColor: Colours[props.colour ?? "Highlight"].Background,
+          backgroundColor: colour.Background,
         }}
       >
         {props.children}

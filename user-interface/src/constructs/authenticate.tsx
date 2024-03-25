@@ -4,18 +4,17 @@ import Textbox from "../atoms/textbox";
 import { UseSsoControls } from "../data/use-sso";
 import { useState } from "react";
 import Button from "../atoms/button";
-import { View } from "react-native";
-import { Classes } from "../styles/theme";
+import { View } from "../atoms/native";
 
 export default () => {
   const { login, register } = UseSsoControls();
   const [mode, set_mode] = useState("login" as "login" | "register");
 
   return (
-    <View style={Classes("modal")}>
-      <View style={Classes("container")}>
+    <View class="modal">
+      <View class="container">
         {mode === "login" ? (
-          <Form classes={["column"]} fetcher={login}>
+          <Form fetcher={login}>
             <Textbox name="email" keyboard="email-address">
               Email
             </Textbox>
@@ -28,7 +27,7 @@ export default () => {
             </Button>
           </Form>
         ) : (
-          <Form classes={["column"]} fetcher={register}>
+          <Form fetcher={register}>
             <Textbox name="UserName">User Name</Textbox>
             <Textbox name="Email" keyboard="email-address">
               Email

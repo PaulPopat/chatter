@@ -1,14 +1,13 @@
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { UseForm } from "./form";
 import {
-  TextInput,
   KeyboardTypeOptions,
-  View,
-  Text,
   TouchableOpacity,
+  TextInput as TextInputType,
 } from "react-native";
 import { z } from "zod";
-import { Class, Classes, FontSizes } from "../styles/theme";
+import { Class, FontSizes } from "../styles/theme";
+import { View, Text, TextInput } from "./native";
 
 type Props = {
   name: string;
@@ -18,7 +17,7 @@ type Props = {
 
   default_value?: string;
   multiline?: boolean;
-  classes?: Array<Class>;
+  class?: Class;
 };
 
 const DefaultHeight = 35;
@@ -26,7 +25,7 @@ const DefaultHeight = 35;
 export default (props: PropsWithChildren<Props>) => {
   const { value, set_value, submit, use_submit } = UseForm(props.name);
   const [focused, set_focused] = useState(false);
-  const input = useRef<TextInput>(null);
+  const input = useRef<TextInputType>(null);
   const [height, set_height] = useState(DefaultHeight);
 
   useEffect(() => {
@@ -47,10 +46,10 @@ export default (props: PropsWithChildren<Props>) => {
         input.current?.focus();
       }}
     >
-      <View style={Classes("card", "colour_body", ...(props.classes ?? []))}>
+      <View class={["card", "colour_body", props.class]}>
         <Text
+          class="body_text container colour_body"
           style={{
-            ...Classes("body_text", "container", "colour_body"),
             ...(!!(value || focused)
               ? {
                   position: "absolute",
@@ -71,9 +70,9 @@ export default (props: PropsWithChildren<Props>) => {
         </Text>
         <TextInput
           ref={input}
+          class="body_text edge_container"
           style={
             {
-              ...Classes("body_text", "edge_container"),
               outlineStyle: "none",
               height: height,
             } as any

@@ -1,10 +1,8 @@
-import { Pressable, ScrollView, Text, View } from "react-native";
 import ImageUpload from "../atoms/image-upload";
 import { Form, RawForm } from "../atoms/form";
 import Submitter from "../atoms/submitter";
 import Textbox from "../atoms/textbox";
 import UseServerMetadata from "../data/use-server-metadata";
-import { Classes } from "../styles/theme";
 import UseServerUsers, { ServerUser } from "../data/use-server-users";
 import UsePublicProfile from "../data/use-public-profile";
 import { z } from "zod";
@@ -19,6 +17,7 @@ import TopBar from "../atoms/top-bar";
 import DataAsset from "../utils/data-asset";
 import UseInviteLink from "../data/use-invite-link";
 import Card from "../atoms/card";
+import { View, Text, Pressable, ScrollView } from "../atoms/native";
 
 const PermissionForm = z.object({
   read: z.boolean(),
@@ -47,7 +46,6 @@ const InviteLinker = (props: { url: string }) => {
           set_admin(data.admin);
         }}
         form_type={InviteForm}
-        classes={["column"]}
       >
         <Checkbox name="embed" default_value={embed_password} submit_on_change>
           Embed the Password?
@@ -56,8 +54,8 @@ const InviteLinker = (props: { url: string }) => {
           Is Admin Link?
         </Checkbox>
       </RawForm>
-      <Card colour="Body" classes={["container"]}>
-        <Text>{invite_link.state?.Url}</Text>
+      <Card colour="Body" class="container">
+        <Text class="body_text">{invite_link.state?.Url}</Text>
       </Card>
     </>
   );
@@ -72,13 +70,10 @@ const UserPermissions = (props: { user: ServerUser }) => {
   });
   const { state: channels } = UseChannels();
   return (
-    <View style={Classes("column", "spacer")}>
+    <View class="column spacer">
       {channels?.map((c) => (
-        <View
-          key={c.ChannelId}
-          style={Classes("card", "colour_body", "container")}
-        >
-          <Text>{c.Name}</Text>
+        <View key={c.ChannelId} class="card colour_body container">
+          <Text class="body_text">{c.Name}</Text>
 
           <RawForm
             on_submit={async (data) => {
@@ -139,8 +134,8 @@ const ServerUserDiplay = (props: {
   const [is_permissioning, set_is_permissioning] = useState(false);
 
   return (
-    <View style={Classes("row", "card", "container")}>
-      <View style={Classes("flex_fill", "body_text")}>
+    <View class="row card container">
+      <View class="flex_fill body_text">
         <Text>{profile?.UserName}</Text>
       </View>
 
@@ -208,10 +203,10 @@ export default (props: { url: string; blur: () => void }) => {
   } = UseServerUsers();
 
   return (
-    <View style={Classes("fill")}>
+    <View class="fill">
       <TopBar click={props.blur} title={metadata?.ServerName}></TopBar>
       <ScrollView>
-        <Form fetcher={update} classes={["container", "column"]}>
+        <Form fetcher={update} class="container column">
           <Textbox name="ServerName" default_value={metadata?.ServerName}>
             Server Name
           </Textbox>
@@ -229,11 +224,11 @@ export default (props: { url: string; blur: () => void }) => {
           <Submitter>Save Changes</Submitter>
         </Form>
 
-        <Button on_click={() => set_inviting(true)} classes={["spacer"]}>
+        <Button on_click={() => set_inviting(true)} class="spacer">
           Get An Invite Link
         </Button>
 
-        <View style={Classes("column", "spacer")}>
+        <View class="column spacer">
           {users?.map((u) => (
             <ServerUserDiplay
               key={u.UserId}
@@ -254,7 +249,7 @@ export default (props: { url: string; blur: () => void }) => {
         set_open={set_inviting}
         title="Create an Invite Link"
       >
-        <View style={Classes("column")}>
+        <View class="column">
           <InviteLinker url={props.url} />
           <Button on_click={() => set_inviting(false)} colour="Info">
             Close

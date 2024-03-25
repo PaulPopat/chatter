@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import Settings from "../utils/system/settings";
 
 export const Margins = 6;
 export const Padding = 6;
@@ -12,32 +13,59 @@ export const FontSizes = {
   Small: 9,
 };
 
-export const Colours = {
-  Body: {
-    Foreground: "black",
-    Background: "white",
-  },
-  Highlight: {
-    Foreground: "#333",
-    Background: "#f6f6f6",
-  },
-  Primary: {
-    Foreground: "white",
-    Background: "#7209b7",
-  },
-  Secondary: {
-    Foreground: "black",
-    Background: "#4cc9f0",
-  },
-  Info: {
-    Foreground: "black",
-    Background: "#4361ee",
-  },
-  Danger: {
-    Foreground: "white",
-    Background: "#3a0ca3",
-  },
-};
+export const Colours = !Settings.prefer_dark
+  ? {
+      Body: {
+        Foreground: "white",
+        Background: "#222",
+      },
+      Highlight: {
+        Foreground: "#f6f6f6",
+        Background: "#333",
+      },
+      Primary: {
+        Foreground: "white",
+        Background: "#7209b7",
+      },
+      Secondary: {
+        Foreground: "black",
+        Background: "#4cc9f0",
+      },
+      Info: {
+        Foreground: "black",
+        Background: "#4361ee",
+      },
+      Danger: {
+        Foreground: "white",
+        Background: "#3a0ca3",
+      },
+    }
+  : {
+      Body: {
+        Foreground: "black",
+        Background: "white",
+      },
+      Highlight: {
+        Foreground: "#333",
+        Background: "#f6f6f6",
+      },
+      Primary: {
+        Foreground: "white",
+        Background: "#7209b7",
+      },
+      Secondary: {
+        Foreground: "black",
+        Background: "#4cc9f0",
+      },
+      Info: {
+        Foreground: "black",
+        Background: "#4361ee",
+      },
+      Danger: {
+        Foreground: "white",
+        Background: "#3a0ca3",
+      },
+    };
 
 const ThemeStyles: Record<string, any> = StyleSheet.create({
   ...Object.keys(Colours).reduce(
@@ -56,6 +84,7 @@ const ThemeStyles: Record<string, any> = StyleSheet.create({
     shadowOpacity: 0.3,
     borderWidth: BorderWidth,
     borderRadius: BorderRadius,
+    borderColor: Colours.Body.Foreground,
   },
   bordered: {
     borderWidth: 2,
@@ -88,16 +117,20 @@ const ThemeStyles: Record<string, any> = StyleSheet.create({
   },
   body_text: {
     fontSize: FontSizes.Label,
+    color: Colours.Body.Foreground,
   },
   important_text: {
     fontSize: FontSizes.Label,
     fontWeight: "bold",
+    color: Colours.Body.Foreground,
   },
   small_text: {
     fontSize: FontSizes.Small,
+    color: Colours.Body.Foreground,
   },
   title: {
     fontSize: FontSizes.Title,
+    color: Colours.Body.Foreground,
   },
   row: {
     flexDirection: "row",
@@ -152,17 +185,29 @@ const ThemeStyles: Record<string, any> = StyleSheet.create({
   flush: { padding: 0 },
 });
 
-export type Class = keyof typeof ThemeStyles;
+export type Class = string | [string, boolean] | undefined | Array<Class>;
 
-export function Classes(...classes: Array<Class | [Class, boolean]>) {
-  return classes
-    .map((c) => (typeof c === "string" ? ([c, true] as [Class, boolean]) : c))
-    .flatMap(([c, s]) => c.split(" ").map((c) => [c, s] as [Class, boolean]))
-    .reduce(
-      (c, n) => ({
-        ...c,
-        ...(n[1] ? { ...ThemeStyles[n[0]] } : {}),
-      }),
-      {} as any
-    );
+function Flatten(classes: Class): Array<[string, boolean]> {
+  if (!classes) return [];
+  let condition = true;
+  let name = "";
+  if (typeof classes === "string") name = classes;
+  if (Array.isArray(classes) && typeof classes[1] === "boolean") {
+    name = classes[0] as string;
+    condition = classes[1];
+  }
+
+  if (name) return name.split(" ").map((i) => [i, condition]);
+
+  return (classes as Array<Class>).flatMap(Flatten);
+}
+
+export function Render(classes: Class) {
+  return Flatten(classes).reduce(
+    (c, n) => ({
+      ...c,
+      ...(n[1] ? { ...ThemeStyles[n[0].replace(/-/gm, "_")] } : {}),
+    }),
+    {} as any
+  );
 }

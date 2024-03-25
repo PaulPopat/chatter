@@ -1,8 +1,7 @@
 import { PropsWithChildren } from "react";
-import { View, Modal, Pressable, ScrollView } from "react-native";
-import { Classes } from "../styles/theme";
 import TopBar from "./top-bar";
 import Icon from "./icon";
+import { Modal, Pressable, ScrollView, View } from "./native";
 
 type Props = PropsWithChildren<{
   open: boolean;
@@ -26,19 +25,17 @@ export default (props: Props) => {
       style={{ maxHeight: "100%" }}
     >
       <Pressable
-        style={Classes("modal_background")}
+        class="modal_background"
         onPress={() => props.set_open(false)}
       />
-      <View style={Classes("max_fill modal container")}>
-        <View style={Classes("card highlight flush column max_fill", props.class ?? "")}>
+      <View class="max_fill modal container">
+        <View class={["card highlight flush column max_fill", props.class]}>
           <TopBar title={props.title}>
             <Pressable onPress={() => props.set_open(false)}>
               <Icon area="System" icon="close" />
             </Pressable>
           </TopBar>
-          <ScrollView style={Classes("container flex_fill")}>
-            {props.children}
-          </ScrollView>
+          <ScrollView class="container flex_fill">{props.children}</ScrollView>
         </View>
       </View>
     </Modal>
