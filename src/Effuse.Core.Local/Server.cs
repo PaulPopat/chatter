@@ -105,6 +105,8 @@ public class Server
 
     var ws = webSocketContext.WebSocket;
     var connectionId = Guid.NewGuid();
+
+    Console.WriteLine($"Opened connection ${connectionId}");
     var connectionString = connectionId.ToString();
     websockets[connectionString] = ws;
     IWebSocketHandler? handler = null;
@@ -149,6 +151,7 @@ public class Server
     }
     finally
     {
+      Console.WriteLine($"Closing connection ${connectionId}");
       ws?.Dispose();
       try
       {

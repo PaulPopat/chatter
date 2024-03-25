@@ -78,7 +78,7 @@ export default function UseChat(channel_id: string) {
       connection.close();
       set_socket(null);
     };
-  }, [server?.BaseUrl]);
+  }, [server?.BaseUrl, channel_id]);
 
   const backlog_fetcher = UseFetcher("/api/v1/channels/:channel_id/messages", {
     method: "GET",
