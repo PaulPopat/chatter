@@ -22,7 +22,7 @@ const ChannelListItem = (
 ) => {
   return (
     <Pressable onPress={props.on_open}>
-      <View style={Classes("card", "row", "colour_body", "container")}>
+      <View style={Classes("card row colour_body container")}>
         <Icon area="Communication" icon="chat-3" />
         <Text>{props.channel.Name}</Text>
       </View>
@@ -126,11 +126,13 @@ export default (props: { open: boolean; blur: () => void }) => {
             update={update_channel}
             blur={() => set_open_channel(null)}
           />
-        ) : (
+        ) : configuring ? (
           <ServerAdmin
             blur={() => set_configuring(false)}
             url={server.BaseUrl}
           />
+        ) : (
+          <></>
         )}
       </ResponsiveModal>
     </ResponsiveModal>

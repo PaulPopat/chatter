@@ -72,58 +72,56 @@ const UserPermissions = (props: { user: ServerUser }) => {
   });
   const { state: channels } = UseChannels();
   return (
-    <ScrollView>
-      <View style={Classes("column", "spacer")}>
-        {channels?.map((c) => (
-          <View
-            key={c.ChannelId}
-            style={Classes("card", "colour_body", "container")}
-          >
-            <Text>{c.Name}</Text>
+    <View style={Classes("column", "spacer")}>
+      {channels?.map((c) => (
+        <View
+          key={c.ChannelId}
+          style={Classes("card", "colour_body", "container")}
+        >
+          <Text>{c.Name}</Text>
 
-            <RawForm
-              on_submit={async (data) => {
-                await kick_user_from_channel({
-                  user_id: props.user.UserId,
+          <RawForm
+            on_submit={async (data) => {
+              await kick_user_from_channel({
+                user_id: props.user.UserId,
+                channel_id: c.ChannelId,
+              });
+
+              if (data.read)
+                await add_user_to_channel({
                   channel_id: c.ChannelId,
+                  UserId: props.user.UserId,
+                  AllowWrite: data.write,
                 });
-
-                if (data.read)
-                  await add_user_to_channel({
-                    channel_id: c.ChannelId,
-                    UserId: props.user.UserId,
-                    AllowWrite: data.write,
-                  });
-              }}
-              form_type={PermissionForm}
+            }}
+            form_type={PermissionForm}
+          >
+            <Checkbox
+              name="read"
+              default_value={
+                !!permissions?.find((p) => p.ChannelId === c.ChannelId)
+              }
+              clear_on_submit
+              submit_on_change
             >
-              <Checkbox
-                name="read"
-                default_value={
-                  !!permissions?.find((p) => p.ChannelId === c.ChannelId)
-                }
-                clear_on_submit
-                submit_on_change
-              >
-                May View
-              </Checkbox>
-              <Checkbox
-                name="write"
-                default_value={
-                  !!permissions?.find(
-                    (p) => p.ChannelId === c.ChannelId && p.Write
-                  )
-                }
-                clear_on_submit
-                submit_on_change
-              >
-                May Post
-              </Checkbox>
-            </RawForm>
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+              May View
+            </Checkbox>
+            <Checkbox
+              name="write"
+              default_value={
+                !!permissions?.find(
+                  (p) => p.ChannelId === c.ChannelId && p.Write
+                )
+              }
+              clear_on_submit
+              submit_on_change
+            >
+              May Post
+            </Checkbox>
+          </RawForm>
+        </View>
+      ))}
+    </View>
   );
 };
 
@@ -181,7 +179,11 @@ const ServerUserDiplay = (props: {
       </Modal>
 
       {!props.user.Admin && (
-        <Modal open={is_permissioning} set_open={set_is_permissioning} title="Permissions">
+        <Modal
+          open={is_permissioning}
+          set_open={set_is_permissioning}
+          title="Permissions"
+        >
           <UserPermissions user={props.user} />
           <Button on_click={() => set_is_permissioning(false)} colour="Danger">
             Close
@@ -247,7 +249,11 @@ export default (props: { url: string; blur: () => void }) => {
         </View>
       </ScrollView>
 
-      <Modal open={inviting} set_open={set_inviting} title="Create an Invite Link">
+      <Modal
+        open={inviting}
+        set_open={set_inviting}
+        title="Create an Invite Link"
+      >
         <View style={Classes("column")}>
           <InviteLinker url={props.url} />
           <Button on_click={() => set_inviting(false)} colour="Info">

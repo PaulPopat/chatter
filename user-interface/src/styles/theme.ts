@@ -118,6 +118,7 @@ const ThemeStyles: Record<string, any> = StyleSheet.create({
   },
   max_fill: {
     maxHeight: "100%",
+    overflow: "hidden",
   },
   fill: {
     height: "100%",

@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { View, Modal, Pressable } from "react-native";
+import { View, Modal, Pressable, ScrollView } from "react-native";
 import { Classes } from "../styles/theme";
 import TopBar from "./top-bar";
 import Icon from "./icon";
@@ -29,14 +29,16 @@ export default (props: Props) => {
         style={Classes("modal_background")}
         onPress={() => props.set_open(false)}
       />
-      <View style={Classes("max_fill", "modal")}>
-        <View style={Classes("spacer card highlight flush", props.class ?? "")}>
+      <View style={Classes("max_fill modal container")}>
+        <View style={Classes("card highlight flush column max_fill", props.class ?? "")}>
           <TopBar title={props.title}>
             <Pressable onPress={() => props.set_open(false)}>
               <Icon area="System" icon="close" />
             </Pressable>
           </TopBar>
-          <View style={Classes("container")}>{props.children}</View>
+          <ScrollView style={Classes("container flex_fill")}>
+            {props.children}
+          </ScrollView>
         </View>
       </View>
     </Modal>
