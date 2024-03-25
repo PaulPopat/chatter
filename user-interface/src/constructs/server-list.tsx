@@ -51,7 +51,7 @@ export default (props: {
 
   return (
     <View style={Classes("flex_fill")}>
-      <Modal open={joining} set_open={set_joining}>
+      <Modal open={joining} set_open={set_joining} title="Join a Server">
         <Form
           fetcher={join_server}
           on_submit={() => {

@@ -5,7 +5,7 @@ import { Classes } from "../styles/theme";
 import UseOrientation from "../utils/orientation";
 
 type Props = {
-  click: () => void;
+  click?: () => void;
   title: string | undefined;
 };
 
@@ -13,7 +13,7 @@ export default (props: PropsWithChildren<Props>) => {
   const orientation = UseOrientation();
   return (
     <View style={Classes("edge_container", "row", "border_bottom")}>
-      {orientation === "portrait" && (
+      {orientation === "portrait" && props.click && (
         <Pressable onPress={props.click}>
           <Icon area="Arrows" icon="arrow-left" />
         </Pressable>

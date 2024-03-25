@@ -14,7 +14,7 @@ import Checkbox from "../atoms/checkbox";
 import useServerMetadata from "../data/use-server-metadata";
 import UseOrientation from "../utils/orientation";
 import TopBar from "../atoms/top-bar";
-import ResponsiveModal from "../atoms/responsive-modal";
+import ResponsiveModal from "../molecules/responsive-modal";
 import ServerAdmin from "./server-admin";
 
 const ChannelListItem = (
@@ -34,7 +34,7 @@ export default (props: { open: boolean; blur: () => void }) => {
   const server = UseServer();
   const {
     state: channels,
-    actions: { create_channel },
+    actions: { create_channel, update_channel },
   } = UseChannels();
   const { state: metadata } = useServerMetadata();
   const [open_channel, set_open_channel] = useState<Channel | null>(null);
@@ -44,7 +44,7 @@ export default (props: { open: boolean; blur: () => void }) => {
 
   return (
     <ResponsiveModal classes={["row", "fill", "no_gap"]} open={props.open}>
-      <Modal open={creating} set_open={set_creating}>
+      <Modal open={creating} set_open={set_creating} title="Create a Channel">
         <Form
           fetcher={create_channel}
           on_submit={() => set_creating(false)}
@@ -123,6 +123,7 @@ export default (props: { open: boolean; blur: () => void }) => {
         {open_channel ? (
           <ChannelView
             channel={open_channel}
+            update={update_channel}
             blur={() => set_open_channel(null)}
           />
         ) : (

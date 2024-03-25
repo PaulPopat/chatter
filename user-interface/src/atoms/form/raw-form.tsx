@@ -45,7 +45,9 @@ export default function Form<TExpect>(
         submit: on_submit,
       }}
     >
-      <View style={Classes(...(props.classes ?? []))}>{props.children}</View>
+      <View style={Classes("column", ...(props.classes ?? []))}>
+        {props.children}
+      </View>
     </FormContext.Provider>
   );
 }

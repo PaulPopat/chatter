@@ -53,7 +53,11 @@ const MainPanel = () => {
         ))}
       </View>
 
-      <Modal open={updating_profile} set_open={set_updating_profile}>
+      <Modal
+        open={updating_profile}
+        set_open={set_updating_profile}
+        title="My Profile"
+      >
         <Form fetcher={profile.actions.update_profile} classes={["column"]}>
           <Textbox name="UserName" default_value={profile.state?.UserName}>
             User Name

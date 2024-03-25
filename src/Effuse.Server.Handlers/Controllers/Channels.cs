@@ -14,6 +14,8 @@ public class Channels : IHandler
     public string Type { get; set; }
 
     public string Name { get; set; }
+
+    public bool Public { get; set; }
   }
 
   private readonly Base channels;
@@ -34,7 +36,8 @@ public class Channels : IHandler
     {
       ChannelId = c.ChannelId.ToString(),
       Type = Enum.GetName(c.Type) ?? string.Empty,
-      Name = c.Name
+      Name = c.Name,
+      Public = c.Public
     }));
   }
 }

@@ -148,22 +148,20 @@ const ThemeStyles: Record<string, any> = StyleSheet.create({
     height: "100%",
     backgroundColor: "rgba(0, 0, 0, 0.4)",
   },
+  flush: { padding: 0 },
 });
 
 export type Class = keyof typeof ThemeStyles;
 
 export function Classes(...classes: Array<Class | [Class, boolean]>) {
-  return classes.reduce(
-    (c, n) =>
-      typeof n === "string"
-        ? {
-            ...c,
-            ...ThemeStyles[n],
-          }
-        : {
-            ...c,
-            ...(n[1] ? { ...ThemeStyles[n[0]] } : {}),
-          },
-    {} as any
-  );
+  return classes
+    .map((c) => (typeof c === "string" ? ([c, true] as [Class, boolean]) : c))
+    .flatMap(([c, s]) => c.split(" ").map((c) => [c, s] as [Class, boolean]))
+    .reduce(
+      (c, n) => ({
+        ...c,
+        ...(n[1] ? { ...ThemeStyles[n[0]] } : {}),
+      }),
+      {} as any
+    );
 }

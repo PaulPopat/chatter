@@ -169,8 +169,7 @@ const ServerUserDiplay = (props: {
         </Pressable>
       )}
 
-      <Modal open={is_banning} set_open={set_is_banning}>
-        <Text>Are you sure?</Text>
+      <Modal open={is_banning} set_open={set_is_banning} title="Are you sure?">
         <Text>
           This will block the user from performing any server actions.
         </Text>
@@ -182,7 +181,7 @@ const ServerUserDiplay = (props: {
       </Modal>
 
       {!props.user.Admin && (
-        <Modal open={is_permissioning} set_open={set_is_permissioning}>
+        <Modal open={is_permissioning} set_open={set_is_permissioning} title="Permissions">
           <UserPermissions user={props.user} />
           <Button on_click={() => set_is_permissioning(false)} colour="Danger">
             Close
@@ -248,7 +247,7 @@ export default (props: { url: string; blur: () => void }) => {
         </View>
       </ScrollView>
 
-      <Modal open={inviting} set_open={set_inviting}>
+      <Modal open={inviting} set_open={set_inviting} title="Create an Invite Link">
         <View style={Classes("column")}>
           <InviteLinker url={props.url} />
           <Button on_click={() => set_inviting(false)} colour="Info">
