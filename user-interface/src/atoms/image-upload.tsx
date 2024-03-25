@@ -3,7 +3,7 @@ import { UseForm } from "./form";
 import { KeyboardTypeOptions, Text, Pressable, View } from "react-native";
 import Icon from "./icon";
 import { Classes } from "../styles/theme";
-import FilePicker from "../utils/file-picker";
+import FilePicker from "../utils/system/file-picker";
 import IAsset from "../utils/asset";
 import Image from "./image";
 

@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
-import IAsset from "./asset";
-import { ToBase64 } from "./file";
-import DataAsset from "./data-asset";
+import IAsset from "../asset";
+import { ToBase64 } from "../file";
+import DataAsset from "../data-asset";
 
 export default function FilePicker(accept?: string): Promise<IAsset> {
   switch (Platform.OS) {

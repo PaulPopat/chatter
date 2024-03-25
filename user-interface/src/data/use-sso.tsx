@@ -1,7 +1,7 @@
 import { PropsWithChildren, createContext, useContext, useState } from "react";
 import { Auth, Sso } from "../auth/sso";
 import UseFetcher, { Fetcher } from "../utils/fetch";
-import { Session } from "../utils/storage";
+import { Session } from "../utils/system/storage";
 
 const SsoContext = createContext(Sso.Stored);
 

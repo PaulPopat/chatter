@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Fetch } from "../utils/fetch";
-import { Session } from "../utils/storage";
+import { Session } from "../utils/system/storage";
 import { createContext, useContext } from "react";
 
 export const Auth = z.object({

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ClearArgs, GetArgs } from "../utils/args";
+import { ClearArgs, GetArgs } from "../utils/system/args";
 
 let args_listeners: Array<() => void> = [];
 

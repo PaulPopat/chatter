@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import UseFetcher, { FetcherOf, UseFetcherConfig } from "./fetch";
-import { Session } from "./storage";
+import { Session } from "./system/storage";
 
 type RemoteStateFetchers = Record<string, [string, UseFetcherConfig<any, any>]>;
 

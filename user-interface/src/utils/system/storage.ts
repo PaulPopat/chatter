@@ -1,5 +1,5 @@
 import { Platform } from "react-native";
-import Json from "./json";
+import Json from "../json";
 
 function GetSession() {
   switch (Platform.OS) {
