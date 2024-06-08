@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.AWS.Infrastructure", "Effuse.SSO.AWS.Infrastructure\Effuse.SSO.AWS.Infrastructure.csproj", "{924CF5AB-46E7-437A-A3D2-F83DEF140E5A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.AWS.Integration", "Effuse.Core.AWS.Integration\Effuse.Core.AWS.Integration.csproj", "{6859BC17-F91E-4C42-9070-A783FB7FB198}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.Handlers", "Effuse.SSO.Handlers\Effuse.SSO.Handlers.csproj", "{497BE617-FDEB-4089-9796-EF4B791C9519}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.AWS.Handlers", "Effuse.SSO.AWS.Handlers\Effuse.SSO.AWS.Handlers.csproj", "{5320A6BF-B92A-46A3-A43C-5B72627EC36D}"
@@ -20,8 +16,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.Integration", "Effuse.Core.Integration\Effuse.Core.Integration.csproj", "{DF1615B5-9B55-4BDE-9996-098D632B3F41}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.Handlers", "Effuse.Core.Handlers\Effuse.Core.Handlers.csproj", "{A35061CA-19D7-46A9-BCF7-B13D43918487}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.AWS.Infrastructure", "Effuse.Core.AWS.Infrastructure\Effuse.Core.AWS.Infrastructure.csproj", "{FC757917-64AB-47F0-9BB1-A1FBD58B75D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.Utilities", "Effuse.Core.Utilities\Effuse.Core.Utilities.csproj", "{0203CE64-C026-4554-AFEC-8BB5B18DD95D}"
 EndProject
@@ -40,8 +34,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Server.Handlers", "Effuse.Server.Handlers\Effuse.Server.Handlers.csproj", "{F9A900BD-BC0F-4D19-ABF5-B73A37C335B9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Server.Local", "Effuse.Server.Local\Effuse.Server.Local.csproj", "{1945DFEB-9D34-4607-BD40-5BBCD4B34894}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.Core.AWS.Handlers", "Effuse.Core.AWS.Handlers\Effuse.Core.AWS.Handlers.csproj", "{BCC181A9-44D8-4387-AA0A-AF8504E9F3B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
