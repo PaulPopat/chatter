@@ -16,7 +16,23 @@ const config = {
 /** @type {() => Promise<import('webpack').Configuration>} */
 module.exports = async () => {
   const response = await favicons(
-    path.resolve(__dirname, "asset-src/app-icon.png")
+    path.resolve(__dirname, "asset-src/app-icon.png"),
+    {
+      appName: "Effuse",
+      appShortName: "Effuse",
+      appDescription: "The privacy focused chat for gamers",
+      developerName: "Ipheion",
+      developerURL: "https://github.com/Iph3i0n",
+      lang: "en-GB",
+      background: "#f8f9f9",
+      theme_color: "#f8f9f9",
+      appleStatusBarStyle: "black-translucent",
+      display: "standalone",
+      orientation: "portrait",
+      scope: "/",
+      start_url: "https://app.effuse.cloud/",
+      version: "1.0",
+    }
   );
 
   return {
@@ -56,7 +72,7 @@ module.exports = async () => {
           {
             from: "node_modules/remixicon/fonts/remixicon.ttf",
             to: "icons.ttf",
-          },
+          }
         ],
       }),
       new MiniCssExtractPlugin(),
