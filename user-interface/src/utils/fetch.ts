@@ -3,7 +3,7 @@ import Url from "./url";
 import { useCallback } from "react";
 import Json from "./json";
 import { SSO_BASE } from "@effuse/config";
-import UseSso from "../data/use-sso";
+import UseSso, { UseSsoControls } from "../data/use-sso";
 import UseServer from "../data/use-server";
 
 const BodyTypes = ["PUT", "POST"];
@@ -111,6 +111,7 @@ export default function UseFetcher<
   url: string,
   props: UseFetcherConfig<TExpect, TBody>
 ): Fetcher<TExpect, TBody> {
+  const controls = UseSsoControls();
   const server = UseServer();
   const token = props.area === "sso" ? UseSso().AdminToken : server.LocalToken;
 
@@ -128,7 +129,8 @@ export default function UseFetcher<
           if (props.on_success) props.on_success(r.response, r.data);
           return r;
         })
-        .catch((response) => {
+        .catch((response: Response) => {
+          if (response.status === 403) controls.clear();
           if (props.on_fail) props.on_fail(response);
           throw response;
         }),

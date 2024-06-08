@@ -1,7 +1,5 @@
 import { z } from "zod";
-import { Fetch } from "../utils/fetch";
 import { Session } from "../utils/system/storage";
-import { createContext, useContext } from "react";
 
 export const Auth = z.object({
   AdminToken: z.string(),
@@ -63,7 +61,13 @@ export class Sso {
   }
 
   static get Stored() {
-    return new Sso(Auth.parse(Session.auth ?? EmptyAuth));
+    try {
+      return new Sso(Auth.parse(Session.auth ?? EmptyAuth));
+    } catch (err) {
+      console.error(err);
+      delete Session.auth;
+      return this.Empty;
+    }
   }
 
   static get Empty() {

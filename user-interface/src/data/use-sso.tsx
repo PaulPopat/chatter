@@ -1,4 +1,9 @@
-import { PropsWithChildren, createContext, useContext, useState } from "react";
+import React, {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useState,
+} from "react";
 import { Auth, Sso } from "../auth/sso";
 import UseFetcher, { Fetcher } from "../utils/fetch";
 import { Session } from "../utils/system/storage";
@@ -9,6 +14,7 @@ const SsoControlContext = createContext<{
   refresh: Fetcher<unknown>;
   login: Fetcher<unknown>;
   register: Fetcher<unknown>;
+  clear: () => void;
 }>(null as any);
 
 export default function UseSso() {
@@ -32,7 +38,7 @@ export const SsoProvider = (props: PropsWithChildren) => {
     },
     on_fail(response) {
       set_auth(Sso.Empty);
-      Session.auth = undefined;
+      delete Session.auth;
     },
   });
 
@@ -56,14 +62,20 @@ export const SsoProvider = (props: PropsWithChildren) => {
     },
   });
 
+  const value = React.useMemo(
+    () => ({
+      refresh,
+      login,
+      register,
+      clear() {
+        set_auth(Sso.Empty);
+      },
+    }),
+    [refresh, login, register]
+  );
+
   return (
-    <SsoControlContext.Provider
-      value={{
-        refresh,
-        login,
-        register,
-      }}
-    >
+    <SsoControlContext.Provider value={value}>
       <SsoContext.Provider value={auth}>{props.children}</SsoContext.Provider>
     </SsoControlContext.Provider>
   );

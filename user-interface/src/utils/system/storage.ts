@@ -22,6 +22,12 @@ export const Session = SystemMatch({
           window.sessionStorage.setItem(p, Json.ToString(input));
           return true;
         },
+        deleteProperty(_, p) {
+          if (typeof p !== "string")
+            throw new Error("May only index session storage by string");
+          window.sessionStorage.removeItem(p);
+          return true;
+        },
       }
     ),
 });
