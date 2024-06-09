@@ -5,7 +5,7 @@ using Effuse.Server.Integrations.Contracts;
 
 namespace Effuse.Server.Integrations;
 
-public class DbUserClient : IUserClient
+public class DbUserClient(IDatabase database, IChannelClient channelClient, IRoleClient roleClient) : IUserClient
 {
   private struct ServerTokenDto
   {
@@ -32,6 +32,8 @@ public class DbUserClient : IUserClient
     public bool Admin { get; set; }
 
     public List<UserPolicyDto> Policies { get; set; }
+
+    public string RoleId { get; set; }
   }
 
   private struct ListUsersDto
@@ -43,15 +45,6 @@ public class DbUserClient : IUserClient
   private static string ListTableName => "ListServerUsers";
   private static string ListItemName => "ListServerUsersItem";
 
-  private readonly IDatabase database;
-  private readonly IChannelClient channelClient;
-
-  public DbUserClient(IDatabase database, IChannelClient channelClient)
-  {
-    this.database = database;
-    this.channelClient = channelClient;
-  }
-
   private static UserDto ToDto(User user)
   {
     return new UserDto
@@ -60,6 +53,7 @@ public class DbUserClient : IUserClient
       LastLoggedIn = user.LastLoggedIn.ToISOString(),
       Banned = user.Banned,
       Admin = user.Admin,
+      RoleId = user.Role.RoleId.ToString(),
       Policies = user.Policies.Select(p => new UserPolicyDto
       {
         ChannelId = p.ChannelId.ToString(),
@@ -69,13 +63,14 @@ public class DbUserClient : IUserClient
     };
   }
 
-  private static User FromDto(Guid userId, UserDto dto)
+  private static User FromDto(Guid userId, UserDto dto, Role role)
   {
     return new User(
       userId,
       DateTime.Parse(dto.JoinedServer),
       DateTime.Parse(dto.LastLoggedIn),
       dto.Banned,
+      role,
       dto.Policies.Select(p => new UserPolicy(
         channelId: Guid.Parse(p.ChannelId),
         access: p.Write ? UserPolicyAccess.Write : UserPolicyAccess.Read)),
@@ -84,12 +79,15 @@ public class DbUserClient : IUserClient
 
   public async Task UpdateUser(User user)
   {
-    await this.database.UpdateItem(TableName, user.UserId.ToString(), ToDto(user));
+    await database.UpdateItem(TableName, user.UserId.ToString(), ToDto(user));
   }
 
   public async Task<User> GetUser(Guid userId)
   {
-    return FromDto(userId, await this.database.GetItem<UserDto>(TableName, userId.ToString())); ;
+    var userRow = await database.GetItem<UserDto>(TableName, userId.ToString());
+    var roleId = Guid.Parse(userRow.RoleId);
+    var role = roleId != Guid.Empty ? await roleClient.GetRole(roleId) : Role.Empty;
+    return FromDto(userId, userRow, role);
   }
 
   public async Task<User> RegisterUser(Guid userId, bool admin)
@@ -99,26 +97,27 @@ public class DbUserClient : IUserClient
       joinedServer: DateTime.Now,
       lastLoggedIn: DateTime.Now,
       banned: false,
-      policies: await this.channelClient.ListChannels()
+      role: Role.Empty,
+      policies: await channelClient.ListChannels()
         .Where(c => c.Public)
         .Select(c => new UserPolicy(
           channelId: c.ChannelId,
           access: UserPolicyAccess.Write)).ToListAsync(),
       admin: admin);
 
-    await this.database.AddItem(TableName, userId.ToString(), ToDto(input));
+    await database.AddItem(TableName, userId.ToString(), ToDto(input));
 
-    var existing = await this.database.FindItem<ListUsersDto>(ListTableName, ListItemName);
+    var existing = await database.FindItem<ListUsersDto>(ListTableName, ListItemName);
     if (existing == null)
     {
-      await this.database.AddItem(ListTableName, ListItemName, new ListUsersDto
+      await database.AddItem(ListTableName, ListItemName, new ListUsersDto
       {
-        Users = new List<string>() { input.UserId.ToString() }
+        Users = [input.UserId.ToString()]
       });
     }
     else
     {
-      await this.database.UpdateItem(ListTableName, ListItemName, new ListUsersDto
+      await database.UpdateItem(ListTableName, ListItemName, new ListUsersDto
       {
         Users = existing.Value.Users.Append(input.UserId.ToString()).ToList()
       });
@@ -129,7 +128,7 @@ public class DbUserClient : IUserClient
 
   public async IAsyncEnumerable<User> ListUsers()
   {
-    var listing = await this.database.FindItem<ListUsersDto>(ListTableName, ListItemName);
+    var listing = await database.FindItem<ListUsersDto>(ListTableName, ListItemName);
 
     if (listing == null) yield break;
 
@@ -143,7 +142,7 @@ public class DbUserClient : IUserClient
 
   public async IAsyncEnumerable<User> ListBannedUsers()
   {
-    var listing = await this.database.FindItem<ListUsersDto>(ListTableName, ListItemName);
+    var listing = await database.FindItem<ListUsersDto>(ListTableName, ListItemName);
 
     if (listing == null) yield break;
 
@@ -157,8 +156,10 @@ public class DbUserClient : IUserClient
 
   public async Task<User?> FindUser(Guid userId)
   {
-    var dto = await this.database.FindItem<UserDto>(TableName, userId.ToString());
+    var dto = await database.FindItem<UserDto>(TableName, userId.ToString());
     if (dto == null) return null;
-    return FromDto(userId, dto.Value);
+    var roleId = Guid.Parse(dto.Value.RoleId);
+    var role = roleId != Guid.Empty ? await roleClient.GetRole(roleId) : Role.Empty;
+    return FromDto(userId, dto.Value, role);
   }
 }

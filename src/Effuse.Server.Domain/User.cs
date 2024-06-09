@@ -1,64 +1,53 @@
-﻿using Effuse.Core.Domain;
+﻿using System.Diagnostics.CodeAnalysis;
+using Effuse.Core.Domain;
 
 namespace Effuse.Server.Domain;
 
-public class User
-{
-  public User(
+public class User(
     Guid userId,
     DateTime joinedServer,
     DateTime lastLoggedIn,
     bool banned,
+    [AllowNull] Role? role,
     IEnumerable<UserPolicy> policies,
     bool admin)
-  {
-    UserId = userId;
-    JoinedServer = joinedServer;
-    LastLoggedIn = lastLoggedIn;
-    Banned = banned;
-    Policies = policies;
-    Admin = admin;
-  }
+{
+  public Guid UserId => userId;
 
-  public Guid UserId { get; }
+  public DateTime JoinedServer => joinedServer;
 
-  public DateTime JoinedServer { get; }
+  public DateTime LastLoggedIn => lastLoggedIn;
 
-  public DateTime LastLoggedIn { get; }
+  public bool Banned => banned;
 
-  public bool Banned { get; }
+  public Role Role => role ?? Role.Empty;
 
-  public IEnumerable<UserPolicy> Policies { get; }
+  public IEnumerable<UserPolicy> Policies => policies;
 
-  public bool Admin { get; }
+  public bool Admin => admin || Role.Admin;
 
-  public bool MayRead(Channel channel)
-  {
-    if (this.Admin)
-      return true;
+  public bool MayRead(Channel channel) =>
+    Role.MayRead(channel) ||
+    admin ||
+    (policies.FirstOrDefault(p => p.ChannelId == channel.ChannelId)?.Read ?? false);
 
-    return this.Policies.FirstOrDefault(p => p.ChannelId == channel.ChannelId)?.Read ?? false;
-  }
-
-  public bool MayWrite(Channel channel)
-  {
-    if (this.Admin)
-      return true;
-
-    return this.Policies.FirstOrDefault(p => p.ChannelId == channel.ChannelId)?.Write ?? false;
-  }
+  public bool MayWrite(Channel channel) =>
+    Role.MayWrite(channel) ||
+    admin ||
+    (policies.FirstOrDefault(p => p.ChannelId == channel.ChannelId)?.Write ?? false);
 
   public User WithChannelAccess(Channel channel, UserPolicyAccess access)
   {
     return new User(
-      userId: this.UserId,
+      userId: UserId,
       joinedServer: JoinedServer,
       lastLoggedIn: LastLoggedIn,
       banned: Banned,
       admin: Admin,
       policies: this.Policies.Append(new UserPolicy(
         channelId: channel.ChannelId,
-        access: access)));
+        access: access)),
+      role: role);
   }
 
   public User RevokeChannelAccess(Channel channel)
@@ -69,7 +58,8 @@ public class User
       lastLoggedIn: LastLoggedIn,
       banned: Banned,
       admin: Admin,
-      policies: this.Policies.Where(p => p.ChannelId != channel.ChannelId));
+      policies: this.Policies.Where(p => p.ChannelId != channel.ChannelId),
+      role: role);
   }
 
   public User AsBanned => new(
@@ -78,7 +68,8 @@ public class User
       lastLoggedIn: LastLoggedIn,
       banned: true,
       admin: Admin,
-      policies: Policies);
+      policies: Policies,
+      role: role);
 
   public User AsAdmin => new(
       userId: this.UserId,
@@ -86,7 +77,8 @@ public class User
       lastLoggedIn: LastLoggedIn,
       banned: Banned,
       admin: true,
-      policies: Policies);
+      policies: Policies,
+      role: role);
 
   public User WithoutAdmin => new(
       userId: this.UserId,
@@ -94,5 +86,6 @@ public class User
       lastLoggedIn: LastLoggedIn,
       banned: Banned,
       admin: false,
-      policies: Policies);
+      policies: Policies,
+      role: role);
 }

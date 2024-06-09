@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.Handlers", "Effuse.SSO.Handlers\Effuse.SSO.Handlers.csproj", "{497BE617-FDEB-4089-9796-EF4B791C9519}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.AWS.Handlers", "Effuse.SSO.AWS.Handlers\Effuse.SSO.AWS.Handlers.csproj", "{5320A6BF-B92A-46A3-A43C-5B72627EC36D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.Integration", "Effuse.SSO.Integration\Effuse.SSO.Integration.csproj", "{CDF28F49-D78F-4244-9F2E-D0020F6C4259}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Effuse.SSO.Services", "Effuse.SSO.Services\Effuse.SSO.Services.csproj", "{9945C4B9-E769-49D1-8148-0BBD05194DD0}"
