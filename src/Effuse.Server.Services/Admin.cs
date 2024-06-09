@@ -2,11 +2,17 @@
 using Effuse.Core.Integration.Contracts;
 using Effuse.Core.Utilities;
 using Effuse.Server.Domain;
+using Effuse.Server.Integrations;
 using Effuse.Server.Integrations.Contracts;
 
 namespace Effuse.Server.Services;
 
-public class AdminService(AuthService authService, IChannelClient channelClient, IUserClient userClient, IParameters parameters)
+public class AdminService(
+  AuthService authService,
+  IChannelClient channelClient,
+  IUserClient userClient,
+  IParameters parameters,
+  IRoleClient roleClient)
 {
   public async Task<Channel> CreateChatChannel(string localToken, string name, bool @public)
   {
@@ -98,5 +104,48 @@ public class AdminService(AuthService authService, IChannelClient channelClient,
     await authService.RequireAdmin(localToken);
     var user = await userClient.GetUser(userId);
     return user.Policies;
+  }
+
+  public async Task<Role> CreateRole(string localToken, string name) {
+    await authService.RequireAdmin(localToken);
+    return await roleClient.AddRole(name);
+  }
+
+  public async Task<IEnumerable<Role>> GetAllRoles(string localToken)
+  {
+    await authService.RequireAdmin(localToken);
+    return await roleClient.ListRole().ToListAsync();
+  }
+
+  public async Task AddRoleToChannel(string localToken, Guid channelId, Guid roleId, bool allowWrite)
+  {
+    await authService.RequireAdmin(localToken);
+    var role = await roleClient.GetRole(roleId);
+    var channel = await channelClient.GetChannel(channelId);
+    await roleClient.UpdateRole(role.WithChannelAccess(
+      channel,
+      allowWrite ? UserPolicyAccess.Write : UserPolicyAccess.Read));
+  }
+
+  public async Task KickRoleFromChannel(string localToken, Guid channelId, Guid roleId)
+  {
+    await authService.RequireAdmin(localToken);
+    var role = await roleClient.GetRole(roleId);
+    var channel = await channelClient.GetChannel(channelId);
+    await roleClient.UpdateRole(role.RevokeChannelAccess(channel));
+  }
+
+  public async Task GiveRoleAdmin(string localToken, Guid roleId)
+  {
+    await authService.RequireAdmin(localToken);
+    var role = await roleClient.GetRole(roleId);
+    await roleClient.UpdateRole(role.AsAdmin);
+  }
+
+  public async Task RevokeRoleAdmin(string localToken, Guid roleId)
+  {
+    await authService.RequireAdmin(localToken);
+    var role = await roleClient.GetRole(roleId);
+    await roleClient.UpdateRole(role.WithoutAdmin);
   }
 }
