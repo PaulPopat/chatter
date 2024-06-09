@@ -23,6 +23,12 @@ tasks:
       - npx jest
     dir: "{{.TASKFILE_DIR}}/tests"
 
+  integration:watch:
+    cmds:
+      - task: integration:prepare
+      - npx jest --watch
+    dir: "{{.TASKFILE_DIR}}/tests"
+
   solution:build:
     cmds:
       - dotnet build

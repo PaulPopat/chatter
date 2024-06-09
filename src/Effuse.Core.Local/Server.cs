@@ -56,7 +56,7 @@ public class Server
     var res = ctx.Response;
 
     var connectionId = Guid.NewGuid();
-    Console.WriteLine($"Handling {connectionId} {req.HttpMethod}: {req.Url?.AbsolutePath}");
+    // Console.WriteLine($"Handling {connectionId} {req.HttpMethod}: {req.Url?.AbsolutePath}");
 
     try
     {
@@ -85,7 +85,7 @@ public class Server
       }
     }
 
-    Console.WriteLine($"Finished {connectionId}");
+    // Console.WriteLine($"Finished {connectionId}");
   }
 
   private async void ProcessWebSocketRequest(HttpListenerContext ctx)
@@ -106,7 +106,7 @@ public class Server
     var ws = webSocketContext.WebSocket;
     var connectionId = Guid.NewGuid();
 
-    Console.WriteLine($"Opened connection ${connectionId}");
+    // Console.WriteLine($"Opened connection ${connectionId}");
     var connectionString = connectionId.ToString();
     websockets[connectionString] = ws;
     IWebSocketHandler? handler = null;
@@ -151,7 +151,7 @@ public class Server
     }
     finally
     {
-      Console.WriteLine($"Closing connection ${connectionId}");
+      // Console.WriteLine($"Closing connection ${connectionId}");
       ws?.Dispose();
       try
       {

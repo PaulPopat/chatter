@@ -106,6 +106,15 @@ public class AdminService(
     return user.Policies;
   }
 
+  public async Task SetUserRole(string localToken, Guid userId, Guid roleId)
+  {
+    await authService.RequireAdmin(localToken);
+    var role = await roleClient.GetRole(roleId);
+    var user = await userClient.GetUser(userId);
+
+    await userClient.UpdateUser(user.WithRole(role));
+  }
+
   public async Task<Role> CreateRole(string localToken, string name) {
     await authService.RequireAdmin(localToken);
     return await roleClient.AddRole(name);

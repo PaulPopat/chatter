@@ -62,6 +62,15 @@ public class User(
       role: role);
   }
 
+  public User WithRole(Role role) => new(
+      userId: UserId,
+      joinedServer: JoinedServer,
+      lastLoggedIn: LastLoggedIn,
+      banned: Banned,
+      admin: Admin,
+      policies: Policies,
+      role: role);
+
   public User AsBanned => new(
       userId: this.UserId,
       joinedServer: JoinedServer,

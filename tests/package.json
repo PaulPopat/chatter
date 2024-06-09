@@ -1,7 +1,9 @@
 {
   "name": "effuse-tests",
   "version": "1.0.0",
-  "scripts": {},
+  "scripts": {
+    "test": "task integration:prepare && jest"
+  },
   "author": "Paul Popat",
   "license": "ISC",
   "dependencies": {
@@ -14,6 +16,12 @@
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.20",
+    "@types/uuid": "^9.0.8",
     "uuid": "^9.0.1"
+  },
+  "jest": {
+    "testTimeout": 1000000000,
+    "maxConcurrency": 1,
+    "testEnvironment": "node"
   }
 }
